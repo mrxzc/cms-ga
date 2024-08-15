@@ -6,8 +6,8 @@ const saltHex = Buffer.from(saltString, 'utf8').toString('hex')
 const salt = CryptoJS.enc.Hex.parse(saltHex)
 
 const key = CryptoJS.PBKDF2(secret, salt, {
-  keySize: 128 / 32,
-  iterations: 65536,
+  keySize: 256 / 32,
+  iterations: 74,
   hasher: CryptoJS.algo.SHA256,
 })
 
