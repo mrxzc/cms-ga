@@ -32,6 +32,13 @@ const MENU_HEADER = [
     icon: 'IconUser',
     submenu: [],
   },
+  {
+    id: 'Management-05',
+    name: 'Management',
+    href: '/management',
+    icon: 'IconManagement',
+    submenu: [],
+  },
 ]
 
 const ICON_MENU = {
@@ -39,6 +46,7 @@ const ICON_MENU = {
   IconNotification: ({ color }: { color: string }) => <IconNotification className="w-6 h-6" color={color} />,
   IconHistory: ({ color }: { color: string }) => <IconHistory className="w-6 h-6" color={color} />,
   IconUser: ({ color }: { color: string }) => <IconUser className="w-6 h-6" color={color} />,
+  IconManagement: ({ color }: { color: string }) => <IconUser className="w-6 h-6" color={color} />,
 }
 
 export { ICON_MENU, MENU_HEADER }

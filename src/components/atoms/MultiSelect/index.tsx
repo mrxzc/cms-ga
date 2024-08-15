@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react'
-import { Controller, UseFormReturn } from 'react-hook-form'
+import React, { useState, useCallback } from 'react';
+import { Controller, UseFormReturn } from 'react-hook-form';
 import {
   Checkbox,
   FormControl,
@@ -9,20 +9,20 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-} from '@mui/material'
-import Image from 'next/image'
-import images from '@assets/images'
+} from '@mui/material';
+import Image from 'next/image';
+import images from '@assets/images';
 
 interface RHFMultiSelectProps {
-  data: { value: string; name: string; selectedValue?: boolean }[]
-  className?: string
-  name: string
-  label: string
-  control: UseFormReturn<any>['control']
+  data: { value: string; name: string; selectedValue?: boolean; }[];
+  className?: string;
+  name: string;
+  label: string;
+  control: UseFormReturn<any>['control'];
 }
 
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
     style: {
@@ -30,31 +30,33 @@ const MenuProps = {
       width: 250,
     },
   },
-}
+};
 
 const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, label, control }) => {
   const [selectedValues, setSelectedValues] = useState<string[]>(
     data.filter(item => item.selectedValue).map(item => item.value)
-  )
+  );
 
-  const isAllSelected = data.length > 0 && selectedValues.length === data.length
-  const labelId = `${name}-label`
+  const isAllSelected = data.length > 0 && selectedValues.length === data.length;
+  const labelId = `${name}-label`;
 
   const handleChange = (event: SelectChangeEvent<string[]>) => {
-    const newSelectedValues = event.target.value as string[]
+    const newSelectedValues = event.target.value as string[];
     setSelectedValues(
-      newSelectedValues.includes('all') ? (isAllSelected ? [] : data.map(item => item.value)) : newSelectedValues
-    )
-  }
+      newSelectedValues.includes('all')
+        ? (isAllSelected ? [] : data.map(item => item.value))
+        : newSelectedValues
+    );
+  };
 
   const handleDelete = useCallback(
     (valueToDelete: string, onChange: (value: string[]) => void) => () => {
-      const updatedSelected = selectedValues.filter(value => value !== valueToDelete)
-      setSelectedValues(updatedSelected)
-      onChange(updatedSelected)
+      const updatedSelected = selectedValues.filter(value => value !== valueToDelete);
+      setSelectedValues(updatedSelected);
+      onChange(updatedSelected);
     },
     [selectedValues]
-  )
+  );
 
   return (
     <FormControl className={className}>
@@ -73,7 +75,7 @@ const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, 
               renderValue={selectedValues => (
                 <div className="flex gap-2">
                   {selectedValues.map(value => {
-                    const selectedItem = data.find(item => item.value === value)
+                    const selectedItem = data.find(item => item.value === value);
                     return (
                       <div key={value}>
                         <div className="flex border border-[#5141fe] rounded-md bg-white">
@@ -88,11 +90,11 @@ const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, 
                             />
                           </div>
                           <p className="text-[#5141fe] py-2 pr-2 pl-2 text-extra-small regular-12 border-l-[1px] border-[#5141fe]">
-                            {selectedItem?.name} {/* Display the name here */}
+                            {selectedItem?.name}
                           </p>
                         </div>
                       </div>
-                    )
+                    );
                   })}
                 </div>
               )}
@@ -100,6 +102,12 @@ const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, 
               inputProps={{ placeholder: label }}
               className="min-w-[650px]"
             >
+              <MenuItem key='all' value='all'>
+                <ListItemIcon>
+                  <Checkbox checked={isAllSelected} />
+                </ListItemIcon>
+                <ListItemText primary='Select All' />
+              </MenuItem>
               {data.map(item => (
                 <MenuItem key={item.value} value={item.value}>
                   <ListItemIcon>
@@ -114,7 +122,7 @@ const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, 
         )}
       />
     </FormControl>
-  )
-}
+  );
+};
 
-export default RHFMultiSelect
+export default RHFMultiSelect;

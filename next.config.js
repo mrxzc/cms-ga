@@ -14,6 +14,18 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV !== 'development',
   },
+  images: {
+    // domains: ['via.placeholder.com'], // Deprecated
+    domains: ['via.placeholder.com'], // Tambahkan domain di sini
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '/.*',
+      },
+    ],
+  },
 
   async headers() {
     return [

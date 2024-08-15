@@ -1,28 +1,28 @@
-'use client'
+'use client';
 
-import React, { useState, ChangeEvent, useEffect } from 'react'
-import Image from 'next/image'
-import { toast } from 'react-toastify'
+import React, { useState, ChangeEvent, useEffect } from 'react';
+import Image from 'next/image';
+import { toast } from 'react-toastify';
 
-import IconPlus from '@assets/icons/IconPlus'
-import images from '@assets/images'
+import IconPlus from '@assets/icons/IconPlus';
+import images from '@assets/images';
 
 interface ImageCardProps {
-  file: File
-  isMain: boolean
-  onClose?: () => void
+  file: File;
+  isMain: boolean;
+  onClose?: () => void;
 }
 
 const ImageCard: React.FC<ImageCardProps> = ({ file, isMain, onClose }) => {
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = e => {
-      setImageUrl(e.target?.result as string)
-    }
-    reader.readAsDataURL(file)
-  }, [file])
+      setImageUrl(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  }, [file]);
 
   return (
     <div className="relative flex flex-col items-center justify-center rounded-lg shadow-md w-[125px] h-[125px] mr-2">
@@ -50,40 +50,45 @@ const ImageCard: React.FC<ImageCardProps> = ({ file, isMain, onClose }) => {
         onClick={onClose}
       />
     </div>
-  )
-}
+  );
+};
 
-const ImageGallery: React.FC = () => {
-  const [images, setImages] = useState<File[]>([])
+const ImageGallery: React.FC<{ setImages: (images: File[]) => void; }> = ({ setImages }) => {
+  const [images, setImageGallery] = useState<File[]>([]);
+
+  useEffect(() => {
+    setImages(images);
+  }, [images]);
 
   const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files
+    const files = event.target.files;
     if (files) {
       for (let i = 0; i < files.length; i++) {
-        const file = files.item(i)
+        const file = files.item(i);
         if (file) {
-          const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg']
-          const maxSizeInBytes = 5 * 1024 * 1024 // 5MB
+          const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+          const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
 
           if (!allowedTypes.includes(file.type)) {
-            toast.error('Format file harus .png, .jpeg, atau .jpg')
-            return
+            toast.error('Format file harus .png, .jpeg, atau .jpg');
+            return;
           }
 
           if (file.size > maxSizeInBytes) {
-            toast.error('Ukuran file maksimal 5MB')
-            return
+            toast.error('Ukuran file maksimal 5MB');
+            return;
           }
 
-          setImages(prevImages => [...prevImages, file])
+          setImageGallery(prevImages => [...prevImages, file]); // Use the renamed state variable
         }
       }
     }
-  }
+  };
 
   const handleCloseImage = (index: number) => {
-    setImages(prevImages => prevImages.filter((_, i) => i !== index))
-  }
+    const newImages = images.filter((_, i) => i !== index);
+    setImageGallery(newImages); // Use the renamed state variable
+  };
 
   return (
     <div className="mx-auto">
@@ -97,7 +102,7 @@ const ImageGallery: React.FC = () => {
           <label htmlFor="fileInput" className="cursor-pointer">
             <div
               className="border border-[#d5d5d5] rounded grid place-items-center w-[125px] h-[125px] items-center justify-left bg-[#f9f8ff]"
-              onKeyDown={() => {}}
+              onKeyDown={() => { }}
               role="button"
               tabIndex={0}
             >
@@ -116,7 +121,7 @@ const ImageGallery: React.FC = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ImageGallery
+export default ImageGallery;
