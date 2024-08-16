@@ -1,7 +1,7 @@
 export const data = [
   {
     ID: 1,
-    IMAGE: 'https://via.placeholder.com/1000x800.png?text=Gambar',
+    IMAGE: '',
     TITLE_ROOM: '201',
     LOCATION: 'Head Office ACC',
     FLOOR: '1',
@@ -11,7 +11,7 @@ export const data = [
   },
   {
     ID: 2,
-    IMAGE: 'https://via.placeholder.com/1000x800.png?text=Gambar',
+    IMAGE: '',
     TITLE_ROOM: '301',
     LOCATION: 'Berijalan',
     FLOOR: '1',
@@ -21,7 +21,7 @@ export const data = [
   },
   {
     ID: 3,
-    IMAGE: 'https://via.placeholder.com/1000x800.png?text=Meeting Room',
+    IMAGE: '',
     TITLE_ROOM: '301',
     LOCATION: 'Berijalan',
     FLOOR: '2',
@@ -31,7 +31,7 @@ export const data = [
   },
   {
     ID: 4,
-    IMAGE: 'https://via.placeholder.com/1000x800.png?text=Pantry',
+    IMAGE: '',
     TITLE_ROOM: '301',
     LOCATION: 'Berijalan',
     FLOOR: '3',
@@ -41,7 +41,7 @@ export const data = [
   },
   {
     ID: 5,
-    IMAGE: 'https://via.placeholder.com/1000x800.png?text=Server Room',
+    IMAGE: '',
     TITLE_ROOM: '301',
     LOCATION: 'Head Office ACC',
     FLOOR: '1', // Can indicate basement level
@@ -51,7 +51,7 @@ export const data = [
   },
   {
     ID: 6,
-    IMAGE: 'https://via.placeholder.com/1000x800.png?text=Storage',
+    IMAGE: '',
     TITLE_ROOM: '301',
     LOCATION: 'Head Office ACC',
     FLOOR: '1',
@@ -61,7 +61,7 @@ export const data = [
   },
   {
     ID: 7,
-    IMAGE: 'https://via.placeholder.com/1000x800.png?text=Relaxation',
+    IMAGE: '',
     TITLE_ROOM: '301',
     LOCATION: 'Head Office ACC',
     FLOOR: '2',
