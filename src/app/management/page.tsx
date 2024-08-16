@@ -5,5 +5,9 @@ export const metadata = {
 }
 
 export default function ManagingAsset() {
-  return <ManagementAssetPage />
+  return (
+    <>
+      <ManagementAssetPage />
+    </>
+  )
 }

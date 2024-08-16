@@ -33,7 +33,6 @@ export function AddAsset() {
 
   const [isChecked, setIsChecked] = useState(false);
 
-
   const [images, setImages] = useState<File[]>([]);
 
   const handleImageChange = (newImages: File[]) => {
@@ -51,24 +50,24 @@ export function AddAsset() {
   ];
 
   const breadcrumbs = [
-    <Link href='/management/asset' key='1' className='text-heading m semibold-21 text-[#235696] hover:underline'>
+    <Link href="/management/asset" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
       Booking Asset Data - Room
     </Link>,
-    <Typography key='2' color='text.primary' className='text-heading m semibold-21'>
+    <Typography key="2" color="text.primary" className="text-heading m semibold-21">
       Add Room Data
     </Typography>,
   ];
 
-  // const [descriptionData, setDescriptionData] = useState('');
-  // const [termsData, setTermsData] = useState('');
+  // const [descriptionData, setDescriptionData] = useState('')
+  // const [termsData, setTermsData] = useState('')
 
   // const handleDescriptionChange = (data: string) => {
-  //   setDescriptionData(data);
-  // };
+  //   setDescriptionData(data)
+  // }
 
   // const handleTermsChange = (data: string) => {
-  //   setTermsData(data);
-  // };
+  //   setTermsData(data)
+  // }
 
   const facilityList = useWatch({
     control,
@@ -92,24 +91,24 @@ export function AddAsset() {
   };
 
   return (
-    <div className='px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto'>
-      <div className='bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center '>
+    <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
+      <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center ">
         <Stack spacing={2}>
-          <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />} aria-label='breadcrumb'>
+          <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
             {breadcrumbs}
           </Breadcrumbs>
         </Stack>
       </div>
 
-      <div className='bg-white px-4 py-4 rounded-xl'>
-        <p className='text-heading s semibold-18 mb-4'>Add Room Data</p>
+      <div className="bg-white px-4 py-4 rounded-xl">
+        <p className="text-heading s semibold-18 mb-4">Add Room Data</p>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className='flex items-center'>
-            <p className='text-heading xs regular-16 w-[160px]'>Aktif</p>
-            <label className='label cursor-pointer'>
+          <div className="flex items-center">
+            <p className="text-heading xs regular-16 w-[160px]">Aktif</p>
+            <label className="label cursor-pointer">
               <input
-                type='checkbox'
-                className='toggle toggle-accent'
+                type="checkbox"
+                className="toggle toggle-accent"
                 checked={isChecked}
                 onChange={() => setIsChecked(!isChecked)}
                 value={''}
@@ -117,117 +116,117 @@ export function AddAsset() {
             </label>
           </div>
 
-          <div className='flex items-center'>
-            <p className='text-heading xs regular-16 w-[160px]'>
-              Lokasi<span className='text-red-500'>*</span>
+          <div className="flex items-center">
+            <p className="text-heading xs regular-16 w-[160px]">
+              Lokasi<span className="text-red-500">*</span>
             </p>
             <SelectForm
               control={control}
-              name='location'
-              placeholder='Pilih kategori pengajuan'
+              name="location"
+              placeholder="Pilih kategori pengajuan"
               options={options}
               setValue={setValue}
-              className='w-[350px]'
+              className="w-[350px]"
             />
           </div>
 
-          <div className='flex items-center'>
-            <p className='text-heading xs regular-16 w-[160px]'>
-              Title Room<span className='text-red-500'>*</span>
+          <div className="flex items-center">
+            <p className="text-heading xs regular-16 w-[160px]">
+              Title Room<span className="text-red-500">*</span>
             </p>
             <TextAreaForm
               control={control}
-              name='roomTitle'
+              name="roomTitle"
               fieldLabel={{ children: 'Title Room' }}
               fieldInput={{ rows: 1 }}
               counter
-              className='w-[350px]'
+              className="w-[350px]"
             />
           </div>
 
-          <div className='flex items-center'>
-            <p className='text-heading xs regular-16 w-[160px]'>
-              Lantai Ruangan<span className='text-red-500'>*</span>
+          <div className="flex items-center">
+            <p className="text-heading xs regular-16 w-[160px]">
+              Lantai Ruangan<span className="text-red-500">*</span>
             </p>
             <SelectForm
               control={control}
-              name='floor'
-              placeholder='Pilih lantai ruangan'
+              name="floor"
+              placeholder="Pilih lantai ruangan"
               options={optionsFloor}
               setValue={setValue}
-              className='w-[350px]'
+              className="w-[350px]"
             />
           </div>
 
-          <div className='flex items-center'>
-            <p className='text-heading xs regular-16 w-[160px]'>
-              Kapasitas Ruangan<span className='text-red-500'>*</span>
+          <div className="flex items-center">
+            <p className="text-heading xs regular-16 w-[160px]">
+              Kapasitas Ruangan<span className="text-red-500">*</span>
             </p>
             <SelectForm
               control={control}
-              name='capacity'
-              placeholder='Pilih kapasitas ruangan'
+              name="capacity"
+              placeholder="Pilih kapasitas ruangan"
               options={optionsCapacity}
               setValue={setValue}
-              className='w-[350px]'
+              className="w-[350px]"
             />
           </div>
 
-          <div className='flex items-center'>
-            <p className='text-heading xs regular-16 w-[160px]'>Description</p>
-            <div className=''>
+          <div className="flex items-center">
+            <p className="text-heading xs regular-16 w-[160px]">Description</p>
+            <div className="">
               {/* <TextEditor
-                placeholder='Isi deskripsi ruangan'
+                placeholder="Isi deskripsi ruangan"
                 onChange={handleDescriptionChange}
                 data={descriptionData}
               /> */}
             </div>
           </div>
 
-          <div className='flex items-center'>
-            <p className='text-heading xs regular-16 w-[160px]'>Terms & Condition</p>
-            <div className='max-w-[650px]'>
+          <div className="flex items-center">
+            <p className="text-heading xs regular-16 w-[160px]">Terms & Condition</p>
+            <div className="max-w-[650px]">
               {/* <TextEditor
-                placeholder='Isi ketentuan penggunaan yang perlu diketahui'
+                placeholder="Isi ketentuan penggunaan yang perlu diketahui"
                 onChange={handleTermsChange}
                 data={termsData}
               /> */}
             </div>
           </div>
 
-          <div className='flex items-start mt-4'>
-            <p className='text-heading xs regular-16 w-[160px]'>Fasilitas Ruangan</p>
+          <div className="flex items-start mt-4">
+            <p className="text-heading xs regular-16 w-[160px]">Fasilitas Ruangan</p>
             <RHFMultiSelect
               data={optionsFacility}
-              name='facilityList'
-              label='Pilih Fasilitas Ruangan'
+              name="facilityList"
+              label="Pilih Fasilitas Ruangan"
               control={control}
-              className='mt-4 min-w-[650px]'
+              className="mt-4 min-w-[650px]"
             />
           </div>
 
-          <div className='flex items-center mt-4'>
-            <p className='text-heading xs regular-16 w-[160px]'>
-              Image<span className='text-red-500'>*</span>
+          <div className="flex items-center mt-4">
+            <p className="text-heading xs regular-16 w-[160px]">
+              Image<span className="text-red-500">*</span>
             </p>
-            <div className='max-w-[600px]'>
+            <div className="max-w-[600px]">
               <ImageGallery setImages={handleImageChange} />
             </div>
           </div>
 
-          <div className='divider' />
+          <div className="divider" />
 
-          <div className='flex justify-end gap-2 items-end'>
+          <div className="flex justify-end gap-2 items-end">
             <button
-              className='bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md'
-              type='button'
+              className="bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
+              type="button"
               onClick={() => router.push('/management/asset')}
             >
               Cancel
             </button>
             <button
-              className='bg-[#235696] text-[#e5f2fc] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md'
-              type='submit'
+              className="bg-[#235696] text-[#e5f2fc] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
+              type="submit"
             >
               Submit
             </button>

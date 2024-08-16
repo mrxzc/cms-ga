@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect, useRef } from 'react'
-import { CKEditor } from '@ckeditor/ckeditor5-react'
+import React, { useState, useEffect, useRef } from 'react';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import {
   ClassicEditor,
   AccessibilityHelp,
@@ -19,31 +19,31 @@ import {
   Underline,
   Undo,
   EventInfo,
-} from 'ckeditor5'
+} from 'ckeditor5';
 
-import 'ckeditor5/ckeditor5.css'
-import './style.css'
+import 'ckeditor5/ckeditor5.css';
+import './style.css';
 
 interface TextEditorProps {
-  onChange?: (data: string) => void
+  onChange?: (data: string) => void;
   // onChange: (event: EventInfo, editor: any) => void
-  data: string
-  initialValue?: string
-  placeholder?: string
+  data: string;
+  initialValue?: string;
+  placeholder?: string;
 }
 
-function TextEditor ({ onChange, data, initialValue = '', placeholder = '' }: TextEditorProps) {
-  const editorRef = useRef<ClassicEditor | null>(null)
-  const [editorLoaded, setEditorLoaded] = useState(false)
+function TextEditor({ onChange, data, initialValue = '', placeholder = '' }: TextEditorProps) {
+  const editorRef = useRef<ClassicEditor | null>(null);
+  const [editorLoaded, setEditorLoaded] = useState(false);
 
   useEffect(() => {
-    setEditorLoaded(true)
-  }, [])
+    setEditorLoaded(true);
+  }, []);
 
   const handleEditorChange = (event: EventInfo<string, unknown>, editor: ClassicEditor) => {
-    const data = editor.getData()
-    onChange?.(data)
-  }
+    const data = editor.getData();
+    onChange?.(data);
+  };
 
   return (
     <div className='editor-container editor-container_classic-editor'>
@@ -95,14 +95,14 @@ function TextEditor ({ onChange, data, initialValue = '', placeholder = '' }: Te
               placeholder: placeholder,
             }}
             onReady={editor => {
-              editorRef.current = editor
+              editorRef.current = editor;
             }}
             onChange={handleEditorChange}
           />
         )}
       </div>
     </div>
-  )
+  );
 }
 
-export default TextEditor
+export default TextEditor;
