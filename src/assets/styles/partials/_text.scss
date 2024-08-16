@@ -1,0 +1,225 @@
+.text-heading {
+  &.s {
+    &.semibold-18 {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 22.63px;
+      letter-spacing: -0.14000000059604645px;
+    }
+  }
+
+  &.xs {
+    &.semibold-16 {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 20.11px;
+      letter-spacing: -0.05999999865889549px;
+    }
+
+    &.regular-16 {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 20.11px;
+      letter-spacing: -0.05999999865889549px;
+    }
+  }
+
+  &.m {
+    &.semibold-21 {
+      font-size: 21px;
+      font-weight: 600;
+      line-height: 26.4px;
+      letter-spacing: -0.17000000178813934px;
+    }
+  }
+}
+
+.text-paragraph {
+  &.regular-14 {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 17.6px;
+    letter-spacing: 0.009999999776482582px;
+  }
+  &.semibold-14 {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 17.6px;
+    letter-spacing: 0.009999999776482582px;
+  }
+}
+
+.text-extra-small {
+  &.regular-12 {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15.08px;
+    letter-spacing: 0.10000000149011612px;
+  }
+  &.semibold-12 {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 15.08px;
+    letter-spacing: 0.10000000149011612px;
+  }
+}
+
+.text-ultra-small {
+  &.regular-10 {
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 12.57px;
+    letter-spacing: 0.15000000596046448px;
+  }
+}
+
+.text-modal {
+  &.title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 25.14px;
+  }
+
+  &.desc {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 17.6px;
+  }
+
+  &.button {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 17.6px;
+  }
+}
+
+.text-header {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20.11px;
+}
+
+.text-information {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20.8px;
+}
+
+.text-desc {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18.2px;
+}
+
+.text-badge {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18.2px;
+}
+
+.text-button {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 15.6px;
+}
+
+.text-card {
+  &.title {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 18px;
+  }
+
+  &.desc {
+    font-size: 8px;
+    font-weight: 500;
+    line-height: 12px;
+  }
+}
+
+.text-banner-image {
+  &.more {
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 15px;
+  }
+
+  &.modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20.11px;
+  }
+}
+
+.text-room-detail {
+  &.title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 27px;
+  }
+
+  &.desc {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+  }
+
+  &.list {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+  }
+
+  &.badge-date {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15.6px;
+  }
+
+  &.badge-time {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15.6px;
+  }
+}
+
+.text-date-range-input {
+  &.day {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  &.date {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+  }
+}
+
+.text-input-counter {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16.8px;
+  letter-spacing: 0.10000000149011612px;
+}
+
+.text-container-success {
+  &.title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 25.14px;
+  }
+
+  &.desc {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 17.6px;
+  }
+
+  &.list {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 17.6px;
+  }
+}

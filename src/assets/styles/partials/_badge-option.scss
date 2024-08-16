@@ -1,0 +1,7 @@
+.badge-option-active {
+  @apply inline-block rounded-full  py-2 px-4 text-badge mr-2 bg-[#E5F2FC] border-[1.2px] border-[#0089CF] text-[#0089CF];
+}
+
+.badge-option-not-active {
+  @apply inline-block rounded-full  py-2 px-4 text-badge mr-2 border border-[#D5D5D5] text-[#000000];
+}

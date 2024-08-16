@@ -1,24 +1,22 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
-import Stack from '@mui/material/Stack'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import Typography from '@mui/material/Typography'
-import Link from 'next/link'
-import * as Yup from 'yup'
+import React, { useEffect, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Stack from '@mui/material/Stack';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import Typography from '@mui/material/Typography';
+import Link from 'next/link';
+import * as Yup from 'yup';
 
-import SelectForm from '@components/atoms/Form/SelectForm'
-import ImageGallery from '@components/atoms/ImageGallery'
-import TextAreaForm from '@components/atoms/Form/TextAreaForm'
-import RHFMultiSelect from '@components/atoms/MultiSelect'
-// import CKEditorWithoutUpload from '@components/atoms/CKEditor/CKEditorWithoutUpload'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { optionsCapacity, optionsFacility, optionsFloor } from './data'
-// import CKTextEditor from '@components/atoms/CKTextEditor'
-// import TextEditor from '@components/atoms/TextEditor'
+import SelectForm from '@components/atoms/Form/SelectForm';
+import ImageGallery from '@components/atoms/ImageGallery';
+import TextAreaForm from '@components/atoms/Form/TextAreaForm';
+import RHFMultiSelect from '@components/atoms/MultiSelect';
+// import TextEditor from '@components/atoms/TextEditor';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { optionsCapacity, optionsFacility, optionsFloor } from './data';
 
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
@@ -27,22 +25,29 @@ const schema = Yup.object().shape({
   floor: Yup.object().required('Lantai Ruangan wajib dipilih'),
   capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
   facilityList: Yup.array(),
-})
+  images: Yup.array(),
+});
 
 export function AddAsset() {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [isChecked, setIsChecked] = useState(false)
+  const [isChecked, setIsChecked] = useState(false);
+
+  const [images, setImages] = useState<File[]>([]);
+
+  const handleImageChange = (newImages: File[]) => {
+    setImages(newImages);
+  };
 
   const { handleSubmit, control, setValue } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
-  })
+  });
 
   const options = [
     { label: 'Head Office', value: 1 },
     { label: 'Berijalan', value: 2 },
-  ]
+  ];
 
   const breadcrumbs = [
     <Link href="/management/asset" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
@@ -51,25 +56,42 @@ export function AddAsset() {
     <Typography key="2" color="text.primary" className="text-heading m semibold-21">
       Add Room Data
     </Typography>,
-  ]
+  ];
+
+  // const [descriptionData, setDescriptionData] = useState('')
+  // const [termsData, setTermsData] = useState('')
+
+  // const handleDescriptionChange = (data: string) => {
+  //   setDescriptionData(data)
+  // }
+
+  // const handleTermsChange = (data: string) => {
+  //   setTermsData(data)
+  // }
+
+  const facilityList = useWatch({
+    control,
+    name: 'facilityList',
+  });
+
+  useEffect(() => {
+    setValue('isActive', isChecked);
+  }, [isChecked]);
+
+  useEffect(() => {
+    setValue('facilityList', facilityList);
+  }, [facilityList, setValue]);
+
+  useEffect(() => {
+    setValue('images', images);
+  }, []);
 
   const onSubmit = () => {
     /* ... Your submission logic ... */
-  }
-
-  // const [editorData, setEditorData] = useState('')
-
-  // useEffect(() => {
-  //   setEditorData('')
-  // }, [])
-
-  // const handleEditorChange = (event: any, editor: any) => {
-  //   const data = editor.getData()
-  //   setEditorData(data)
-  // }
+  };
 
   return (
-    <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full">
+    <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
       <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center ">
         <Stack spacing={2}>
           <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
@@ -153,13 +175,10 @@ export function AddAsset() {
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Description</p>
             <div className="">
-              {/* <CKEditorWithoutUpload data={editorData} onChange={handleEditorChange} /> */}
-              {/* <TextEditor placeholder='Isi deskripsi ruangan' onChange={handleEditorChange} data={editorData} /> */}
-              {/* <TextEditor placeholder='Isi deskripsi ruangan' data={editorData} /> */}
-              {/* <CKTextEditor
-                onChange={handleEditorChange}
-                data={editorData}
-                placeholder='Start typing your awesome content...'
+              {/* <TextEditor
+                placeholder="Isi deskripsi ruangan"
+                onChange={handleDescriptionChange}
+                data={descriptionData}
               /> */}
             </div>
           </div>
@@ -167,17 +186,10 @@ export function AddAsset() {
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Terms & Condition</p>
             <div className="max-w-[650px]">
-              {/* <CKEditorWithoutUpload data={editorData} onChange={handleEditorChange} /> */}
               {/* <TextEditor
-                placeholder='Isi ketentuan penggunaan yang perlu diketahui'
-                onChange={handleEditorChange}
-                data={editorData}
-              /> */}
-              {/* <TextEditor placeholder='Isi ketentuan penggunaan yang perlu diketahui' data={editorData} /> */}
-              {/* <CKTextEditor
-                onChange={handleEditorChange}
-                data={editorData}
-                placeholder='Start typing your awesome content...'
+                placeholder="Isi ketentuan penggunaan yang perlu diketahui"
+                onChange={handleTermsChange}
+                data={termsData}
               /> */}
             </div>
           </div>
@@ -198,7 +210,7 @@ export function AddAsset() {
               Image<span className="text-red-500">*</span>
             </p>
             <div className="max-w-[600px]">
-              <ImageGallery />
+              <ImageGallery setImages={handleImageChange} />
             </div>
           </div>
 
@@ -222,5 +234,5 @@ export function AddAsset() {
         </form>
       </div>
     </div>
-  )
+  );
 }

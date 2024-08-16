@@ -46,21 +46,21 @@ export function List() {
       cell: info => info.getValue(),
       header: 'Tanggal Upload',
     }),
-    columnHelper.accessor('status', {
-      cell: info => (
-        <div className="flex items-center justify-center">
-          {/* Hello */}
-          {/* <Image
-          width={1400}
-          height={800}
-          src={info.getValue()}
-          alt="Room Image"
-          className="w-[140px] h-[80px] object-cover"
-        /> */}
-        </div>
-      ),
-      header: 'Status',
-    }),
+    // columnHelper.accessor('status', {
+    //   cell: info => (
+    //     <div className="flex items-center justify-center">
+    //       {/* Hello */}
+    //       {/* <Image
+    //       width={1400}
+    //       height={800}
+    //       src={info.getValue()}
+    //       alt="Room Image"
+    //       className="w-[140px] h-[80px] object-cover"
+    //     /> */}
+    //     </div>
+    //   ),
+    //   header: 'Status',
+    // }),
     columnHelper.accessor('ACTION', {
       cell: () => (
         <div className="flex gap-3 items-center justify-center">

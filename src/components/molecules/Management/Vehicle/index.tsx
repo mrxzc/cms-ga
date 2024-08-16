@@ -9,14 +9,14 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
-import { data } from './data';
 import SelectInput from '@components/atoms/Form/Select';
 import IconPlus from '@assets/icons/IconPlus';
 import Table from '@components/atoms/Table';
 import IconEditing from '@assets/icons/IconEditing';
 import images from '@assets/images';
+import { dataVehicle } from './data';
 
-export function Management() {
+export function VehicleManagement() {
   const router = useRouter();
 
   const [selectedOption, setSelectedOption] = useState<any | null>(null);
@@ -32,62 +32,68 @@ export function Management() {
     { value: 'acc', label: 'ACC' },
   ];
 
-  const handleStatus = (status: boolean) => {
-    if (status) {
-      return <div className='bg-[#eaf5e9] text-[#457b3b] border border-[#afd5ab] rounded'>Active</div>;
-    } else if (status === false) {
-      return <div className='bg-[#fcebee] text-[#b63831] border border-[#e39e9c] rounded'>Non-Active</div>;
-    } else {
-      return '-';
+  const handleStatus = (status: string) => {
+    if (status === "Active") {
+      return <div className="bg-[#eaf5e9] text-[#457b3b] border border-[#afd5ab] rounded">Active</div>;
+    } else { // Menangani semua kasus selain "Active"
+      return <div className="bg-[#fcebee] text-[#b63831] border border-[#e39e9c] rounded">Non-Active</div>;
     }
   };
 
   const columnHelper = createColumnHelper<any>();
 
   const columns = [
-    columnHelper.accessor('ID', {
+    columnHelper.accessor('no', {
       cell: info => info.getValue(),
       header: 'No',
     }),
-    columnHelper.accessor('IMAGE', {
+    columnHelper.accessor('image', {
       cell: info => (
-        <div className='flex items-center justify-center'>
+        <div className="flex items-center justify-center">
           <Image
             width={1400}
             height={800}
             src={info.getValue()}
-            alt='Room Image'
-            className='w-[140px] h-[80px] object-cover'
+            alt="Room Image"
+            className="w-[140px] h-[80px] object-cover"
           />
         </div>
       ),
       header: 'Image',
     }),
-    columnHelper.accessor('TITLE_ROOM', {
+    columnHelper.accessor('detailMobil', {
       cell: info => info.getValue(),
-      header: 'Title Room',
+      header: 'Detail Mobil',
     }),
-    columnHelper.accessor('LOCATION', {
+    columnHelper.accessor('nomorPolisi', {
       cell: info => info.getValue(),
+      header: 'Nomor Polisi',
+    }),
+    columnHelper.accessor('plat', {
+      cell: info => `${info.getValue()}`,
+      header: 'Plat',
+    }),
+    columnHelper.accessor('kategoriMobil', {
+      cell: info => `${info.getValue()}`,
+      header: 'Kategori Mobil',
+    }),
+    columnHelper.accessor('lokasi', {
+      cell: info => `${info.getValue()}`,
       header: 'Lokasi',
     }),
-    columnHelper.accessor('FLOOR', {
-      cell: info => `Lantai ${info.getValue()}`,
-      header: 'Lantai Ruangan',
+    columnHelper.accessor('kapasitasMobil', {
+      cell: info => `${info.getValue()}`,
+      header: 'Kapasitas Mobil',
     }),
-    columnHelper.accessor('CAPACITY', {
-      cell: info => `${info.getValue()} orang`,
-      header: 'Kapasitas Ruangan',
-    }),
-    columnHelper.accessor('STATUS', {
+    columnHelper.accessor('status', {
       cell: info => handleStatus(info.getValue()),
       header: 'Status',
     }),
     columnHelper.accessor('ACTION', {
       cell: () => (
-        <div className='flex gap-3 items-center justify-center'>
-          <IconEditing width={20} height={20} className='hover:cursor-pointer' />
-          <Image src={images.DELETE_ICON} width={20} height={20} alt='Delete Icon' className='hover:cursor-pointer' />
+        <div className="flex gap-3 items-center justify-center">
+          <IconEditing width={20} height={20} className="hover:cursor-pointer" />
+          <Image src={images.DELETE_ICON} width={20} height={20} alt="Delete Icon" className="hover:cursor-pointer" />
         </div>
       ),
       header: 'Action',
@@ -100,15 +106,15 @@ export function Management() {
 
   const breadcrumbs = [
     <Link
-      underline='none'
-      color='#235696'
-      href='/management/asset'
+      underline="none"
+      color="#235696"
+      href="/management/vehicle"
       onClick={handleClick}
-      key='1'
-      className='text-heading m semibold-21'
+      key="1"
+      className="text-heading m semibold-21"
     >
-      Booking Asset Data - Room
-    </Link>
+      Booking Asset Data - Vehicle Data
+    </Link>,
   ];
 
   const handlePageChange = (newPage: number) => {
@@ -120,33 +126,32 @@ export function Management() {
   }, []);
 
   return (
-    <div className='px-4 py-8 bg-[#f6f6f6] h-full w-full'>
-      <div className='bg-white px-4 py-4 rounded-xl mb-4 text-[#235696]'>
-        {/* <p className="text-heading m semibold-21 ">Booking Asset Data - Room</p> */}
+    <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full">
+      <div className="bg-white px-4 py-4 rounded-xl mb-4 text-[#235696]">
         <Stack spacing={2}>
-          <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />} aria-label='breadcrumb'>
+          <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
             {breadcrumbs}
           </Breadcrumbs>
         </Stack>
       </div>
 
-      <div className='bg-white px-4 py-4 rounded-xl'>
-        <p className='text-heading s semibold-18 mb-4'>List Room</p>
-        <div className='flex justify-between mb-4'>
+      <div className="bg-white px-4 py-4 rounded-xl">
+        <p className="text-heading s semibold-18 mb-4">Vehicle Data</p>
+        <div className="flex justify-between mb-4">
           <SelectInput
-            name='location'
+            name="location"
             options={options}
             value={selectedOption}
             onChange={handleChange}
-            placeholder='Semua Lokasi'
-            className='w-[150px]'
+            placeholder="Semua Lokasi"
+            className="w-[150px]"
           />
           <button
-            className='next-button flex rounded-md justify-center items-center w-[100px] text-white'
-            onClick={() => router.push('/management/asset/add-asset')}
+            className="next-button flex rounded-md justify-center items-center w-[100px] text-white"
+            onClick={() => router.push('/management/vehicle/add-vehicle')}
           >
-            <div className='bg-white w-[16px] h-[16px] rounded-full items-center justify-center flex mr-1'>
-              <IconPlus width={12} height={12} color='#1e5597' />
+            <div className="bg-white w-[16px] h-[16px] rounded-full items-center justify-center flex mr-1">
+              <IconPlus width={12} height={12} color="#1e5597" />
             </div>
             Add New
           </button>
@@ -154,7 +159,7 @@ export function Management() {
 
         <Table
           columns={columns}
-          data={data}
+          data={dataVehicle}
           loading={false}
           pagination={{
             TOTAL_DATA: 100,
