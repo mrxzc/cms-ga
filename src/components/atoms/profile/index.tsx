@@ -24,7 +24,7 @@ export function ProfileMobile() {
   return (
     <Link href={'/profile'}>
       <div>
-        <IconProfileLG />
+        <IconProfileLG color="#235696" />
       </div>
     </Link>
   )
