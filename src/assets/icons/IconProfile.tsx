@@ -1,7 +1,7 @@
 export default function IconProfile({
   width = 24,
   height = 24,
-  color = '#8C4D99',
+  color = '#235696',
   colorProfile = '#FFFF',
   ...props
 }: Readonly<React.SVGProps<SVGSVGElement>>) {
@@ -34,7 +34,7 @@ export default function IconProfile({
 export function IconProfileLG({
   width = 32,
   height = 32,
-  color = '#8C4D99',
+  color = '#235696',
   ...props
 }: Readonly<React.SVGProps<SVGSVGElement>>) {
   return (

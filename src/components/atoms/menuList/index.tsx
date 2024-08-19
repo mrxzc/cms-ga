@@ -23,7 +23,7 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
           } text-base font-semibold my-1 py-2 px-3 hover:bg-menuColor hover:rounded-lg hover:text-teksActive flex flex-row items-center`}
         >
           <div className="mr-2">
-            <ListMenu color={pathname === item.href || isHovering ? '#8C4D99' : '#0A0A0A'} />
+            <ListMenu color={pathname === item.href || isHovering ? '#235696' : '#0A0A0A'} />
           </div>
           {item.name}
         </li>
@@ -45,11 +45,11 @@ export function MenuNav({ item, index }: Readonly<ListInterface>) {
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
           className={`${
-            pathname === item.href ? ' rounded-lg text-teksActive' : 'text-teksBlack'
-          } text-[10px] font-semibold my-1 py-2 px-3 hover:rounded-lg hover:text-teksActive flex flex-col justify-center items-center`}
+            pathname === item.href ? ' rounded-lg text-[#235696]' : 'text-teksBlack'
+          } text-[10px] font-semibold my-1 py-2 px-3 hover:rounded-lg hover:text-[#235696] flex flex-col justify-center items-center`}
         >
           <div className="mb-2">
-            <ListMenu color={pathname === item.href || isHovering ? '#8C4D99' : '#0A0A0A'} />
+            <ListMenu color={pathname === item.href || isHovering ? '#235696' : '#0A0A0A'} />
           </div>
           {item.name}
         </li>
