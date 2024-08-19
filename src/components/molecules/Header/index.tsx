@@ -12,7 +12,7 @@ export default function Header() {
 
       <div className="flex-row ml-auto hidden md:flex">
         <IconGrape />
-        <h1 className="text-teksNatural">Grape by ACC</h1>
+        <h1 className="text-teksNatural">BEFAST</h1>
       </div>
 
       <div className="md:hidden ml-auto">
