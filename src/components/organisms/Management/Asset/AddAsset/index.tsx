@@ -3,8 +3,8 @@ import React from 'react'
 
 export function AddAssetPage() {
   return (
-    <>
+    <div>
       <AddAsset />
-    </>
+    </div>
   )
 }

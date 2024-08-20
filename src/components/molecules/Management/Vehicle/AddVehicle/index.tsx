@@ -1,20 +1,20 @@
-'use client';
+'use client'
 
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Stack from '@mui/material/Stack';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import Typography from '@mui/material/Typography';
-import Link from 'next/link';
-import * as Yup from 'yup';
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Stack from '@mui/material/Stack'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import Typography from '@mui/material/Typography'
+import Link from 'next/link'
+import * as Yup from 'yup'
 
-import SelectForm from '@components/atoms/Form/SelectForm';
-import ImageGallery from '@components/atoms/ImageGallery';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { optionsCapacity, optionsFloor } from './data';
-import TextForm from '@components/atoms/Form/TextForm';
+import SelectForm from '@components/atoms/Form/SelectForm'
+import ImageGallery from '@components/atoms/ImageGallery'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { optionsCapacity, optionsFloor } from './data'
+import TextForm from '@components/atoms/Form/TextForm'
 // import TextEditor from '@components/atoms/TextEditor';
 // import QuillEditor from '@components/atoms/QuillEditor';
 
@@ -31,27 +31,27 @@ const schema = Yup.object().shape({
   noPolisi: Yup.string().required('Nomor Polisi wajib diisi'),
   plat: Yup.string().required('Plat wajib diisi'),
   images: Yup.array(),
-});
+})
 
 export function AddVehicle() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [isChecked, setIsChecked] = useState(false);
-  const [images, setImages] = useState<File[]>([]);
-
+  const [isChecked, setIsChecked] = useState(false)
+  // const [images, setImages] = useState<(File | null)[]>(Array(10).fill(null));
+  const [images, setImages] = useState<File[]>([])
   const handleImageChange = (newImages: File[]) => {
-    setImages(newImages);
-  };
+    setImages(newImages)
+  }
 
   const { handleSubmit, control, setValue, watch } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
-  });
+  })
 
   const options = [
     { label: 'Head Office', value: 1 },
     { label: 'Berijalan', value: 2 },
-  ];
+  ]
 
   const breadcrumbs = [
     <Link href="/management/asset" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
@@ -60,7 +60,7 @@ export function AddVehicle() {
     <Typography key="2" color="text.primary" className="text-heading m semibold-21">
       Add Vehicle Data
     </Typography>,
-  ];
+  ]
 
   // const [descriptionData, setDescriptionData] = useState('');
 
@@ -69,50 +69,49 @@ export function AddVehicle() {
   // };
 
   useEffect(() => {
-    setValue('isActive', isChecked ? 'Active' : 'Non-Active');
-  }, [isChecked]);
+    setValue('isActive', isChecked ? 'Active' : 'Non-Active')
+  }, [isChecked])
 
   useEffect(() => {
-    setValue('images', images);
-  }, []);
+    setValue('images', images)
+  }, [])
 
   const onSubmit = () => {
     /* ... Your submission logic ... */
-  };
+  }
 
   function cekGanjilGenap(nomorPlat: string): string {
     // Cari angka terakhir dari belakang, melewati karakter non-digit
-    let angkaTerakhir = null;
+    let angkaTerakhir = null
     for (let i = nomorPlat.length - 1; i >= 0; i--) {
       if (!isNaN(parseInt(nomorPlat[i]))) {
-        angkaTerakhir = parseInt(nomorPlat[i]);
-        break;
+        angkaTerakhir = parseInt(nomorPlat[i])
+        break
       }
     }
 
     // Jika tidak ditemukan angka, berikan pesan kesalahan
     if (angkaTerakhir === null) {
-      return "Format nomor plat tidak valid";
+      return 'Format nomor plat tidak valid'
     }
 
     // Periksa apakah angka terakhir ganjil atau genap
     if (angkaTerakhir % 2 === 0) {
-      return "Genap";
+      return 'Genap'
     } else {
-      return "Ganjil";
+      return 'Ganjil'
     }
   }
 
   useEffect(() => {
-    const a = watch('noPolisi');
+    const a = watch('noPolisi')
     // Tambahkan timeout 1 detik
     const timeoutId = setTimeout(() => {
-      setValue('plat', cekGanjilGenap(a));
-    }, 1000);
+      setValue('plat', cekGanjilGenap(a))
+    }, 1000)
     // Bersihkan timeout saat komponen dibongkar
-    return () => clearTimeout(timeoutId);
-  }, [watch('noPolisi')]);
-
+    return () => clearTimeout(timeoutId)
+  }, [watch('noPolisi')])
 
   // const [editorContent, setEditorContent] = useState("");
 
@@ -241,14 +240,12 @@ export function AddVehicle() {
           </div>
 
           <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Kapasitas Mobil
-            </p>
+            <p className="text-heading xs regular-16 w-[160px]">Kapasitas Mobil</p>
             <TextForm
               control={control}
               name="carCapacity"
               fieldInput={{ placeholder: 'Masukkan kapasitas mobil', disabled: true }}
-              className='w-[350px]'
+              className="w-[350px]"
             />
           </div>
 
@@ -260,19 +257,17 @@ export function AddVehicle() {
               control={control}
               name="noPolisi"
               fieldInput={{ placeholder: 'Masukkan nomor polisi' }}
-              className='w-[350px]'
+              className="w-[350px]"
             />
           </div>
 
           <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Plat
-            </p>
+            <p className="text-heading xs regular-16 w-[160px]">Plat</p>
             <TextForm
               control={control}
               name="plat"
               fieldInput={{ placeholder: 'Masukkan plat', disabled: true }}
-              className='w-[350px]'
+              className="w-[350px]"
             />
           </div>
 
@@ -294,6 +289,10 @@ export function AddVehicle() {
           <div className="flex items-center mt-4">
             <p className="text-heading xs regular-16 w-[160px]">
               Image<span className="text-red-500">*</span>
+              {images.length >= 0 && <p className="text-paragraph regular-14 mt-2">{images.length}/10</p>}
+              <p className="text-paragraph regular-14 text-gray-500 ">
+                Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
+              </p>
             </p>
             <div className="max-w-[600px]">
               <ImageGallery setImages={handleImageChange} />
@@ -320,5 +319,5 @@ export function AddVehicle() {
         </form>
       </div>
     </div>
-  );
+  )
 }

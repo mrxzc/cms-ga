@@ -103,13 +103,13 @@ const TextForm: React.FC<TextFormProps> = ({
               )}
               {suffix && <span>{suffix}</span>}
 
-              {/* Counter */}
               {maxChar && (
                 <div className="absolute bottom-2 right-2 text-xs text-gray-400">
                   {field.value?.length || 0}/{maxChar}
                 </div>
               )}
             </div>
+
             {notes && !errors?.[name]?.message && !customError?.[name]?.message && (
               <span className="text-xs text-[#676869]">{notes}</span>
             )}

@@ -17,7 +17,6 @@ export default function IconMasterData({ width = 18, height = 18, ...props }: Re
       />
       <path
         d="M9 6C13.1421 6 16.5 4.99264 16.5 3.75C16.5 2.50736 13.1421 1.5 9 1.5C4.85786 1.5 1.5 2.50736 1.5 3.75C1.5 4.99264 4.85786 6 9 6Z"
-        fill="white"
         stroke="black"
         strokeWidth="1.3"
         strokeLinecap="round"

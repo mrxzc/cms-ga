@@ -43,19 +43,41 @@ export function Management() {
   const columnHelper = createColumnHelper<any>()
 
   const columns = [
-    columnHelper.accessor('no', {
-      cell: info => info.getValue(),
+    columnHelper.accessor('originalIndex', {
+      cell: info => info.getValue() + 1,
       header: 'No',
     }),
-    columnHelper.accessor('asset_name', {
-      cell: info => info.getValue(),
-      header: 'Nama Asset',
+    columnHelper.accessor('pathImage[0]', {
+      cell: info => (
+        <div className="flex items-center justify-center">
+          <Image
+            width={1400}
+            height={800}
+            src={info.getValue()}
+            alt="Room Image"
+            className="w-[140px] h-[80px] object-cover"
+          />
+        </div>
+      ),
+      header: 'Image',
     }),
-    columnHelper.accessor('location', {
+    columnHelper.accessor('titleRoom', {
+      cell: info => info.getValue(),
+      header: 'Title Room',
+    }),
+    columnHelper.accessor('lokasi', {
       cell: info => info.getValue(),
       header: 'Lokasi',
     }),
-    columnHelper.accessor('STATUS', {
+    columnHelper.accessor('lantaiRuangan', {
+      cell: info => `${info.getValue()}`,
+      header: 'Lantai Ruangan',
+    }),
+    columnHelper.accessor('kapasitas', {
+      cell: info => `${info.getValue()}`,
+      header: 'Kapasitas Ruangan',
+    }),
+    columnHelper.accessor('status', {
       cell: info => handleStatus(info.getValue()),
       header: 'Status',
     }),
@@ -83,7 +105,7 @@ export function Management() {
       key="1"
       className="text-heading m semibold-21"
     >
-      Booking Asset Data - Asset Data
+      Booking Asset Data - Room
     </Link>,
   ]
 
@@ -95,10 +117,21 @@ export function Management() {
     setTotalPages(10)
   }, [])
 
+  const dataWithOriginalIndex = data.map((item, index) => ({ ...item, originalIndex: index }))
+
+  const getDataForPage = (page: number) => {
+    const startIndex = (page - 1) * 10
+    const endIndex = startIndex + 10
+    return dataWithOriginalIndex.slice(startIndex, endIndex)
+  }
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(dataWithOriginalIndex.length / 10))
+  }, [])
+
   return (
-    <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full">
+    <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
       <div className="bg-white px-4 py-4 rounded-xl mb-4 text-[#235696]">
-        {/* <p className="text-heading m semibold-21 ">Booking Asset Data - Room</p> */}
         <Stack spacing={2}>
           <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
             {breadcrumbs}
@@ -107,7 +140,7 @@ export function Management() {
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">List Asset</p>
+        <p className="text-heading s semibold-18 mb-4">List Room</p>
         <div className="flex justify-between mb-4">
           <SelectInput
             name="location"
@@ -130,10 +163,10 @@ export function Management() {
 
         <Table
           columns={columns}
-          data={data}
+          data={getDataForPage(currentPage)}
           loading={false}
           pagination={{
-            TOTAL_DATA: 100,
+            TOTAL_DATA: dataWithOriginalIndex.length,
             PAGE: currentPage,
             LAST_PAGE: totalPages,
           }}
