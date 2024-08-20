@@ -478,7 +478,7 @@ const ImageGallery: React.FC<{ setImages: (images: File[]) => void }> = ({ setIm
 
   return (
     <div className="mx-auto">
-      <div className="grid grid-cols-5 gap-4 mb-4 w-[650px]">
+      <div className="grid grid-cols-5 gap-4 w-[650px]">
         {images.slice(0, 10).map((image, index) => (
           <ImageCard key={index} file={image} isMain={index === 0} onClose={() => handleCloseImage(index)} />
         ))}

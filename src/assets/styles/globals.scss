@@ -121,3 +121,7 @@
 .hide-arrow[type='number'] {
   -moz-appearance: textfield;
 }
+
+.search-input:has(input:focus) {
+  border: 1px solid #4994ec;
+}

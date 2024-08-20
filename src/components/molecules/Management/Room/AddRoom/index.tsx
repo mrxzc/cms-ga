@@ -53,7 +53,7 @@ export function AddRoom() {
   ]
 
   const breadcrumbs = [
-    <Link href="/management/asset" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
+    <Link href="/management/room" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
       Booking Asset Data - Room
     </Link>,
     <Typography key="2" color="text.primary" className="text-heading m semibold-21">

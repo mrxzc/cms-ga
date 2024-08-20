@@ -55,7 +55,7 @@ export function AddVehicle() {
   ]
 
   const breadcrumbs = [
-    <Link href="/management/asset" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
+    <Link href="/management/vehicle" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
       Booking Asset Data - Vehicle Data
     </Link>,
     <Typography key="2" color="text.primary" className="text-heading m semibold-21">

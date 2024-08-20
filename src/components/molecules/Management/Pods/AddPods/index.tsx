@@ -53,11 +53,11 @@ export function AddPods() {
   ]
 
   const breadcrumbs = [
-    <Link href="/management/asset" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
-      Booking Asset Data - Room
+    <Link href="/management/pods" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
+      Booking Asset Data - Pods Data
     </Link>,
     <Typography key="2" color="text.primary" className="text-heading m semibold-21">
-      Add Room Data
+      Add Pods Data
     </Typography>,
   ]
 
@@ -103,7 +103,7 @@ export function AddPods() {
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Add Room Data</p>
+        <p className="text-heading s semibold-18 mb-4">Add Pods Data</p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Aktif</p>

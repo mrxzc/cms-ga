@@ -10,27 +10,19 @@ import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 
 import { data } from './data'
-import SelectInput from '@components/atoms/Form/Select'
 import IconPlus from '@assets/icons/IconPlus'
 import Table from '@components/atoms/Table'
 import IconEditing from '@assets/icons/IconEditing'
 import images from '@assets/images'
+import IconDownload from '@assets/icons/IconDownload'
+import IconSearch from '@assets/icons/IconSearch'
 
 export function Management() {
   const router = useRouter()
 
-  const [selectedOption, setSelectedOption] = useState<any | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-
-  const handleChange = (newValue: any) => {
-    setSelectedOption(newValue)
-  }
-
-  const options = [
-    { value: 'berijalan', label: 'Berijalan' },
-    { value: 'acc', label: 'ACC' },
-  ]
+  const [searchQuery, setSearchQuery] = useState('')
 
   const handleStatus = (status: string) => {
     if (status === 'Active') {
@@ -105,7 +97,7 @@ export function Management() {
       key="1"
       className="text-heading m semibold-21"
     >
-      Booking Asset Data - Room
+      Booking Asset Data - Room Data
     </Link>,
   ]
 
@@ -119,46 +111,68 @@ export function Management() {
 
   const dataWithOriginalIndex = data.map((item, index) => ({ ...item, originalIndex: index }))
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value)
+    setCurrentPage(1)
+  }
+
+  // Fungsi untuk memfilter data berdasarkan query pencarian
+  const filteredData = dataWithOriginalIndex.filter(item =>
+    Object.values(item).some(value => String(value).toLowerCase().includes(searchQuery.toLowerCase()))
+  )
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(filteredData.length / 10))
+  }, [filteredData.length])
+
   const getDataForPage = (page: number) => {
     const startIndex = (page - 1) * 10
     const endIndex = startIndex + 10
-    return dataWithOriginalIndex.slice(startIndex, endIndex)
+    return filteredData.slice(startIndex, endIndex)
   }
-
-  useEffect(() => {
-    setTotalPages(Math.ceil(dataWithOriginalIndex.length / 10))
-  }, [])
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
-      <div className="bg-white px-4 py-4 rounded-xl mb-4 text-[#235696]">
+      <div className="bg-white px-4 py-4 rounded-xl mb-4 text-[#235696] flex justify-between">
         <Stack spacing={2}>
           <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
             {breadcrumbs}
           </Breadcrumbs>
         </Stack>
+        <div className="flex">
+          <button type="button" className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]">
+            <IconDownload />
+            Download
+          </button>
+          <div className="divider lg:divider-horizontal" />
+          <button
+            type="button"
+            className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]"
+            onClick={() => router.push('/management/room/add-room')}
+          >
+            <IconPlus color="white" className="bg-[#505050] p-1 rounded-full" width={16} height={16} />
+            Add New
+          </button>
+        </div>
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">List Room</p>
+        <p className="text-heading s semibold-18 mb-4">Room Data</p>
         <div className="flex justify-between mb-4">
-          <SelectInput
-            name="location"
-            options={options}
-            value={selectedOption}
-            onChange={handleChange}
-            placeholder="Semua Lokasi"
-            className="w-[150px]"
-          />
-          <button
-            className="next-button flex rounded-md justify-center items-center w-[100px] text-white"
-            onClick={() => router.push('/management/asset/add-asset')}
-          >
-            <div className="bg-white w-[16px] h-[16px] rounded-full items-center justify-center flex mr-1">
-              <IconPlus width={12} height={12} color="#1e5597" />
-            </div>
-            Add New
-          </button>
+          <div className="search-input h-[38px] px-3 flex items-center justify-center space-x-3 border rounded-lg min-w-[400px]">
+            <IconSearch color="#909090" />
+
+            <input
+              type="text"
+              placeholder="Search..."
+              className="flex-1 text-paragraph regular-14 mt-1"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              style={{
+                outline: 'none',
+              }}
+            />
+          </div>
         </div>
 
         <Table
@@ -166,7 +180,7 @@ export function Management() {
           data={getDataForPage(currentPage)}
           loading={false}
           pagination={{
-            TOTAL_DATA: dataWithOriginalIndex.length,
+            TOTAL_DATA: filteredData.length,
             PAGE: currentPage,
             LAST_PAGE: totalPages,
           }}
