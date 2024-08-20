@@ -15,8 +15,9 @@ import ImageGallery from '@components/atoms/ImageGallery'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { optionsCapacity, optionsFloor } from './data'
 import TextForm from '@components/atoms/Form/TextForm'
-// import TextEditor from '@components/atoms/TextEditor';
-// import QuillEditor from '@components/atoms/QuillEditor';
+
+import dynamic from 'next/dynamic'
+const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
 const schema = Yup.object().shape({
   isActive: Yup.string().required('Aktif wajib dipilih'),
@@ -62,11 +63,10 @@ export function AddVehicle() {
     </Typography>,
   ]
 
-  // const [descriptionData, setDescriptionData] = useState('');
-
-  // const handleDescriptionChange = (data: string) => {
-  //   setDescriptionData(data);
-  // };
+  const [termsData, setTermsData] = useState('')
+  const handleTermsChange = (data: string) => {
+    setTermsData(data)
+  }
 
   useEffect(() => {
     setValue('isActive', isChecked ? 'Active' : 'Non-Active')
@@ -112,8 +112,6 @@ export function AddVehicle() {
     // Bersihkan timeout saat komponen dibongkar
     return () => clearTimeout(timeoutId)
   }, [watch('noPolisi')])
-
-  // const [editorContent, setEditorContent] = useState("");
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
@@ -272,17 +270,15 @@ export function AddVehicle() {
           </div>
 
           <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">Description</p>
+            <p className="text-heading xs regular-16 w-[160px]">Terms & Condition</p>
             <div className="mt-4">
-              {/* <TextEditor
-                placeholder='Isi deskripsi ruangan'
-                onChange={handleDescriptionChange}
-                data={descriptionData}
-              /> */}
-              {/* <QuillEditor
-                value={editorContent}
-                onChange={setEditorContent}
-              /> */}
+              <ReusableCKEditor
+                config={{
+                  placeholder: 'Type your text here...',
+                }}
+                initialData={termsData}
+                onChange={handleTermsChange}
+              />
             </div>
           </div>
 

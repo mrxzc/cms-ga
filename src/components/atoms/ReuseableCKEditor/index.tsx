@@ -4,18 +4,22 @@ import { CKEditor } from '@ckeditor/ckeditor5-react'
 import 'ckeditor5/ckeditor5.css'
 import {
   ClassicEditor,
-  Editor,
+  AccessibilityHelp,
+  Alignment,
+  AutoLink,
+  Autosave,
+  BalloonToolbar,
   Bold,
   Essentials,
-  Heading,
+  FontFamily,
+  FontSize,
   Indent,
-  IndentBlock,
   Italic,
   Link,
   List,
-  MediaEmbed,
   Paragraph,
-  Table,
+  SelectAll,
+  Underline,
   Undo,
 } from 'ckeditor5'
 
@@ -26,7 +30,8 @@ interface ReusableCKEditorProps {
 }
 
 const ReusableCKEditor: React.FC<ReusableCKEditorProps> = ({ initialData = '', onChange, config = {} }) => {
-  const editorRef = useRef<Editor>(null) // Add type Editor
+  const editorRef = useRef(null)
+  const editorContainerRef = useRef(null) // Declare editorContainerRef here
   const [editorLoaded, setEditorLoaded] = useState(false)
   const [data, setData] = useState(initialData)
 
@@ -42,54 +47,91 @@ const ReusableCKEditor: React.FC<ReusableCKEditorProps> = ({ initialData = '', o
     }
   }
 
+  const defaultConfig = {
+    toolbar: {
+      items: [
+        'undo',
+        'redo',
+        '|',
+        'fontSize',
+        'fontFamily',
+        '|',
+        'bold',
+        'italic',
+        'underline',
+        '|',
+        'link',
+        '|',
+        'alignment',
+        '|',
+        'bulletedList',
+        'numberedList',
+        'outdent',
+        'indent',
+      ],
+      shouldNotGroupWhenFull: false,
+    },
+    plugins: [
+      AccessibilityHelp,
+      Alignment,
+      AutoLink,
+      Autosave,
+      BalloonToolbar,
+      Bold,
+      Essentials,
+      FontFamily,
+      FontSize,
+      Indent,
+      Italic,
+      Link,
+      List,
+      Paragraph,
+      SelectAll,
+      Underline,
+      Undo,
+    ],
+    balloonToolbar: ['bold', 'italic', '|', 'link', '|', 'bulletedList', 'numberedList'],
+    fontFamily: {
+      supportAllValues: true,
+    },
+    fontSize: {
+      options: [10, 12, 14, 'default', 18, 20, 22],
+      supportAllValues: true,
+    },
+    link: {
+      addTargetToExternalLinks: true,
+      defaultProtocol: 'https://',
+      decorators: {
+        toggleDownloadable: {
+          mode: 'manual',
+          label: 'Downloadable',
+          attributes: {
+            download: 'file',
+          },
+        },
+      },
+    },
+    menuBar: {
+      isVisible: true,
+    },
+    placeholder: 'Type or paste your content here!',
+  }
+
+  const mergedConfig = { ...defaultConfig, ...config } // Merge default and custom configs
+
   return (
     <div>
-      {editorLoaded && (
-        <CKEditor
-          editor={ClassicEditor}
-          data={data}
-          config={{
-            ...config,
-            toolbar: [
-              'undo',
-              'redo',
-              '|',
-              'heading',
-              '|',
-              'bold',
-              'italic',
-              '|',
-              'link',
-              'insertTable',
-              'mediaEmbed',
-              '|',
-              'bulletedList',
-              'numberedList',
-              'indent',
-              'outdent',
-            ],
-            plugins: [
-              Bold,
-              Essentials,
-              Heading,
-              Indent,
-              IndentBlock,
-              Italic,
-              Link,
-              List,
-              MediaEmbed,
-              Paragraph,
-              Table,
-              Undo,
-            ],
-          }}
-          onReady={editor => {
-            // @ts-expect-error Type 'ClassicEditor' is not assignable to type 'Editor'.
-            editorRef.current = editor
-          }}
-          onChange={handleEditorChange}
-        />
-      )}
+      <div className="main-container">
+        <div className="editor-container editor-container_classic-editor" ref={editorContainerRef}>
+          <div className="editor-container__editor">
+            <div ref={editorRef}>
+              {editorLoaded && (
+                <CKEditor editor={ClassicEditor} config={mergedConfig} data={data} onChange={handleEditorChange} />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

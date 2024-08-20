@@ -13,11 +13,12 @@ import * as Yup from 'yup'
 import SelectForm from '@components/atoms/Form/SelectForm'
 import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
+import TextForm from '@components/atoms/Form/TextForm'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { optionsCapacity, optionsFacility, optionsFloor } from './data'
-import TextForm from '@components/atoms/Form/TextForm'
-// import TextEditor from '@components/atoms/TextEditor';
-// import ReusableCKEditor from '@components/atoms/ReuseableCKEditor';
+
+import dynamic from 'next/dynamic'
+const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
@@ -60,15 +61,15 @@ export function AddPods() {
     </Typography>,
   ]
 
-  // const [descriptionData, setDescriptionData] = useState('');
-  // const handleDescriptionChange = (data: string) => {
-  //   setDescriptionData(data);
-  // };
+  const [descriptionData, setDescriptionData] = useState('')
+  const handleDescriptionChange = (data: string) => {
+    setDescriptionData(data)
+  }
 
-  // const [termsData, setTermsData] = useState('');
-  // const handleTermsChange = (data: string) => {
-  //   setTermsData(data);
-  // };
+  const [termsData, setTermsData] = useState('')
+  const handleTermsChange = (data: string) => {
+    setTermsData(data)
+  }
 
   const facilityList = useWatch({
     control,
@@ -176,36 +177,26 @@ export function AddPods() {
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Description</p>
             <div className="mt-1">
-              {/* <TextEditor
-                placeholder="Isi deskripsi ruangan"
-                onChange={handleDescriptionChange}
-                data={descriptionData}
-              /> */}
-              {/* <ReusableCKEditor
+              <ReusableCKEditor
                 config={{
-                  placeholder: 'Type your text here...'
+                  placeholder: 'Type your text here...',
                 }}
                 initialData={descriptionData}
                 onChange={handleDescriptionChange}
-              /> */}
+              />
             </div>
           </div>
 
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Terms & Condition</p>
             <div className="max-w-[650px] mt-1">
-              {/* <TextEditor
-                placeholder="Isi ketentuan penggunaan yang perlu diketahui"
-                onChange={handleTermsChange}
-                data={termsData}
-              /> */}
-              {/* <ReusableCKEditor
+              <ReusableCKEditor
                 config={{
-                  placeholder: 'Type your text here...'
+                  placeholder: 'Type your text here...',
                 }}
                 initialData={termsData}
                 onChange={handleTermsChange}
-              /> */}
+              />
             </div>
           </div>
 
