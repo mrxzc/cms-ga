@@ -13,11 +13,11 @@ import IconPlus from '@assets/icons/IconPlus'
 import Table from '@components/atoms/Table'
 import IconEditing from '@assets/icons/IconEditing'
 import images from '@assets/images'
-import IconDownload from '@assets/icons/IconDownload'
 import IconSearch from '@assets/icons/IconSearch'
-import { dataVehicle } from './data'
+import IconDownload from '@assets/icons/IconDownload'
+import { data } from './data'
 
-export function VehicleManagement() {
+export function ManagementPods() {
   const router = useRouter()
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -27,7 +27,6 @@ export function VehicleManagement() {
     if (status === 'Active') {
       return <div className="bg-[#eaf5e9] text-[#457b3b] border border-[#afd5ab] rounded">Active</div>
     } else {
-      // Menangani semua kasus selain "Active"
       return <div className="bg-[#fcebee] text-[#b63831] border border-[#e39e9c] rounded">Non-Active</div>
     }
   }
@@ -35,11 +34,11 @@ export function VehicleManagement() {
   const columnHelper = createColumnHelper<any>()
 
   const columns = [
-    columnHelper.accessor('no', {
-      cell: info => info.getValue(),
+    columnHelper.accessor('originalIndex', {
+      cell: info => info.getValue() + 1,
       header: 'No',
     }),
-    columnHelper.accessor('image', {
+    columnHelper.accessor('pathImage[0]', {
       cell: info => (
         <div className="flex items-center justify-center">
           <Image
@@ -53,29 +52,21 @@ export function VehicleManagement() {
       ),
       header: 'Image',
     }),
-    columnHelper.accessor('detailMobil', {
+    columnHelper.accessor('titleRoom', {
       cell: info => info.getValue(),
-      header: 'Detail Mobil',
-    }),
-    columnHelper.accessor('nomorPolisi', {
-      cell: info => info.getValue(),
-      header: 'Nomor Polisi',
-    }),
-    columnHelper.accessor('plat', {
-      cell: info => `${info.getValue()}`,
-      header: 'Plat',
-    }),
-    columnHelper.accessor('kategoriMobil', {
-      cell: info => `${info.getValue()}`,
-      header: 'Kategori Mobil',
+      header: 'Title Room',
     }),
     columnHelper.accessor('lokasi', {
-      cell: info => `${info.getValue()}`,
+      cell: info => info.getValue(),
       header: 'Lokasi',
     }),
-    columnHelper.accessor('kapasitasMobil', {
+    columnHelper.accessor('lantaiRuangan', {
       cell: info => `${info.getValue()}`,
-      header: 'Kapasitas Mobil',
+      header: 'Lantai Ruangan',
+    }),
+    columnHelper.accessor('kapasitas', {
+      cell: info => `${info.getValue()}`,
+      header: 'Kapasitas Ruangan',
     }),
     columnHelper.accessor('status', {
       cell: info => handleStatus(info.getValue()),
@@ -100,12 +91,12 @@ export function VehicleManagement() {
     <Link
       underline="none"
       color="#235696"
-      href="/management/vehicle"
+      href="/management/pods"
       onClick={handleClick}
       key="1"
       className="text-heading m semibold-21"
     >
-      Booking Asset Data - Vehicle Data
+      Booking Asset Data - Pods Data
     </Link>,
   ]
 
@@ -116,6 +107,8 @@ export function VehicleManagement() {
   useEffect(() => {
     setTotalPages(10)
   }, [])
+
+  const dataWithOriginalIndex = data.map((item, index) => ({ ...item, originalIndex: index }))
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full">
@@ -134,7 +127,7 @@ export function VehicleManagement() {
           <button
             type="button"
             className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]"
-            onClick={() => router.push('/management/vehicle/add-vehicle')}
+            onClick={() => router.push('/management/pods/add-pods')}
           >
             <IconPlus color="white" className="bg-[#505050] p-1 rounded-full" width={16} height={16} />
             Add New
@@ -143,7 +136,7 @@ export function VehicleManagement() {
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Vehicle Data</p>
+        <p className="text-heading s semibold-18 mb-4">Pods Data</p>
         <div className="flex justify-between mb-4">
           <div className="search-input h-[38px] px-3 flex items-center justify-center space-x-3 border rounded-lg min-w-[400px]">
             <IconSearch color="#909090" />
@@ -163,7 +156,7 @@ export function VehicleManagement() {
 
         <Table
           columns={columns}
-          data={dataVehicle}
+          data={dataWithOriginalIndex}
           loading={false}
           pagination={{
             TOTAL_DATA: 100,

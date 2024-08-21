@@ -1,94 +1,87 @@
-'use client';
+'use client'
 
-import React, { useEffect, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Stack from '@mui/material/Stack';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import Typography from '@mui/material/Typography';
-import Link from 'next/link';
-import * as Yup from 'yup';
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Stack from '@mui/material/Stack'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import Typography from '@mui/material/Typography'
+import Link from 'next/link'
+import * as Yup from 'yup'
 
-import SelectForm from '@components/atoms/Form/SelectForm';
-import ImageGallery from '@components/atoms/ImageGallery';
-import TextAreaForm from '@components/atoms/Form/TextAreaForm';
-import RHFMultiSelect from '@components/atoms/MultiSelect';
-// import TextEditor from '@components/atoms/TextEditor';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { optionsCapacity, optionsFacility, optionsFloor } from './data';
+import SelectForm from '@components/atoms/Form/SelectForm'
+import { yupResolver } from '@hookform/resolvers/yup'
+import TextForm from '@components/atoms/Form/TextForm'
+import AddWithTable from '@components/atoms/AddWithTable'
 
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
+  asset: Yup.string().required('Nama asset wajib diisi'),
   location: Yup.object().required('Lokasi wajib dipilih'),
+  floor: Yup.object().required('Lokasi wajib dipilih'),
   roomTitle: Yup.string().required('Title Room wajib diisi'),
-  floor: Yup.object().required('Lantai Ruangan wajib dipilih'),
-  capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
-  facilityList: Yup.array(),
-  images: Yup.array(),
-});
+})
 
 export function AddAsset() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [isChecked, setIsChecked] = useState(false);
-
-  const [images, setImages] = useState<File[]>([]);
-
-  const handleImageChange = (newImages: File[]) => {
-    setImages(newImages);
-  };
+  const [isChecked, setIsChecked] = useState(false)
 
   const { handleSubmit, control, setValue } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
-  });
+  })
 
   const options = [
     { label: 'Head Office', value: 1 },
     { label: 'Berijalan', value: 2 },
-  ];
+  ]
 
   const breadcrumbs = [
     <Link href="/management/asset" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
-      Booking Asset Data - Room
+      Booking Asset Data - Asset Data
     </Link>,
     <Typography key="2" color="text.primary" className="text-heading m semibold-21">
-      Add Room Data
+      Add Asset Data
     </Typography>,
-  ];
-
-  // const [descriptionData, setDescriptionData] = useState('')
-  // const [termsData, setTermsData] = useState('')
-
-  // const handleDescriptionChange = (data: string) => {
-  //   setDescriptionData(data)
-  // }
-
-  // const handleTermsChange = (data: string) => {
-  //   setTermsData(data)
-  // }
-
-  const facilityList = useWatch({
-    control,
-    name: 'facilityList',
-  });
+  ]
 
   useEffect(() => {
-    setValue('isActive', isChecked);
-  }, [isChecked]);
-
-  useEffect(() => {
-    setValue('facilityList', facilityList);
-  }, [facilityList, setValue]);
-
-  useEffect(() => {
-    setValue('images', images);
-  }, []);
+    setValue('isActive', isChecked)
+  }, [isChecked])
 
   const onSubmit = () => {
     /* ... Your submission logic ... */
-  };
+  }
+
+  const [brands] = useState<any[]>([
+    { name: 'Brand A', stock: 5, isActive: true },
+    { name: 'Brand B', stock: 2, isActive: false },
+  ])
+
+  // Opsi-opsi untuk SelectInput
+  const [selectOptions, setSelectOptions] = useState([
+    { value: 'Brand X', label: 'Brand X' },
+    { value: 'Brand Y', label: 'Brand Y' },
+    { value: 'Brand Z', label: 'Brand Z' },
+  ])
+
+  const handleAddBrand = () => {
+    // Di sini Anda bisa menambahkan logika untuk menyimpan data ke server atau state global.
+  }
+
+  const handleUpdateBrand = () => {
+    // Di sini Anda bisa menambahkan logika untuk memperbarui data di server atau state global.
+  }
+
+  const handleDeleteBrand = () => {
+    // Di sini Anda bisa menambahkan logika untuk menghapus data dari server atau state global.
+  }
+
+  const handleUpdateSelectOptions = (newOptions: any) => {
+    setSelectOptions(newOptions)
+  }
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
@@ -101,7 +94,7 @@ export function AddAsset() {
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Add Room Data</p>
+        <p className="text-heading s semibold-18 mb-4">Add Asset Data</p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Aktif</p>
@@ -118,12 +111,24 @@ export function AddAsset() {
 
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
+              Asset<span className="text-red-500">*</span>
+            </p>
+            <TextForm
+              control={control}
+              name="asset"
+              fieldInput={{ placeholder: 'Masukkan nama asset' }}
+              className="w-[350px]"
+            />
+          </div>
+
+          <div className="flex items-center">
+            <p className="text-heading xs regular-16 w-[160px]">
               Lokasi<span className="text-red-500">*</span>
             </p>
             <SelectForm
               control={control}
               name="location"
-              placeholder="Pilih kategori pengajuan"
+              placeholder="Pilih lokasi asset"
               options={options}
               setValue={setValue}
               className="w-[350px]"
@@ -132,85 +137,17 @@ export function AddAsset() {
 
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
-              Title Room<span className="text-red-500">*</span>
+              Brand<span className="text-red-500">*</span>
             </p>
-            <TextAreaForm
-              control={control}
-              name="roomTitle"
-              fieldLabel={{ children: 'Title Room' }}
-              fieldInput={{ rows: 1 }}
-              counter
-              className="w-[350px]"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Lantai Ruangan<span className="text-red-500">*</span>
-            </p>
-            <SelectForm
-              control={control}
-              name="floor"
-              placeholder="Pilih lantai ruangan"
-              options={optionsFloor}
-              setValue={setValue}
-              className="w-[350px]"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Kapasitas Ruangan<span className="text-red-500">*</span>
-            </p>
-            <SelectForm
-              control={control}
-              name="capacity"
-              placeholder="Pilih kapasitas ruangan"
-              options={optionsCapacity}
-              setValue={setValue}
-              className="w-[350px]"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">Description</p>
-            <div className="">
-              {/* <TextEditor
-                placeholder="Isi deskripsi ruangan"
-                onChange={handleDescriptionChange}
-                data={descriptionData}
-              /> */}
-            </div>
-          </div>
-
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">Terms & Condition</p>
-            <div className="max-w-[650px]">
-              {/* <TextEditor
-                placeholder="Isi ketentuan penggunaan yang perlu diketahui"
-                onChange={handleTermsChange}
-                data={termsData}
-              /> */}
-            </div>
-          </div>
-
-          <div className="flex items-start mt-4">
-            <p className="text-heading xs regular-16 w-[160px]">Fasilitas Ruangan</p>
-            <RHFMultiSelect
-              data={optionsFacility}
-              name="facilityList"
-              label="Pilih Fasilitas Ruangan"
-              control={control}
-              className="mt-4 min-w-[650px]"
-            />
-          </div>
-
-          <div className="flex items-center mt-4">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Image<span className="text-red-500">*</span>
-            </p>
-            <div className="max-w-[600px]">
-              <ImageGallery setImages={handleImageChange} />
+            <div className="mt-1">
+              <AddWithTable
+                initialBrands={brands}
+                onAddBrand={handleAddBrand}
+                onUpdateBrand={handleUpdateBrand}
+                onDeleteBrand={handleDeleteBrand}
+                selectOptions={selectOptions}
+                onUpdateSelectOptions={handleUpdateSelectOptions}
+              />
             </div>
           </div>
 
@@ -234,5 +171,5 @@ export function AddAsset() {
         </form>
       </div>
     </div>
-  );
+  )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
@@ -12,39 +12,37 @@ import * as Yup from 'yup'
 
 import SelectForm from '@components/atoms/Form/SelectForm'
 import ImageGallery from '@components/atoms/ImageGallery'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { optionsCapacity, optionsFloor } from './data'
+import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { optionsCapacity, optionsFacility, optionsFloor } from './data'
 
 import dynamic from 'next/dynamic'
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
 const schema = Yup.object().shape({
-  isActive: Yup.string().required('Aktif wajib dipilih'),
+  isActive: Yup.boolean().required('Aktif wajib dipilih'),
   location: Yup.object().required('Lokasi wajib dipilih'),
-  operational: Yup.object().required('Operational wajib dipilih'),
-  carBrand: Yup.object().required('Brand wajib dipilih'),
-  carType: Yup.object().required('Tipe wajib dipilih'),
-  transmissionType: Yup.object().required('Transmisi wajib dipilih'),
-  fuelType: Yup.object().required('Bahan Bakar wajib dipilih'),
-  year: Yup.object().required('Tahun wajib dipilih'),
-  carCapacity: Yup.number().required().typeError('Kapasitas Mobil wajib diisi'),
-  noPolisi: Yup.string().required('Nomor Polisi wajib diisi'),
-  plat: Yup.string().required('Plat wajib diisi'),
+  roomTitle: Yup.string().required('Title Room wajib diisi'),
+  floor: Yup.object().required('Lantai Ruangan wajib dipilih'),
+  capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
+  facilityList: Yup.array(),
   images: Yup.array(),
 })
 
-export function AddVehicle() {
+export function AddRoom() {
   const router = useRouter()
 
   const [isChecked, setIsChecked] = useState(false)
+
   // const [images, setImages] = useState<(File | null)[]>(Array(10).fill(null));
+
   const [images, setImages] = useState<File[]>([])
   const handleImageChange = (newImages: File[]) => {
     setImages(newImages)
   }
 
-  const { handleSubmit, control, setValue, watch } = useForm<any>({
+  const { handleSubmit, control, setValue } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
@@ -55,22 +53,36 @@ export function AddVehicle() {
   ]
 
   const breadcrumbs = [
-    <Link href="/management/vehicle" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
-      Booking Asset Data - Vehicle Data
+    <Link href="/management/room" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
+      Booking Asset Data - Room
     </Link>,
     <Typography key="2" color="text.primary" className="text-heading m semibold-21">
-      Add Vehicle Data
+      Add Room Data
     </Typography>,
   ]
+
+  const [descriptionData, setDescriptionData] = useState('')
+  const handleDescriptionChange = (data: string) => {
+    setDescriptionData(data)
+  }
 
   const [termsData, setTermsData] = useState('')
   const handleTermsChange = (data: string) => {
     setTermsData(data)
   }
 
+  const facilityList = useWatch({
+    control,
+    name: 'facilityList',
+  })
+
   useEffect(() => {
-    setValue('isActive', isChecked ? 'Active' : 'Non-Active')
+    setValue('isActive', isChecked)
   }, [isChecked])
+
+  useEffect(() => {
+    setValue('facilityList', facilityList)
+  }, [facilityList, setValue])
 
   useEffect(() => {
     setValue('images', images)
@@ -79,39 +91,6 @@ export function AddVehicle() {
   const onSubmit = () => {
     /* ... Your submission logic ... */
   }
-
-  function cekGanjilGenap(nomorPlat: string): string {
-    // Cari angka terakhir dari belakang, melewati karakter non-digit
-    let angkaTerakhir = null
-    for (let i = nomorPlat.length - 1; i >= 0; i--) {
-      if (!isNaN(parseInt(nomorPlat[i]))) {
-        angkaTerakhir = parseInt(nomorPlat[i])
-        break
-      }
-    }
-
-    // Jika tidak ditemukan angka, berikan pesan kesalahan
-    if (angkaTerakhir === null) {
-      return 'Format nomor plat tidak valid'
-    }
-
-    // Periksa apakah angka terakhir ganjil atau genap
-    if (angkaTerakhir % 2 === 0) {
-      return 'Genap'
-    } else {
-      return 'Ganjil'
-    }
-  }
-
-  useEffect(() => {
-    const a = watch('noPolisi')
-    // Tambahkan timeout 1 detik
-    const timeoutId = setTimeout(() => {
-      setValue('plat', cekGanjilGenap(a))
-    }, 1000)
-    // Bersihkan timeout saat komponen dibongkar
-    return () => clearTimeout(timeoutId)
-  }, [watch('noPolisi')])
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
@@ -124,7 +103,7 @@ export function AddVehicle() {
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Add Vehicle Data</p>
+        <p className="text-heading s semibold-18 mb-4">Add Room Data</p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Aktif</p>
@@ -155,12 +134,25 @@ export function AddVehicle() {
 
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
-              Operational<span className="text-red-500">*</span>
+              Title Room<span className="text-red-500">*</span>
+            </p>
+            <TextForm
+              fieldInput={{ type: 'text', placeholder: 'Isi dengan title ruangan' }}
+              control={control}
+              name="roomTitle"
+              maxChar={32}
+              className="w-[350px]"
+            />
+          </div>
+
+          <div className="flex items-center">
+            <p className="text-heading xs regular-16 w-[160px]">
+              Lantai Ruangan<span className="text-red-500">*</span>
             </p>
             <SelectForm
               control={control}
-              name="operational"
-              placeholder="Pilih operational"
+              name="floor"
+              placeholder="Pilih lantai ruangan"
               options={optionsFloor}
               setValue={setValue}
               className="w-[350px]"
@@ -169,26 +161,12 @@ export function AddVehicle() {
 
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
-              Brand<span className="text-red-500">*</span>
+              Kapasitas Ruangan<span className="text-red-500">*</span>
             </p>
             <SelectForm
               control={control}
-              name="carBrand"
-              placeholder="Pilih brand mobil"
-              options={optionsFloor}
-              setValue={setValue}
-              className="w-[350px]"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Tipe<span className="text-red-500">*</span>
-            </p>
-            <SelectForm
-              control={control}
-              name="carType"
-              placeholder="Pilih tipe mobil"
+              name="capacity"
+              placeholder="Pilih kapasitas ruangan"
               options={optionsCapacity}
               setValue={setValue}
               className="w-[350px]"
@@ -196,82 +174,21 @@ export function AddVehicle() {
           </div>
 
           <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Transmisi<span className="text-red-500">*</span>
-            </p>
-            <SelectForm
-              control={control}
-              name="transmissionType"
-              placeholder="Pilih tipe transmisi"
-              options={optionsCapacity}
-              setValue={setValue}
-              className="w-[350px]"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Bahan Bakar<span className="text-red-500">*</span>
-            </p>
-            <SelectForm
-              control={control}
-              name="fuelType"
-              placeholder="Pilih tipe bahan bakar"
-              options={optionsCapacity}
-              setValue={setValue}
-              className="w-[350px]"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Tahun<span className="text-red-500">*</span>
-            </p>
-            <SelectForm
-              control={control}
-              name="year"
-              placeholder="Pilih tahun"
-              options={optionsCapacity}
-              setValue={setValue}
-              className="w-[350px]"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">Kapasitas Mobil</p>
-            <TextForm
-              control={control}
-              name="carCapacity"
-              fieldInput={{ placeholder: 'Masukkan kapasitas mobil', disabled: true }}
-              className="w-[350px]"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Nomor Polisi<span className="text-red-500">*</span>
-            </p>
-            <TextForm
-              control={control}
-              name="noPolisi"
-              fieldInput={{ placeholder: 'Masukkan nomor polisi' }}
-              className="w-[350px]"
-            />
-          </div>
-
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">Plat</p>
-            <TextForm
-              control={control}
-              name="plat"
-              fieldInput={{ placeholder: 'Masukkan plat', disabled: true }}
-              className="w-[350px]"
-            />
+            <p className="text-heading xs regular-16 w-[160px]">Description</p>
+            <div className="mt-1">
+              <ReusableCKEditor
+                config={{
+                  placeholder: 'Type your text here...',
+                }}
+                initialData={descriptionData}
+                onChange={handleDescriptionChange}
+              />
+            </div>
           </div>
 
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Terms & Condition</p>
-            <div className="mt-4">
+            <div className="max-w-[650px] mt-1">
               <ReusableCKEditor
                 config={{
                   placeholder: 'Type your text here...',
@@ -282,14 +199,25 @@ export function AddVehicle() {
             </div>
           </div>
 
-          <div className="flex items-center mt-4">
-            <p className="text-heading xs regular-16 w-[160px]">
+          <div className="flex items-center mt-1">
+            <p className="text-heading xs regular-16 w-[160px]">Fasilitas Ruangan</p>
+            <RHFMultiSelect
+              data={optionsFacility}
+              name="facilityList"
+              label="Pilih Fasilitas Ruangan"
+              control={control}
+              className=" min-w-[650px]"
+            />
+          </div>
+
+          <div className="flex items-center mt-1">
+            <div className="text-heading xs regular-16 w-[160px]">
               Image<span className="text-red-500">*</span>
               {images.length >= 0 && <p className="text-paragraph regular-14 mt-2">{images.length}/10</p>}
               <p className="text-paragraph regular-14 text-gray-500 ">
                 Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
               </p>
-            </p>
+            </div>
             <div className="max-w-[600px]">
               <ImageGallery setImages={handleImageChange} />
             </div>
@@ -301,7 +229,7 @@ export function AddVehicle() {
             <button
               className="bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
               type="button"
-              onClick={() => router.push('/management/vehicle')}
+              onClick={() => router.push('/management/asset')}
             >
               Cancel
             </button>
