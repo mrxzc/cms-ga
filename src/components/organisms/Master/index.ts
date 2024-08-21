@@ -14,6 +14,14 @@ import { RoomCapacityAddPage } from './RoomCapacity/Add'
 import { RoomFacilityAddPage } from './RoomFacility/Add'
 import { RoomFloorAddPage } from './RoomFloor/Add'
 import { YearAddPage } from './Year/Add'
+import { CarBrandEditPage } from './CarBrand/Edit'
+import { CarTypeEditPage } from './CarType/Edit'
+import { FuelEditPage } from './Fuel/Edit'
+import { LocationEditPage } from './Location/Edit'
+import { RoomCapacityEditPage } from './RoomCapacity/Edit'
+import { RoomFacilityEditPage } from './RoomFacility/Edit'
+import { RoomFloorEditPage } from './RoomFloor/Edit'
+import { YearEditPage } from './Year/Edit'
 
 export {
   CarBrandListPage,
@@ -32,4 +40,12 @@ export {
   RoomFacilityAddPage,
   RoomFloorAddPage,
   YearAddPage,
+  CarBrandEditPage,
+  CarTypeEditPage,
+  FuelEditPage,
+  LocationEditPage,
+  RoomCapacityEditPage,
+  RoomFacilityEditPage,
+  RoomFloorEditPage,
+  YearEditPage,
 }
