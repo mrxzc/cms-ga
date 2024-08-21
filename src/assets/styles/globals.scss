@@ -60,6 +60,10 @@
   @apply max-w-full sm:max-w-[375px];
 }
 
+.max-container {
+  @apply max-w-full sm:max-w-[640px];
+}
+
 .booking-button {
   background: linear-gradient(0deg, #2c598d, #2c598d),
     linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%);
@@ -97,9 +101,7 @@
 	box-shadow: 0px 1px 2px 0px #253ea77a;
 }
 
-.max-container {
-  @apply max-w-full sm:max-w-[640px];
-}
+
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
@@ -124,4 +126,19 @@
 
 .search-input:has(input:focus) {
   border: 1px solid #4994ec;
+}
+
+.sidebar li.has-submenu > a .arrow {
+  /* Gaya untuk tanda panah submenu */
+}
+
+.sidebar .submenu {
+  /* ... */
+  max-height: 0; /* Sembunyikan submenu dengan mengatur tinggi maksimum menjadi 0 */
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out; /* Animasi transisi tinggi */
+}
+
+.sidebar .submenu.open {
+  max-height: 200px; /* Atau sesuaikan dengan tinggi yang diinginkan */
 }

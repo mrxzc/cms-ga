@@ -1,4 +1,4 @@
-import { ManagementAssetPage } from '@components/organisms/Management'
+import { ManagementRoomPage } from '@components/organisms/Management'
 
 export const metadata = {
   title: 'Management Asset',
@@ -7,7 +7,7 @@ export const metadata = {
 export default function ManagingAsset() {
   return (
     <>
-      <ManagementAssetPage />
+      <ManagementRoomPage />
     </>
   )
 }

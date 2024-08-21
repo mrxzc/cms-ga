@@ -1,37 +1,32 @@
-'use client';
+'use client'
 
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Stack from '@mui/material/Stack';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import Typography from '@mui/material/Typography';
-import Link from 'next/link';
-import * as Yup from 'yup';
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Stack from '@mui/material/Stack'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import Typography from '@mui/material/Typography'
+import Link from 'next/link'
+import * as Yup from 'yup'
 
-import { yupResolver } from '@hookform/resolvers/yup';
-import TextForm from '@components/atoms/Form/TextForm';
-// import TextEditor from '@components/atoms/TextEditor';
-// import QuillEditor from '@components/atoms/QuillEditor';
+import { yupResolver } from '@hookform/resolvers/yup'
+import TextForm from '@components/atoms/Form/TextForm'
 
 const schema = Yup.object().shape({
   isActive: Yup.string().required('Aktif wajib dipilih'),
   manpowerAsset: Yup.string().required('Manpower asset wajib dipilih'),
-});
+})
 
 export function AddManpower() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [isChecked, setIsChecked] = useState(false);
-
+  const [isChecked, setIsChecked] = useState(false)
 
   const { handleSubmit, control, setValue } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
-  });
-
-
+  })
 
   const breadcrumbs = [
     <Link href="/management/manpower" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
@@ -40,25 +35,15 @@ export function AddManpower() {
     <Typography key="2" color="text.primary" className="text-heading m semibold-21">
       Add Manpower Data
     </Typography>,
-  ];
-
-  // const [descriptionData, setDescriptionData] = useState('');
-
-  // const handleDescriptionChange = (data: string) => {
-  //   setDescriptionData(data);
-  // };
+  ]
 
   useEffect(() => {
-    setValue('isActive', isChecked ? 'Active' : 'Non-Active');
-  }, [isChecked]);
+    setValue('isActive', isChecked ? 'Active' : 'Non-Active')
+  }, [isChecked])
 
   const onSubmit = () => {
     /* ... Your submission logic ... */
-  };
-
-
-
-
+  }
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
@@ -94,7 +79,7 @@ export function AddManpower() {
               control={control}
               name="manpowerAsset"
               fieldInput={{ placeholder: 'Masukkan manpower asset' }}
-              className='w-[350px]'
+              className="w-[350px]"
             />
           </div>
 
@@ -118,5 +103,5 @@ export function AddManpower() {
         </form>
       </div>
     </div>
-  );
+  )
 }

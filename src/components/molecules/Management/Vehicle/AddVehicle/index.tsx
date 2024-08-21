@@ -28,9 +28,7 @@ const schema = Yup.object().shape({
   transmissionType: Yup.object().required('Transmisi wajib dipilih'),
   fuelType: Yup.object().required('Bahan Bakar wajib dipilih'),
   year: Yup.object().required('Tahun wajib dipilih'),
-  carCapacity: Yup.number().required().typeError('Kapasitas Mobil wajib diisi'),
   noPolisi: Yup.string().required('Nomor Polisi wajib diisi'),
-  plat: Yup.string().required('Plat wajib diisi'),
   images: Yup.array(),
 })
 
@@ -271,7 +269,7 @@ export function AddVehicle() {
 
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Terms & Condition</p>
-            <div className="mt-4">
+            <div className="mt-1">
               <ReusableCKEditor
                 config={{
                   placeholder: 'Type your text here...',
@@ -282,14 +280,14 @@ export function AddVehicle() {
             </div>
           </div>
 
-          <div className="flex items-center mt-4">
-            <p className="text-heading xs regular-16 w-[160px]">
+          <div className="flex items-center mt-1">
+            <div className="text-heading xs regular-16 w-[160px]">
               Image<span className="text-red-500">*</span>
               {images.length >= 0 && <p className="text-paragraph regular-14 mt-2">{images.length}/10</p>}
               <p className="text-paragraph regular-14 text-gray-500 ">
                 Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
               </p>
-            </p>
+            </div>
             <div className="max-w-[600px]">
               <ImageGallery setImages={handleImageChange} />
             </div>
