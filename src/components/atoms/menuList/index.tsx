@@ -55,6 +55,7 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onKeyDown={() => {}}
         onClick={() => item.submenu && toggleSubMenu(item.id)}
       >
         <Link href={item.href}>
