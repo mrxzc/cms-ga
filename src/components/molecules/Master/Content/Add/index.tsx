@@ -11,11 +11,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useRef } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import * as Yup from 'yup'
-
-const schema = Yup.object().shape({
-  title: Yup.string().required('Judul wajib diisi'),
-})
 
 export function Add() {
   const router = useRouter()
