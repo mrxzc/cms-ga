@@ -30,6 +30,14 @@ import { Add as YearAdd } from './Year/Add/index'
 import { Edit as YearEdit } from './Year/Edit/index'
 import { List as YearList } from './Year/List/index'
 
+import { Add as EvaluationAdd } from './Evaluation/Add/index'
+import { Edit as EvaluationEdit } from './Evaluation/Edit/index'
+import { List as EvaluationList } from './Evaluation/List/index'
+
+import { Add as ContentAdd } from './Content/Add/index'
+import { Edit as ContentEdit } from './Content/Edit/index'
+import { List as ContentList } from './Content/List/index'
+
 export {
   CarBrandAdd,
   CarBrandEdit,
@@ -55,4 +63,10 @@ export {
   YearAdd,
   YearEdit,
   YearList,
+  EvaluationAdd,
+  EvaluationEdit,
+  EvaluationList,
+  ContentAdd,
+  ContentEdit,
+  ContentList,
 }
