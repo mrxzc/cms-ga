@@ -4,24 +4,15 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
-import { createColumnHelper } from '@tanstack/react-table'
-import Image from 'next/image'
-import React, { useEffect, useRef, useState } from 'react'
-
-import IconChevronBottom from '@assets/icons/IconChevronBottom'
-import IconEditing from '@assets/icons/IconEditing'
+import React, { useRef } from 'react'
 import IconPencil from '@assets/icons/IconPencil'
 import IconTrash from '@assets/icons/IconTrash'
-import images from '@assets/images'
 import { useRouter } from 'next/navigation'
 import { useForm, useWatch } from 'react-hook-form'
 import IconCloudUpload from '@assets/icons/IconCloudUpload'
 
 export function List() {
   const router = useRouter()
-
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
 
   // const handleStatus = (status: boolean) => {
   //   if (status) {
@@ -57,47 +48,6 @@ export function List() {
     }
   }
 
-  const columnHelper = createColumnHelper<any>()
-
-  const columns = [
-    columnHelper.accessor('id', {
-      cell: info => info.getValue(),
-      header: 'No',
-    }),
-    columnHelper.accessor('title', {
-      cell: info => info.getValue(),
-      header: 'Title',
-    }),
-    columnHelper.accessor('tanggalUpload', {
-      cell: info => info.getValue(),
-      header: 'Tanggal Upload',
-    }),
-    // columnHelper.accessor('status', {
-    //   cell: info => (
-    //     <div className="flex items-center justify-center">
-    //       {/* Hello */}
-    //       {/* <Image
-    //       width={1400}
-    //       height={800}
-    //       src={info.getValue()}
-    //       alt="Room Image"
-    //       className="w-[140px] h-[80px] object-cover"
-    //     /> */}
-    //     </div>
-    //   ),
-    //   header: 'Status',
-    // }),
-    columnHelper.accessor('ACTION', {
-      cell: () => (
-        <div className="flex gap-3 items-center justify-center">
-          <IconEditing width={20} height={20} className="hover:cursor-pointer" />
-          <Image src={images.DELETE_ICON} width={20} height={20} alt="Delete Icon" className="hover:cursor-pointer" />
-        </div>
-      ),
-      header: 'Action',
-    }),
-  ]
-
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault()
   }
@@ -114,14 +64,6 @@ export function List() {
       Master Data - Manage Konten
     </Link>,
   ]
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage)
-  }
-
-  useEffect(() => {
-    setTotalPages(10)
-  }, [])
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full">
