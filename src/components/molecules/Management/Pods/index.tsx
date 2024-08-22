@@ -159,7 +159,7 @@ export function ManagementPods() {
           data={dataWithOriginalIndex}
           loading={false}
           pagination={{
-            TOTAL_DATA: 100,
+            TOTAL_DATA: dataWithOriginalIndex.length,
             PAGE: currentPage,
             LAST_PAGE: totalPages,
           }}

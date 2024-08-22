@@ -17,7 +17,7 @@ export default function IconAccountManagement({
         stroke="black"
         strokeWidth="1.3"
       />
-      <circle cx="6.15769" cy="7.10544" r="3.61316" fill="white" stroke="black" strokeWidth="1.3" />
+      <circle cx="6.15769" cy="7.10544" r="3.61316" stroke="black" strokeWidth="1.3" />
     </svg>
   )
 }
