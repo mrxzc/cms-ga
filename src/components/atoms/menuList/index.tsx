@@ -1,10 +1,11 @@
 'use client'
 
 import IconChevronBottom from '@assets/icons/IconChevronBottom'
+import IconDot from '@assets/icons/IconDot'
 import { ICON_MENU } from '@utils/list'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 export interface ListInterface {
   index: number
@@ -20,11 +21,6 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
   const pathname = usePathname()
   const ListMenu = ICON_MENU[item.icon as keyof typeof ICON_MENU]
   const [activeSubMenuId, setActiveSubMenuId] = useState<string | null>(null)
-
-  const toggleSubMenu = (submenuId: string) => {
-    setActiveSubMenuId(prev => (prev === submenuId ? null : submenuId))
-  }
-
   const [isHovering, setIsHovering] = useState(false)
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false)
 
@@ -42,32 +38,67 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
     }
   }
 
-  const isActive = (item: any): boolean => {
-    if (pathname === item.href) return true
+  const isMenuItemActive = (item: any): boolean => {
+    return pathname === item.href
+  }
+
+  const isSubMenuActive = (subItem: any): boolean => {
+    return (
+      pathname === subItem.href ||
+      (subItem.submenu && subItem.submenu.some((childSubItem: any) => isMenuItemActive(childSubItem)))
+    )
+  }
+
+  const isAnySubMenuOrChildActive = (item: any): boolean => {
     if (item.submenu) {
-      return item.submenu.some((subItem: any) => isActive(subItem))
+      return item.submenu.some((subItem: any) => {
+        return isSubMenuActive(subItem)
+      })
     }
     return false
+  }
+
+  const toggleSubMenu = (submenuId: string) => {
+    // Jika submenu yang sama diklik, tutup. Jika tidak, buka submenu yang sesuai.
+    setActiveSubMenuId(prev => (prev === submenuId ? null : submenuId))
+
+    // Pastikan submenu terbuka saat diklik
+    if (submenuId !== activeSubMenuId) {
+      setIsSubMenuOpen(true)
+    }
+  }
+
+  const onChildSubMenuClick = () => {
+    // Tidak perlu mengubah activeSubMenuId saat child submenu diklik
+    // Kita hanya perlu memastikan submenu tetap terbuka
+    setIsSubMenuOpen(true)
   }
 
   return (
     <div key={index}>
       <div
+        onKeyDown={() => {}}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        onKeyDown={() => {}}
         onClick={() => item.submenu && toggleSubMenu(item.id)}
       >
         <Link href={item.href}>
           <li
+            onKeyDown={() => {}}
             className={`
-              text-sm font-semibold my-1 py-2 px-3 flex flex-row items-center 
-              ${isActive(item) ? 'bg-menuColor rounded-lg text-teksActive' : 'text-teksBlack'} 
-              ${isHovering ? 'bg-menuColor rounded-lg text-teksActive' : ''} 
-            `}
+                text-sm font-semibold my-1 py-2 px-3 flex flex-row items-center 
+                ${
+                  isMenuItemActive(item) || isAnySubMenuOrChildActive(item)
+                    ? 'bg-menuColor rounded-lg text-teksActive'
+                    : 'text-teksBlack'
+                } 
+                ${isHovering ? 'bg-menuColor rounded-lg text-teksActive' : ''} 
+              `}
           >
             <div className="mr-2">
-              <ListMenu color={isActive(item) || isHovering ? '#235696' : '#0A0A0A'} />
+              <ListMenu
+                color={isMenuItemActive(item) || isAnySubMenuOrChildActive(item) || isHovering ? '#235696' : '#0A0A0A'}
+              />
             </div>
             {item.name}
             {item.submenu && item.submenu.length > 0 && (
@@ -81,17 +112,50 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
 
       {/* Submenu */}
       {item.submenu && item.submenu.length > 0 && activeSubMenuId === item.id && (
-        <ul className="submenu">
-          {item.submenu.map((subItem: any, subIndex: number) => (
-            <li
-              key={subIndex}
-              className={`
-                text-sm py-1 font-semibold my-1 px-3 flex flex-row items-center 
-                ${pathname === subItem.href ? 'bg-menuColor rounded-lg text-teksActive' : 'text-teksBlack'} 
-              `} // Hanya terapkan gaya active jika pathname cocok dengan subItem.href
-            >
-              <Link href={subItem.href}>● {subItem.name}</Link>
-            </li>
+        <ul className="submenu ">
+          {item.submenu.map((subItem: any, subIndex: string) => (
+            <React.Fragment key={subIndex}>
+              <li
+                className={`
+                    text-sm py-1 my-1 px-3 flex flex-row items-center 
+                    ${isSubMenuActive(subItem) ? 'bg-menuColor rounded-lg text-teksActive' : 'text-teksBlack'} 
+                  `}
+              >
+                <Link href={subItem.href}>
+                  <div className="flex flex-row gap-2 items-center">
+                    <IconDot color={isSubMenuActive(subItem) ? '#235696' : '#0A0A0A'} />
+                    {subItem.name}
+                  </div>
+                </Link>
+                {subItem.submenu && subItem.submenu.length > 0 && (
+                  <IconChevronBottom
+                    className={`ml-auto transition-transform duration-300 ${isSubMenuOpen ? 'rotate-180' : ''}`}
+                  />
+                )}
+              </li>
+
+              {/* Child Submenu (jika ada) */}
+              {subItem.submenu && subItem.submenu.length > 0 && (
+                <ul className={`submenu ml-4 ${activeSubMenuId === item.id ? 'block' : 'hidden'}`}>
+                  {subItem.submenu.map((childSubItem: any, childSubIndex: string) => (
+                    <li
+                      key={childSubIndex}
+                      className={`text-sm py-1 my-1 px-3 flex flex-row items-center ${
+                        pathname === childSubItem.href ? 'bg-menuColor rounded-lg text-teksActive' : 'text-teksBlack'
+                      }`}
+                      onClick={onChildSubMenuClick}
+                    >
+                      <Link href={childSubItem.href}>
+                        <div className="flex flex-row gap-2 items-center">
+                          <IconDot color={pathname === childSubItem.href ? '#235696' : '#0A0A0A'} />
+                          {childSubItem.name}
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </React.Fragment>
           ))}
         </ul>
       )}
