@@ -87,15 +87,22 @@ export function AddRole() {
 
           <div className="flex flex-col">
             <p className="text-paragraph regular-14 w-[160px]">Status</p>
-            <label className="label cursor-pointer">
-              <input
-                type="checkbox"
-                className="toggle toggle-accent"
-                checked={isChecked}
-                onChange={() => setIsChecked(!isChecked)}
-                value={''}
-              />
-            </label>
+            <div className="flex flex-row gap-2 items-center">
+              <label className="label cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="toggle toggle-accent"
+                  checked={isChecked}
+                  onChange={() => setIsChecked(!isChecked)}
+                  value={''}
+                />
+              </label>
+              {isChecked ? (
+                <p className="text-paragraph regular-14">Aktif</p>
+              ) : (
+                <p className="text-paragraph regular-14">Tidak Aktif</p>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col">
