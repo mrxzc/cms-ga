@@ -36,19 +36,39 @@ const AccessTable: React.FC<AccessTableProps> = ({ accessState, onAccessChange }
           <tr key={item.menu}>
             <td className="p-2 border">{item.menu}</td>
             <td className="p-2 border text-center">
-              <input type="checkbox" checked={item.create} onChange={() => handleCheckboxChange(item.menu, 'create')} />
+              <input
+                type="checkbox"
+                defaultChecked={item.create}
+                onChange={() => handleCheckboxChange(item.menu, 'create')}
+              />
             </td>
             <td className="p-2 border text-center">
-              <input type="checkbox" checked={item.update} onChange={() => handleCheckboxChange(item.menu, 'update')} />
+              <input
+                type="checkbox"
+                defaultChecked={item.update}
+                onChange={() => handleCheckboxChange(item.menu, 'update')}
+              />
             </td>
             <td className="p-2 border text-center">
-              <input type="checkbox" checked={item.delete} onChange={() => handleCheckboxChange(item.menu, 'delete')} />
+              <input
+                type="checkbox"
+                defaultChecked={item.delete}
+                onChange={() => handleCheckboxChange(item.menu, 'delete')}
+              />
             </td>
             <td className="p-2 border text-center">
-              <input type="checkbox" checked={item.view} onChange={() => handleCheckboxChange(item.menu, 'view')} />
+              <input
+                type="checkbox"
+                defaultChecked={item.view}
+                onChange={() => handleCheckboxChange(item.menu, 'view')}
+              />
             </td>
             <td className="p-2 border text-center">
-              <input type="checkbox" checked={item.all} onChange={() => handleCheckboxChange(item.menu, 'all')} />
+              <input
+                type="checkbox"
+                defaultChecked={item.all}
+                onChange={() => handleCheckboxChange(item.menu, 'all')}
+              />
             </td>
           </tr>
         ))}
