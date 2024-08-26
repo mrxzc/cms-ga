@@ -12,7 +12,8 @@ import { AddAssetPage } from './Asset/AddAsset/index'
 import { ManagementBallroomPage } from '../Ballroom/index'
 import { AddBallroomPage } from '../Ballroom/AddBallroom/index'
 import { ManagementPodsPage } from './Pods/index'
-import AddPodsPage from './Pods/AddPods/index'
+import { AddPodsPage } from './Pods/AddPods/index'
+import { TimeLimitPage } from './TimeLimit/index'
 
 // Export the components directly
 export {
@@ -28,4 +29,5 @@ export {
   AddBallroomPage,
   ManagementPodsPage,
   AddPodsPage,
+  TimeLimitPage,
 }

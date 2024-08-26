@@ -18,7 +18,7 @@ const MENU_HEADER = [
   {
     id: '2',
     name: 'Booking Asset Data',
-    href: '/management/room',
+    href: '',
     icon: 'IconManagement',
     submenu: [
       {
@@ -69,12 +69,24 @@ const MENU_HEADER = [
         href: '/management/time-limit-management',
         submenu: [],
       },
+      {
+        id: '2.9',
+        name: 'Approval Bucket',
+        href: '/management/approval-bucket',
+        submenu: [],
+      },
+      {
+        id: '2.10',
+        name: 'Pengembalian Barang',
+        href: '/management/product-return',
+        submenu: [],
+      },
     ],
   },
   {
     id: '3',
     name: 'Building Management',
-    href: '/building-management/maintenance/repair-asset',
+    href: '',
     icon: 'IconBuilding',
     submenu: [
       {
@@ -166,7 +178,7 @@ const MENU_HEADER = [
   {
     id: '4',
     name: 'Monitoring Pesan',
-    href: '/monitoring-pesan/booking',
+    href: '',
     icon: 'IconMonitorPesan',
     submenu: [
       {
@@ -193,7 +205,7 @@ const MENU_HEADER = [
   {
     id: '6',
     name: 'Master Data',
-    href: '/master/location',
+    href: '',
     icon: 'IconMasterData',
     submenu: [
       {
@@ -280,7 +292,7 @@ const MENU_HEADER = [
   {
     id: '7',
     name: 'Account Management',
-    href: '/account-management/user',
+    href: '',
     icon: 'IconAccountManagement',
     submenu: [
       {
