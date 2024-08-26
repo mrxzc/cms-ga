@@ -23,7 +23,7 @@ export function Role() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
-  const [roles, setRoles] = useState(data.roles) // Gunakan state untuk roles
+  const [roles, setRoles] = useState(data.roles)
 
   const handleStatusChange = (index: number) => {
     setRoles(prevRoles => {
@@ -32,23 +32,6 @@ export function Role() {
       return updatedRoles
     })
   }
-
-  // const handleStatus = (status: string) => {
-  //   if (status === 'Y') {
-  //     return (
-  //       <input
-  //         type='checkbox'
-  //         className='toggle'
-  //         checked
-  //         style={{ backgroundColor: '#0089cf', border: '1px solid #c8e9fa' }}
-  //       />
-  //     )
-  //   } else {
-  //     return (
-  //       <input type='checkbox' className='toggle' style={{ backgroundColor: '#0089cf', border: '1px solid #c8e9fa' }} />
-  //     )
-  //   }
-  // }
 
   const columnHelper = createColumnHelper<any>()
 
@@ -72,7 +55,15 @@ export function Role() {
     columnHelper.accessor('status', {
       cell: info => {
         const rowIndex = info.row.index
-        return <StatusCheckbox status={roles[rowIndex].status} onChange={() => handleStatusChange(rowIndex)} />
+        return (
+          <div onKeyDown={() => {}} onClick={() => handleStatusChange(rowIndex)}>
+            <StatusCheckbox
+              key={rowIndex}
+              status={roles[rowIndex].status}
+              onChange={() => handleStatusChange(rowIndex)}
+            />
+          </div>
+        )
       },
       header: 'Status',
     }),
@@ -129,7 +120,7 @@ export function Role() {
           <button
             type="button"
             className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]"
-            onClick={() => router.push('/management/asset/add-asset')}
+            onClick={() => router.push('/account-management/role/add-role')}
           >
             <IconPlus color="white" className="bg-[#505050] p-1 rounded-full" width={16} height={16} />
             Add New
@@ -158,7 +149,7 @@ export function Role() {
 
         <Table
           columns={columns}
-          data={roles} // Gunakan state roles untuk mengisi tabel
+          data={roles}
           loading={false}
           pagination={{
             TOTAL_DATA: data.pagination.total_roles,
@@ -172,14 +163,16 @@ export function Role() {
   )
 }
 
-// Functional component for the status checkbox
 function StatusCheckbox({ status, onChange }: { status: string; onChange: () => void }) {
+  const backgroundColor = status === 'Y' ? '#0089cf' : '#f6f6f6'
+  const borderColor = status === 'Y' ? '#c8e9fa' : '#b1b1b1'
+
   return (
     <input
       type="checkbox"
       className="toggle"
       checked={status === 'Y'}
-      style={{ backgroundColor: '#0089cf', border: '1px solid #c8e9fa' }}
+      style={{ backgroundColor, border: `1px solid ${borderColor}`, pointerEvents: 'auto' }}
       onChange={onChange}
     />
   )

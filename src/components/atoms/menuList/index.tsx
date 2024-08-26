@@ -120,6 +120,7 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
                     text-sm py-1 my-1 px-3 flex flex-row items-center 
                     ${isSubMenuActive(subItem) ? 'bg-menuColor rounded-lg text-teksActive' : 'text-teksBlack'} 
                   `}
+                  onKeyDown={() => {}}
               >
                 <Link href={subItem.href}>
                   <div className="flex flex-row gap-2 items-center">
@@ -139,6 +140,7 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
                 <ul className={`submenu ml-4 ${activeSubMenuId === item.id ? 'block' : 'hidden'}`}>
                   {subItem.submenu.map((childSubItem: any, childSubIndex: string) => (
                     <li
+                    onKeyDown={() => {}}
                       key={childSubIndex}
                       className={`text-sm py-1 my-1 px-3 flex flex-row items-center ${
                         pathname === childSubItem.href ? 'bg-menuColor rounded-lg text-teksActive' : 'text-teksBlack'

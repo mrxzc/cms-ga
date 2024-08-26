@@ -1,3 +1,4 @@
 import { UserPage } from './User/index'
 import { RolePage } from './Role/index'
-export { UserPage, RolePage }
+import { AddRolePage } from './Role/AddRole/index'
+export { UserPage, RolePage, AddRolePage }
