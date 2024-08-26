@@ -11,6 +11,7 @@ import { AddBallroom } from './Ballroom/AddBallroom/index'
 import { ManagementBallroom } from './Ballroom/index'
 import { AddPods } from './Pods/AddPods/index'
 import { ManagementPods } from './Pods/index'
+import { TimeLimit } from './TimeLimit/index'
 
 // Export the imported components directly
 export {
@@ -26,4 +27,5 @@ export {
   ManagementBallroom,
   AddPods,
   ManagementPods,
+  TimeLimit,
 }
