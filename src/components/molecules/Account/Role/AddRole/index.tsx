@@ -43,13 +43,13 @@ export function AddRole() {
   }, [isChecked])
 
   const [accessData, setAccessData] = useState([
-    { menu: 'Dashboard', create: true, update: true, delete: true, view: false, all: true },
-    { menu: 'Booking Asset Data', create: true, update: true, delete: true, view: true, all: true },
-    { menu: 'Building Management', create: true, update: true, delete: true, view: true, all: false },
-    { menu: 'Monitoring Pesanan', create: false, update: true, delete: true, view: true, all: true },
-    { menu: 'Calendar of Event', create: true, update: false, delete: true, view: true, all: true },
-    { menu: 'Master Data', create: true, update: true, delete: true, view: false, all: true },
-    { menu: 'Account Management', create: true, update: true, delete: true, view: true, all: true },
+    { menu: 'Dashboard', create: false, update: false, delete: false, view: false, all: false },
+    { menu: 'Booking Asset Data', create: false, update: false, delete: false, view: false, all: false },
+    { menu: 'Building Management', create: false, update: false, delete: false, view: false, all: false },
+    { menu: 'Monitoring Pesanan', create: false, update: false, delete: false, view: false, all: false },
+    { menu: 'Calendar of Event', create: false, update: false, delete: false, view: false, all: false },
+    { menu: 'Master Data', create: false, update: false, delete: false, view: false, all: false },
+    { menu: 'Account Management', create: false, update: false, delete: false, view: false, all: false },
   ])
 
   const handleAccessChange = (updatedAccessData: any) => {
