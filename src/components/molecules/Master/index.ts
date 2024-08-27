@@ -38,6 +38,10 @@ import { Add as ContentAdd } from './Content/Add/index'
 import { Edit as ContentEdit } from './Content/Edit/index'
 import { List as ContentList } from './Content/List/index'
 
+import { Add as BuildingConditionAdd } from './BuildingCondition/Add/index'
+import { Edit as BuildingConditionEdit } from './BuildingCondition/Edit/index'
+import { List as BuildingConditionList } from './BuildingCondition/List/index'
+
 export {
   CarBrandAdd,
   CarBrandEdit,
@@ -69,4 +73,7 @@ export {
   ContentAdd,
   ContentEdit,
   ContentList,
+  BuildingConditionAdd,
+  BuildingConditionEdit,
+  BuildingConditionList,
 }
