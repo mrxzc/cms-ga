@@ -92,7 +92,7 @@ const MENU_HEADER = [
       {
         id: '3.1',
         name: 'Building Maintenance',
-        href: '/building-management/maintenance/repair-asset',
+        href: '',
         submenu: [
           {
             id: '3.1.1',
@@ -109,7 +109,7 @@ const MENU_HEADER = [
       {
         id: '3.2',
         name: 'EHS',
-        href: '/building-management/EHS/waste-management',
+        href: '',
         submenu: [
           {
             id: '3.2.1',
@@ -136,7 +136,7 @@ const MENU_HEADER = [
       {
         id: '3.3',
         name: 'Security Guard',
-        href: '/building-management/security-guard/manpower-sg',
+        href: '',
         submenu: [
           {
             id: '3.3.1',
@@ -153,7 +153,7 @@ const MENU_HEADER = [
       {
         id: '3.4',
         name: 'Cleaning Service',
-        href: '/building-management/cleaning-service/manpower-cs',
+        href: '',
         submenu: [
           {
             id: '3.4.1',
@@ -217,7 +217,7 @@ const MENU_HEADER = [
       {
         id: '6.2',
         name: 'Manage Room',
-        href: '/master/room-floor',
+        href: '',
         submenu: [
           {
             id: '6.2.1',
@@ -239,24 +239,24 @@ const MENU_HEADER = [
       {
         id: '6.3',
         name: 'Manage Building',
-        href: '/master/building',
+        href: '',
         submenu: [
           {
             id: '6.3.1',
             name: 'Manage Kondisi Cabang',
-            href: '/master/building/condition',
+            href: '/master/building-condition',
           },
           {
             id: '6.3.2',
             name: 'Manage Penilaian',
-            href: '/master/building/rating',
+            href: '/master/building-rating',
           },
         ],
       },
       {
         id: '6.4',
         name: 'Manage Vehicle',
-        href: '/master/car-brand',
+        href: '',
         submenu: [
           {
             id: '6.4.1',
