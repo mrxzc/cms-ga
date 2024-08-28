@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query'
 export const useGetRoomDetail = (params: IRoomDetailParams) => {
   return useQuery({
     queryKey: ['cms/master/room/detail', params],
-    queryFn: () => apiGetDetailRoom(params),
+    queryFn: async () => apiGetDetailRoom(params),
     enabled: true,
     staleTime: 5000,
   })
@@ -18,7 +18,7 @@ export const useGetRoomDetail = (params: IRoomDetailParams) => {
 export const useGetRoomList = (params: IRoomListParams) => {
   return useQuery({
     queryKey: ['cms/master/room/list', params],
-    queryFn: () => apiGetListRoom(params),
+    queryFn: async () => apiGetListRoom(params),
     enabled: true,
     refetchOnWindowFocus: false,
   })
