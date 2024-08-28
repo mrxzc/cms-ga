@@ -44,7 +44,7 @@ export interface ICreateRoomPayload {
   kapasitas: number
   deskripsi: string
   termsCondition: string
-  fasilitas: string[]
+  fasilitas: string
   kategoriMenu: string
 }
 

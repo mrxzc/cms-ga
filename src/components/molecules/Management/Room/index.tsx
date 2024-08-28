@@ -1,28 +1,42 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { createColumnHelper } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import React, { useState } from 'react'
+import { createColumnHelper } from '@tanstack/react-table'
+import { useRouter } from 'next/navigation'
 
-import { data } from './data'
 import IconPlus from '@assets/icons/IconPlus'
 import Table from '@components/atoms/Table'
 import IconEditing from '@assets/icons/IconEditing'
-import images from '@assets/images'
 import IconDownload from '@assets/icons/IconDownload'
 import IconSearch from '@assets/icons/IconSearch'
+import IconDeleting from '@assets/icons/IconDeleting'
+// import { data } from './data'
+import { useGetRoomList } from '@services/cms/room/query'
+import { IRoomListParams } from '@interfaces/room'
 
 export function Management() {
   const router = useRouter()
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
+
+  const param: IRoomListParams = {
+    search: searchQuery,
+    page: 1,
+    size: 10,
+    sortField: 'kapasitas',
+    sortDirection: 'ASC',
+    kategoriMenu: 'Meeting Menu',
+  }
+
+  const { data: rooms, isLoading, isFetching, refetch } = useGetRoomList(param)
+
+  // const [isEdit, setIsEdit] = useState(false)
+  // const [loading, setLoading] = useState(false)
 
   const handleStatus = (status: string) => {
     if (status === 'Active') {
@@ -76,8 +90,12 @@ export function Management() {
     columnHelper.accessor('ACTION', {
       cell: () => (
         <div className="flex gap-3 items-center justify-center">
-          <IconEditing width={20} height={20} className="hover:cursor-pointer" />
-          <Image src={images.DELETE_ICON} width={20} height={20} alt="Delete Icon" className="hover:cursor-pointer" />
+          <button type="button">
+            <IconEditing width={20} height={20} className="hover:cursor-pointer" />
+          </button>
+          <button type="button">
+            <IconDeleting width={20} height={20} className="hover:cursor-pointer" />
+          </button>
         </div>
       ),
       header: 'Action',
@@ -86,6 +104,11 @@ export function Management() {
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault()
+  }
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value)
+    refetch()
   }
 
   const breadcrumbs = [
@@ -100,36 +123,6 @@ export function Management() {
       Booking Asset Data - Room Data
     </Link>,
   ]
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage)
-  }
-
-  useEffect(() => {
-    setTotalPages(10)
-  }, [])
-
-  const dataWithOriginalIndex = data.map((item, index) => ({ ...item, originalIndex: index }))
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value)
-    setCurrentPage(1)
-  }
-
-  // Fungsi untuk memfilter data berdasarkan query pencarian
-  const filteredData = dataWithOriginalIndex.filter(item =>
-    Object.values(item).some(value => String(value).toLowerCase().includes(searchQuery.toLowerCase()))
-  )
-
-  useEffect(() => {
-    setTotalPages(Math.ceil(filteredData.length / 10))
-  }, [filteredData.length])
-
-  const getDataForPage = (page: number) => {
-    const startIndex = (page - 1) * 10
-    const endIndex = startIndex + 10
-    return filteredData.slice(startIndex, endIndex)
-  }
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
@@ -177,14 +170,13 @@ export function Management() {
 
         <Table
           columns={columns}
-          data={getDataForPage(currentPage)}
-          loading={false}
-          pagination={{
-            TOTAL_DATA: filteredData.length,
-            PAGE: currentPage,
-            LAST_PAGE: totalPages,
-          }}
-          callback={handlePageChange}
+          data={rooms}
+          loading={isLoading || isFetching}
+          // pagination={{
+          //   TOTAL_DATA: filteredData.length,
+          //   PAGE: currentPage,
+          //   LAST_PAGE: totalPages,
+          // }}
         />
       </div>
     </div>
