@@ -15,7 +15,6 @@ import IconEditing from '@assets/icons/IconEditing'
 import IconDownload from '@assets/icons/IconDownload'
 import IconSearch from '@assets/icons/IconSearch'
 import IconDeleting from '@assets/icons/IconDeleting'
-// import { data } from './data'
 import { useGetRoomList } from '@services/cms/room/query'
 import { IRoomListParams } from '@interfaces/room'
 
@@ -30,13 +29,10 @@ export function Management() {
     size: 10,
     sortField: 'kapasitas',
     sortDirection: 'ASC',
-    kategoriMenu: 'Meeting Menu',
+    kategoriMenu: 'Meeting Room',
   }
 
   const { data: rooms, isLoading, isFetching, refetch } = useGetRoomList(param)
-
-  // const [isEdit, setIsEdit] = useState(false)
-  // const [loading, setLoading] = useState(false)
 
   const handleStatus = (status: string) => {
     if (status === 'Active') {
@@ -124,8 +120,14 @@ export function Management() {
     </Link>,
   ]
 
+  const transformedData = rooms?.data?.map((room, index) => ({
+    ...room,
+    originalIndex: index, // Add the originalIndex for the 'No' column
+    ACTION: '', // Placeholder for the 'Action' column
+  }))
+
   return (
-    <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
+    <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-y-auto !important">
       <div className="bg-white px-4 py-4 rounded-xl mb-4 text-[#235696] flex justify-between">
         <Stack spacing={2}>
           <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
@@ -170,7 +172,7 @@ export function Management() {
 
         <Table
           columns={columns}
-          data={rooms}
+          data={transformedData} // Use the transformed data
           loading={isLoading || isFetching}
           // pagination={{
           //   TOTAL_DATA: filteredData.length,
