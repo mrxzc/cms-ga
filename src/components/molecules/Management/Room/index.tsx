@@ -5,7 +5,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
 
@@ -23,16 +23,16 @@ export function Management() {
 
   const [searchQuery, setSearchQuery] = useState('')
 
-  const param: IRoomListParams = {
+  const [param, setParam] = useState<IRoomListParams>({
     search: searchQuery,
     page: 1,
     size: 10,
     sortField: 'kapasitas',
     sortDirection: 'ASC',
     kategoriMenu: 'Meeting Room',
-  }
+  })
 
-  const { data: rooms, isLoading, isFetching, refetch } = useGetRoomList(param)
+  const { data: rooms, isLoading, isFetching } = useGetRoomList(param)
 
   const handleStatus = (status: string) => {
     if (status === 'Active') {
@@ -104,8 +104,16 @@ export function Management() {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value)
-    refetch()
   }
+
+  useEffect(() => {
+    // Perbarui 'param' saat 'searchQuery' berubah
+    setParam(prevParam => ({
+      ...prevParam,
+      search: searchQuery,
+      page: searchQuery ? 1 : prevParam.page,
+    }))
+  }, [searchQuery])
 
   const breadcrumbs = [
     <Link
@@ -122,12 +130,17 @@ export function Management() {
 
   const transformedData = rooms?.data?.map((room, index) => ({
     ...room,
-    originalIndex: index, // Add the originalIndex for the 'No' column
-    ACTION: '', // Placeholder for the 'Action' column
+    originalIndex: index,
+    ACTION: '',
   }))
 
+  const handlePageChange = (newPage: number) => {
+    // Update your state or logic to fetch data for the new page
+    setParam(prevParam => ({ ...prevParam, page: newPage }))
+  }
+
   return (
-    <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-y-auto !important">
+    <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto !important">
       <div className="bg-white px-4 py-4 rounded-xl mb-4 text-[#235696] flex justify-between">
         <Stack spacing={2}>
           <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
@@ -172,13 +185,14 @@ export function Management() {
 
         <Table
           columns={columns}
-          data={transformedData} // Use the transformed data
+          data={transformedData}
           loading={isLoading || isFetching}
-          // pagination={{
-          //   TOTAL_DATA: filteredData.length,
-          //   PAGE: currentPage,
-          //   LAST_PAGE: totalPages,
-          // }}
+          pagination={{
+            TOTAL_DATA: rooms?.pagination?.totalRecords ?? 0,
+            PAGE: rooms?.pagination?.currentPage ?? 1,
+            LAST_PAGE: rooms?.pagination?.totalPage ?? 1,
+          }}
+          callback={handlePageChange}
         />
       </div>
     </div>

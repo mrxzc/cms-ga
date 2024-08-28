@@ -1,8 +1,8 @@
 import { IPaginationParams } from './api'
 
 export interface IRoomListParams {
-  search: string
-  page: number
+  search?: string
+  page?: string | number
   size: number
   sortField: string
   sortDirection: 'ASC' | 'DESC'

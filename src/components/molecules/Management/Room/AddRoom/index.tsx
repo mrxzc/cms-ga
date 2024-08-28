@@ -17,7 +17,7 @@ import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { ICreateRoomPayload } from '@interfaces/room'
+// import { ICreateRoomPayload } from '@interfaces/room'
 import { apiSubmitCreateRoom } from '@services/cms/room/api'
 import { optionsCapacity, optionsFloor } from './data'
 
@@ -91,25 +91,27 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
 
   const handleCreateRoom = async (payload: any) => {
     try {
-      // 1. Siapkan data payload
-      const params: ICreateRoomPayload = {
-        titleRoom: payload.roomTitle,
-        fileImages: images,
-        lantaiRuangan: payload.floor.value,
-        flagActive: payload.isActive ? 'Y' : 'N',
-        location: payload.location.value,
-        kapasitas: payload.capacity.value,
-        deskripsi: descriptionData,
-        termsCondition: termsData,
-        fasilitas: convertList,
-        kategoriMenu: category,
+      // 1. Siapkan FormData
+      const formData: any = new FormData()
+      formData.append('titleRoom', payload.roomTitle)
+      // Append images
+      for (const image of images) {
+        formData.append('fileImages', image)
       }
+      formData.append('lantaiRuangan', payload.floor.value.toString()) // Convert to string
+      formData.append('flagActive', payload.isActive ? 'Y' : 'N')
+      formData.append('location', payload.location.value)
+      formData.append('kapasitas', payload.capacity.value.toString()) // Convert to string
+      formData.append('deskripsi', descriptionData)
+      formData.append('termsCondition', termsData)
+      formData.append('fasilitas', convertList)
+      formData.append('kategoriMenu', category)
 
-      // 2. Panggil fungsi API
-      const response = await apiSubmitCreateRoom(params)
+      // 2. Panggil fungsi API (pastikan apiSubmitCreateRoom bisa menangani FormData)
+      const response = await apiSubmitCreateRoom(formData)
 
       // 3. Tangani respons
-      if (response.status === 'success') {
+      if (response.status === 'T') {
         toast.success('Ruangan berhasil dibuat!')
         router.push('/management/room')
       } else {
