@@ -37,6 +37,9 @@ import { EvaluationListPage } from './Evaluation/List'
 import { ContentAddPage } from './Content/Add'
 import { ContentEditPage } from './Content/Edit'
 import { ContentListPage } from './Content/List'
+import { BuildingConditionAddPage } from './BuildingCondition/Add/index'
+import { BuildingConditionEditPage } from './BuildingCondition/Edit/index'
+import { BuildingConditionListPage } from './BuildingCondition/List/index'
 
 export {
   CarBrandAddPage,
@@ -69,4 +72,7 @@ export {
   ContentAddPage,
   ContentEditPage,
   ContentListPage,
+  BuildingConditionAddPage,
+  BuildingConditionEditPage,
+  BuildingConditionListPage,
 }

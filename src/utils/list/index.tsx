@@ -18,7 +18,7 @@ const MENU_HEADER = [
   {
     id: '2',
     name: 'Booking Asset Data',
-    href: '/management/room',
+    href: '',
     icon: 'IconManagement',
     submenu: [
       {
@@ -69,18 +69,30 @@ const MENU_HEADER = [
         href: '/management/time-limit-management',
         submenu: [],
       },
+      {
+        id: '2.9',
+        name: 'Approval Bucket',
+        href: '/management/approval-bucket',
+        submenu: [],
+      },
+      {
+        id: '2.10',
+        name: 'Pengembalian Barang',
+        href: '/management/product-return',
+        submenu: [],
+      },
     ],
   },
   {
     id: '3',
     name: 'Building Management',
-    href: '/building-management/maintenance/repair-asset',
+    href: '',
     icon: 'IconBuilding',
     submenu: [
       {
         id: '3.1',
         name: 'Building Maintenance',
-        href: '/building-management/maintenance/repair-asset',
+        href: '',
         submenu: [
           {
             id: '3.1.1',
@@ -97,7 +109,7 @@ const MENU_HEADER = [
       {
         id: '3.2',
         name: 'EHS',
-        href: '/building-management/EHS/waste-management',
+        href: '',
         submenu: [
           {
             id: '3.2.1',
@@ -124,7 +136,7 @@ const MENU_HEADER = [
       {
         id: '3.3',
         name: 'Security Guard',
-        href: '/building-management/security-guard/manpower-sg',
+        href: '',
         submenu: [
           {
             id: '3.3.1',
@@ -141,7 +153,7 @@ const MENU_HEADER = [
       {
         id: '3.4',
         name: 'Cleaning Service',
-        href: '/building-management/cleaning-service/manpower-cs',
+        href: '',
         submenu: [
           {
             id: '3.4.1',
@@ -166,7 +178,7 @@ const MENU_HEADER = [
   {
     id: '4',
     name: 'Monitoring Pesan',
-    href: '/monitoring-pesan/booking',
+    href: '',
     icon: 'IconMonitorPesan',
     submenu: [
       {
@@ -193,7 +205,7 @@ const MENU_HEADER = [
   {
     id: '6',
     name: 'Master Data',
-    href: '/master/location',
+    href: '',
     icon: 'IconMasterData',
     submenu: [
       {
@@ -205,7 +217,7 @@ const MENU_HEADER = [
       {
         id: '6.2',
         name: 'Manage Room',
-        href: '/master/room-floor',
+        href: '',
         submenu: [
           {
             id: '6.2.1',
@@ -227,24 +239,24 @@ const MENU_HEADER = [
       {
         id: '6.3',
         name: 'Manage Building',
-        href: '/master/building',
+        href: '',
         submenu: [
           {
             id: '6.3.1',
             name: 'Manage Kondisi Cabang',
-            href: '/master/building/condition',
+            href: '/master/building-condition',
           },
           {
             id: '6.3.2',
             name: 'Manage Penilaian',
-            href: '/master/building/rating',
+            href: '/master/building-rating',
           },
         ],
       },
       {
         id: '6.4',
         name: 'Manage Vehicle',
-        href: '/master/car-brand',
+        href: '',
         submenu: [
           {
             id: '6.4.1',
@@ -280,7 +292,7 @@ const MENU_HEADER = [
   {
     id: '7',
     name: 'Account Management',
-    href: '/account-management/user',
+    href: '',
     icon: 'IconAccountManagement',
     submenu: [
       {

@@ -1,7 +1,7 @@
 import { AddPods } from '@components/molecules/Management'
 import React from 'react'
 
-export default function AddPodsPage() {
+export function AddPodsPage() {
   return (
     <div>
       <AddPods />

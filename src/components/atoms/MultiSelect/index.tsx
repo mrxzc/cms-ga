@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { Controller, UseFormReturn } from 'react-hook-form'
+import { Control, Controller } from 'react-hook-form'
 import {
   Checkbox,
   FormControl,
@@ -18,7 +18,7 @@ interface RHFMultiSelectProps {
   className?: string
   name: string
   label: string
-  control: UseFormReturn<any>['control']
+  control: Control<any>
 }
 
 const ITEM_HEIGHT = 48
@@ -100,12 +100,6 @@ const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, 
               inputProps={{ placeholder: label }}
               className="min-w-[650px]"
             >
-              <MenuItem key="all" value="all">
-                <ListItemIcon>
-                  <Checkbox checked={isAllSelected} />
-                </ListItemIcon>
-                <ListItemText primary="Select All" />
-              </MenuItem>
               {data.map(item => (
                 <MenuItem key={item.value} value={item.value}>
                   <ListItemIcon>

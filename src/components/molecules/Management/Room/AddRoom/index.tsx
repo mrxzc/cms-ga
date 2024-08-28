@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import * as Yup from 'yup'
 
 import SelectForm from '@components/atoms/Form/SelectForm'
@@ -27,17 +27,16 @@ const schema = Yup.object().shape({
   floor: Yup.object().required('Lantai Ruangan wajib dipilih'),
   capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
   facilityList: Yup.array(),
-  images: Yup.array(),
 })
 
 export function AddRoom() {
   const router = useRouter()
 
   const [isChecked, setIsChecked] = useState(false)
-
-  // const [images, setImages] = useState<(File | null)[]>(Array(10).fill(null));
-
+  const [descriptionData, setDescriptionData] = useState('')
+  const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
+
   const handleImageChange = (newImages: File[]) => {
     setImages(newImages)
   }
@@ -47,9 +46,9 @@ export function AddRoom() {
     mode: 'all',
   })
 
-  const options = [
-    { label: 'Head Office', value: 1 },
-    { label: 'Berijalan', value: 2 },
+  const optionsLocation = [
+    { label: 'Head Office', value: 'ACC' },
+    { label: 'Berijalan', value: 'BERIJALAN' },
   ]
 
   const breadcrumbs = [
@@ -61,15 +60,17 @@ export function AddRoom() {
     </Typography>,
   ]
 
-  const [descriptionData, setDescriptionData] = useState('')
   const handleDescriptionChange = (data: string) => {
     setDescriptionData(data)
   }
 
-  const [termsData, setTermsData] = useState('')
   const handleTermsChange = (data: string) => {
     setTermsData(data)
   }
+
+  useEffect(() => {
+    setValue('isActive', isChecked)
+  }, [isChecked])
 
   const facilityList = useWatch({
     control,
@@ -77,19 +78,17 @@ export function AddRoom() {
   })
 
   useEffect(() => {
-    setValue('isActive', isChecked)
-  }, [isChecked])
-
-  useEffect(() => {
     setValue('facilityList', facilityList)
   }, [facilityList, setValue])
 
-  useEffect(() => {
-    setValue('images', images)
-  }, [])
-
   const onSubmit = () => {
-    /* ... Your submission logic ... */
+    // console.log(data)
+    // console.log(descriptionData)
+    // console.log(termsData)
+    // console.log(images)
+    // console.log(facilityList)
+    // const facilityListValues = getValues('facilityList')
+    // console.log('facilityListValues: ', facilityListValues)
   }
 
   return (
@@ -107,14 +106,14 @@ export function AddRoom() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Aktif</p>
-            <label className="label cursor-pointer">
+            <label>
               <input
                 type="checkbox"
                 className="toggle toggle-accent"
                 checked={isChecked}
                 onChange={() => setIsChecked(!isChecked)}
                 value={''}
-              />
+              />{' '}
             </label>
           </div>
 
@@ -126,7 +125,7 @@ export function AddRoom() {
               control={control}
               name="location"
               placeholder="Pilih kategori pengajuan"
-              options={options}
+              options={optionsLocation}
               setValue={setValue}
               className="w-[350px]"
             />
@@ -202,9 +201,9 @@ export function AddRoom() {
           <div className="flex items-center mt-1">
             <p className="text-heading xs regular-16 w-[160px]">Fasilitas Ruangan</p>
             <RHFMultiSelect
-              data={optionsFacility}
-              name="facilityList"
               label="Pilih Fasilitas Ruangan"
+              name="facilityList"
+              data={optionsFacility}
               control={control}
               className=" min-w-[650px]"
             />
@@ -213,7 +212,7 @@ export function AddRoom() {
           <div className="flex items-center mt-1">
             <div className="text-heading xs regular-16 w-[160px]">
               Image<span className="text-red-500">*</span>
-              {images.length >= 0 && <p className="text-paragraph regular-14 mt-2">{images.length}/10</p>}
+              <p className="text-paragraph regular-14 mt-2">{images.length}/10</p>
               <p className="text-paragraph regular-14 text-gray-500 ">
                 Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
               </p>
