@@ -10,8 +10,7 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material'
-import Image from 'next/image'
-import images from '@assets/images'
+import IconClose from '@assets/icons/IconClose'
 
 interface RHFMultiSelectProps {
   data: { value: string; name: string; selectedValue?: boolean }[]
@@ -19,6 +18,7 @@ interface RHFMultiSelectProps {
   name: string
   label: string
   control: Control<any>
+  onValuesChange?: (values: string[]) => void
 }
 
 const ITEM_HEIGHT = 48
@@ -32,7 +32,7 @@ const MenuProps = {
   },
 }
 
-const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, label, control }) => {
+const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, label, control, onValuesChange }) => {
   const [selectedValues, setSelectedValues] = useState<string[]>(
     data.filter(item => item.selectedValue).map(item => item.value)
   )
@@ -45,6 +45,11 @@ const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, 
     setSelectedValues(
       newSelectedValues.includes('all') ? (isAllSelected ? [] : data.map(item => item.value)) : newSelectedValues
     )
+
+    // Call the callback to inform the parent
+    if (onValuesChange) {
+      onValuesChange(newSelectedValues)
+    }
   }
 
   const handleDelete = useCallback(
@@ -78,14 +83,12 @@ const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, 
                       <div key={value} className="relative">
                         <div className="flex border border-[#5141fe] rounded-md bg-white">
                           <div className="flex items-center rounded-l-lg p-1">
-                            <Image
-                              src={images.ERASE_IMAGE}
-                              width={12}
-                              height={12}
-                              alt="Delete Icon"
-                              className="hover:cursor-pointer z-[9999]"
+                            <button
                               onClick={handleDelete(value, field.onChange)}
-                            />
+                              className="w-[12px] h-[12px] hover:cursor-pointer z-[999]"
+                            >
+                              <IconClose />
+                            </button>
                           </div>
                           <p className="text-[#5141fe] py-2 pr-2 pl-2 text-extra-small regular-12 border-l-[1px] border-[#5141fe]">
                             {selectedItem?.name}

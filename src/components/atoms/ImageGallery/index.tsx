@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { toast } from 'react-toastify'
 
 import IconPlus from '@assets/icons/IconPlus'
-import images from '@assets/images'
+import IconClose from '@assets/icons/IconClose'
 
 interface ImageCardProps {
   file: File
@@ -41,14 +41,9 @@ const ImageCard: React.FC<ImageCardProps> = ({ file, isMain, onClose }) => {
         </p>
       )}
 
-      <Image
-        src={images.ERASE_IMAGE}
-        width={12}
-        height={12}
-        alt="Delete Icon"
-        className="hover:cursor-pointer absolute top-2 right-2"
-        onClick={onClose}
-      />
+      <button onClick={onClose} className="w-[12px] h-[12px] hover:cursor-pointer absolute top-2 right-2">
+        <IconClose />
+      </button>
     </div>
   )
 }

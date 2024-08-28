@@ -5,9 +5,11 @@ import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import React, { useEffect, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { Control, useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
 import SelectForm from '@components/atoms/Form/SelectForm'
@@ -15,9 +17,10 @@ import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { optionsCapacity, optionsFacility, optionsFloor } from './data'
+// import { ICreateRoomPayload } from '@interfaces/room'
+import { apiSubmitCreateRoom } from '@services/cms/room/api'
+import { optionsCapacity, optionsFloor } from './data'
 
-import dynamic from 'next/dynamic'
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
 const schema = Yup.object().shape({
@@ -26,10 +29,9 @@ const schema = Yup.object().shape({
   roomTitle: Yup.string().required('Title Room wajib diisi'),
   floor: Yup.object().required('Lantai Ruangan wajib dipilih'),
   capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
-  facilityList: Yup.array(),
 })
 
-export function AddRoom() {
+export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
   const router = useRouter()
 
   const [isChecked, setIsChecked] = useState(false)
@@ -41,7 +43,7 @@ export function AddRoom() {
     setImages(newImages)
   }
 
-  const { handleSubmit, control, setValue } = useForm<any>({
+  const { handleSubmit, control, setValue, getValues } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
@@ -72,23 +74,75 @@ export function AddRoom() {
     setValue('isActive', isChecked)
   }, [isChecked])
 
-  const facilityList = useWatch({
-    control,
-    name: 'facilityList',
-  })
+  const [selectedFacility, setSelectedFacility] = useState([])
 
-  useEffect(() => {
-    setValue('facilityList', facilityList)
-  }, [facilityList, setValue])
+  const convertList = selectedFacility.join(',')
 
-  const onSubmit = () => {
-    // console.log(data)
-    // console.log(descriptionData)
-    // console.log(termsData)
-    // console.log(images)
-    // console.log(facilityList)
-    // const facilityListValues = getValues('facilityList')
-    // console.log('facilityListValues: ', facilityListValues)
+  const optionsFacility = [
+    { value: 'kursi', name: 'Kursi' },
+    { value: 'meja', name: 'Meja' },
+    { value: 'proyektor', name: 'Proyektor' },
+    { value: 'speaker', name: 'Speaker' },
+  ]
+
+  const handleFacilitySelectionChange = (newSelectedValues: any) => {
+    setSelectedFacility(newSelectedValues)
+  }
+
+  const handleCreateRoom = async (payload: any) => {
+    try {
+      // 1. Siapkan FormData
+      const formData: any = new FormData()
+      formData.append('titleRoom', payload.roomTitle)
+      // Append images
+      for (const image of images) {
+        formData.append('fileImages', image)
+      }
+      formData.append('lantaiRuangan', payload.floor.value.toString()) // Convert to string
+      formData.append('flagActive', payload.isActive ? 'Y' : 'N')
+      formData.append('location', payload.location.value)
+      formData.append('kapasitas', payload.capacity.value.toString()) // Convert to string
+      formData.append('deskripsi', descriptionData)
+      formData.append('termsCondition', termsData)
+      formData.append('fasilitas', convertList)
+      formData.append('kategoriMenu', category)
+
+      // 2. Panggil fungsi API (pastikan apiSubmitCreateRoom bisa menangani FormData)
+      const response = await apiSubmitCreateRoom(formData)
+
+      // 3. Tangani respons
+      if (response.status === 'T') {
+        toast.success('Ruangan berhasil dibuat!')
+        router.push('/management/room')
+      } else {
+        // Tampilkan pesan error yang lebih spesifik jika ada
+        let errorMessage = 'Gagal membuat ruangan.'
+        if (response.message) {
+          errorMessage += ` ${response.message}`
+        } else if (response.error && response.error.length > 0) {
+          errorMessage += ` ${response.error}`
+        }
+        toast.error(errorMessage)
+      }
+    } catch (error: any) {
+      // Tangani error yang lebih spesifik
+      if (error.response) {
+        // Error dari server (misalnya 400, 500)
+        const { status, data } = error.response
+        toast.error(`Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`)
+      } else if (error.request) {
+        // Permintaan dikirim tapi tidak ada respons
+        toast.error('Tidak ada respons dari server. Periksa koneksi internet Anda.')
+      } else {
+        // Error lain saat menyiapkan permintaan
+        toast.error('Terjadi kesalahan saat membuat ruangan.')
+      }
+    }
+  }
+
+  const onSubmit = async () => {
+    const data = getValues()
+    handleCreateRoom(data)
   }
 
   return (
@@ -200,13 +254,15 @@ export function AddRoom() {
 
           <div className="flex items-center mt-1">
             <p className="text-heading xs regular-16 w-[160px]">Fasilitas Ruangan</p>
-            <RHFMultiSelect
-              label="Pilih Fasilitas Ruangan"
-              name="facilityList"
-              data={optionsFacility}
-              control={control}
-              className=" min-w-[650px]"
-            />
+            <div className="w-[650px]">
+              <RHFMultiSelect
+                data={optionsFacility}
+                name="fruits"
+                label="Pilih Buah"
+                control={control as Control<any>}
+                onValuesChange={handleFacilitySelectionChange}
+              />
+            </div>
           </div>
 
           <div className="flex items-center mt-1">

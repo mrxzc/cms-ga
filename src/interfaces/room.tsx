@@ -1,8 +1,8 @@
 import { IPaginationParams } from './api'
 
 export interface IRoomListParams {
-  search: string
-  page: number
+  search?: string
+  page?: string | number
   size: number
   sortField: string
   sortDirection: 'ASC' | 'DESC'
@@ -44,7 +44,7 @@ export interface ICreateRoomPayload {
   kapasitas: number
   deskripsi: string
   termsCondition: string
-  fasilitas: string[]
+  fasilitas: string
   kategoriMenu: string
 }
 

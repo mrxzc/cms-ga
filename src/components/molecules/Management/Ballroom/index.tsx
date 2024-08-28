@@ -15,13 +15,24 @@ import IconEditing from '@assets/icons/IconEditing'
 import images from '@assets/images'
 import IconDownload from '@assets/icons/IconDownload'
 import IconSearch from '@assets/icons/IconSearch'
-import { data } from './data'
+import { useGetRoomList } from '@services/cms/room/query'
+import { IRoomListParams } from '@interfaces/room'
 
 export function ManagementBallroom() {
   const router = useRouter()
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const [param, setParam] = useState<IRoomListParams>({
+    search: searchQuery,
+    page: 1,
+    size: 10,
+    sortField: 'kapasitas',
+    sortDirection: 'ASC',
+    kategoriMenu: 'Ballroom',
+  })
+
+  const { data: ballrooms, isLoading, isFetching } = useGetRoomList(param)
 
   const handleStatus = (status: string) => {
     if (status === 'Active') {
@@ -87,6 +98,30 @@ export function ManagementBallroom() {
     event.preventDefault()
   }
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value)
+  }
+
+  useEffect(() => {
+    // Perbarui 'param' saat 'searchQuery' berubah
+    setParam(prevParam => ({
+      ...prevParam,
+      search: searchQuery,
+      page: searchQuery ? 1 : prevParam.page,
+    }))
+  }, [searchQuery])
+
+  const transformedData = ballrooms?.data?.map((ballroom, index) => ({
+    ...ballroom,
+    originalIndex: index,
+    ACTION: '',
+  }))
+
+  const handlePageChange = (newPage: number) => {
+    // Update your state or logic to fetch data for the new page
+    setParam(prevParam => ({ ...prevParam, page: newPage }))
+  }
+
   const breadcrumbs = [
     <Link
       underline="none"
@@ -99,16 +134,6 @@ export function ManagementBallroom() {
       Booking Asset Data - Ballroom Data
     </Link>,
   ]
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage)
-  }
-
-  useEffect(() => {
-    setTotalPages(10)
-  }, [])
-
-  const dataWithOriginalIndex = data.map((item, index) => ({ ...item, originalIndex: index }))
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
@@ -145,8 +170,8 @@ export function ManagementBallroom() {
               type="text"
               placeholder="Search..."
               className="flex-1 text-paragraph regular-14 mt-1"
-              value={''}
-              onChange={() => {}}
+              value={searchQuery}
+              onChange={handleSearchChange}
               style={{
                 outline: 'none',
               }}
@@ -156,12 +181,12 @@ export function ManagementBallroom() {
 
         <Table
           columns={columns}
-          data={dataWithOriginalIndex}
-          loading={false}
+          data={transformedData}
+          loading={isLoading || isFetching}
           pagination={{
-            TOTAL_DATA: 100,
-            PAGE: currentPage,
-            LAST_PAGE: totalPages,
+            TOTAL_DATA: ballrooms?.pagination?.totalRecords ?? 0,
+            PAGE: ballrooms?.pagination?.currentPage ?? 1,
+            LAST_PAGE: ballrooms?.pagination?.totalPage ?? 1,
           }}
           callback={handlePageChange}
         />

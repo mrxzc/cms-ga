@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import type { Metadata, Viewport } from 'next'
 import { DM_Sans } from 'next/font/google'
 import Container from '@components/organisms/Container'
+import ContainerProvider from '@components/organisms/Provider'
 
 const inter = DM_Sans({ subsets: ['latin'] })
 export const viewport: Viewport = {
@@ -28,7 +29,9 @@ export default function RootLayout({ children }: { readonly children: React.Reac
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Container>{children}</Container>
+        <ContainerProvider>
+          <Container>{children}</Container>
+        </ContainerProvider>
       </body>
     </html>
   )
