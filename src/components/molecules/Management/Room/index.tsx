@@ -49,13 +49,13 @@ export function Management() {
       cell: info => info.getValue() + 1,
       header: 'No',
     }),
-    columnHelper.accessor('pathImage[0]', {
+    columnHelper.accessor('pathImage', {
       cell: info => (
         <div className="flex items-center justify-center">
           <Image
             width={1400}
             height={800}
-            src={info.getValue()}
+            src={`https://barndev.acc.co.id/gateway/v1/api/cms/master${info.getValue()[0]}`}
             alt="Room Image"
             className="w-[140px] h-[80px] object-cover"
           />
@@ -84,16 +84,25 @@ export function Management() {
       header: 'Status',
     }),
     columnHelper.accessor('ACTION', {
-      cell: () => (
-        <div className="flex gap-3 items-center justify-center">
-          <button type="button">
-            <IconEditing width={20} height={20} className="hover:cursor-pointer" />
-          </button>
-          <button type="button">
-            <IconDeleting width={20} height={20} className="hover:cursor-pointer" />
-          </button>
-        </div>
-      ),
+      cell: info => {
+        const rowData = info.row.original // Get the original row data
+
+        const handleEditClick = () => {
+          // Assuming 'rowData' has a property 'id' that represents the room ID
+          router.push(`/management/room/edit-room/${rowData.idRoom}`)
+        }
+
+        return (
+          <div className="flex gap-3 items-center justify-center">
+            <button type="button" onClick={handleEditClick}>
+              <IconEditing width={20} height={20} className="hover:cursor-pointer" />
+            </button>
+            <button type="button">
+              <IconDeleting width={20} height={20} className="hover:cursor-pointer" />
+            </button>
+          </div>
+        )
+      },
       header: 'Action',
     }),
   ]
@@ -135,7 +144,6 @@ export function Management() {
   }))
 
   const handlePageChange = (newPage: number) => {
-    // Update your state or logic to fetch data for the new page
     setParam(prevParam => ({ ...prevParam, page: newPage }))
   }
 

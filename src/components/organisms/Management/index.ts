@@ -3,6 +3,7 @@
 // Import from specific files
 import { Management as ManagementRoomPage } from './Room/index'
 import { AddRoomPage } from './Room/AddRoom/index'
+import { EditRoomPage } from './Room/EditRoom/index'
 import { AddVehiclePage } from './Vehicle/AddVehicle/index'
 import { VehicleManagementPage as ManagementVehiclePage } from './Vehicle/index'
 import { AddManpowerPage } from './Manpower/AddManpower/index'
@@ -19,6 +20,7 @@ import { TimeLimitPage } from './TimeLimit/index'
 export {
   ManagementRoomPage,
   AddRoomPage,
+  EditRoomPage,
   ManagementVehiclePage,
   AddVehiclePage,
   AddManpowerPage,

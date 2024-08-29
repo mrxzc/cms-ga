@@ -17,9 +17,10 @@ import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
 import { yupResolver } from '@hookform/resolvers/yup'
-// import { ICreateRoomPayload } from '@interfaces/room'
-import { apiSubmitCreateRoom } from '@services/cms/room/api'
+import { apiSubmitUpdateRoom } from '@services/cms/room/api'
 import { optionsCapacity, optionsFloor } from './data'
+import { useGetRoomDetail } from '@services/cms/room/query'
+import { EditRoomProps, IRoomDetailParams } from '@interfaces/room'
 
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
@@ -31,7 +32,7 @@ const schema = Yup.object().shape({
   capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
 })
 
-export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
+export function EditRoom({ category = 'Meeting Room', roomId = '' }: EditRoomProps) {
   const router = useRouter()
 
   const [isChecked, setIsChecked] = useState(false)
@@ -58,7 +59,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
       Booking Asset Data - Room
     </Link>,
     <Typography key="2" color="text.primary" className="text-heading m semibold-21">
-      Add Room Data
+      Edit Room Data
     </Typography>,
   ]
 
@@ -74,8 +75,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
     setValue('isActive', isChecked)
   }, [isChecked])
 
-  const [selectedFacility, setSelectedFacility] = useState([])
-
+  const [selectedFacility, setSelectedFacility] = useState<string[]>([])
   const convertList = selectedFacility.join(',')
 
   const optionsFacility = [
@@ -89,7 +89,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
     setSelectedFacility(newSelectedValues)
   }
 
-  const handleCreateRoom = async (payload: any) => {
+  const handleUpdateRoom = async (payload: any) => {
     try {
       // 1. Siapkan FormData
       const formData: any = new FormData()
@@ -108,7 +108,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
       formData.append('kategoriMenu', category)
 
       // 2. Panggil fungsi API (pastikan apiSubmitCreateRoom bisa menangani FormData)
-      const response = await apiSubmitCreateRoom(formData)
+      const response = await apiSubmitUpdateRoom(formData)
 
       // 3. Tangani respons
       if (response.status === 'T') {
@@ -142,8 +142,36 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
 
   const onSubmit = async () => {
     const data = getValues()
-    handleCreateRoom(data)
+    handleUpdateRoom(data)
   }
+
+  const [param, setParam] = useState<IRoomDetailParams>({
+    roomId: '',
+  })
+
+  const { data: rooms } = useGetRoomDetail(param)
+
+  useEffect(() => {
+    if (roomId) {
+      setParam({ roomId: roomId })
+    }
+  }, [])
+
+  useEffect(() => {
+    // Set default values when rooms data is available
+    if (rooms?.data) {
+      setValue('isActive', rooms.data.flagActive === 'Y')
+      setValue('location', { label: rooms.data.location, value: rooms.data.location })
+      setValue('roomTitle', rooms.data.titleRoom)
+      const floorOption = optionsFloor.find(option => option.value === rooms?.data?.lantaiRuangan)
+      setValue('floor', floorOption)
+      const capacityOption = optionsCapacity.find(option => option.value === rooms?.data?.kapasitas.toString())
+      setValue('capacity', capacityOption)
+      setDescriptionData(rooms.data.deskripsi)
+      setTermsData(rooms.data.termsCondition)
+      setSelectedFacility(rooms.data.fasilitas)
+    }
+  }, [rooms, setValue])
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
@@ -156,7 +184,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Add Room Data</p>
+        <p className="text-heading s semibold-18 mb-4">Edit Room Data</p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Aktif</p>
@@ -178,7 +206,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             <SelectForm
               control={control}
               name="location"
-              placeholder="Pilih lokasi pengajuan"
+              placeholder="Pilih kategori pengajuan"
               options={optionsLocation}
               setValue={setValue}
               className="w-[350px]"

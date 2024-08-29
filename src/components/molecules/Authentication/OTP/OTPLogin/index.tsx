@@ -1,11 +1,13 @@
 'use client'
 
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import OTPInput from '@components/atoms/OTPInput'
 import Modals from '@components/atoms/modal/Modals'
+import images from '@assets/images'
 import { Button } from '@components/atoms/button'
 import { IconLeftArrow } from '@components/atoms/Icon'
 import { useCountDownTimer } from '@utils/hooks/useCountDownTimer'
@@ -94,60 +96,65 @@ export default function OTPLogin() {
   }
 
   return (
-    <div className="flex flex-col items-center mt-5">
-      <div className="w-full max-w-xs">
-        <button onClick={handleBack}>
-          <IconLeftArrow height={24} width={24} className="cursor-pointer" />
-        </button>
-        <h1 className="text-[28px] font-bold text-black mt-[12px]">Atur Ulang Kata Sandi</h1>
-        <p className="text-sm font-normal text-[#6B7280] mb-5">
-          Kode verifikasi telah dikirimkan ke <span className="text-[#0089cf]">{noHP}</span>
-        </p>
-        <div className="flex flex-col items-center justify-center mb-5">
-          <div className="mb-5">
-            <OTPInput
-              length={6}
-              onComplete={handleComplete}
-              isError={false}
-              onhandleChange={() => {}}
-              isDisable={false}
-              isClearOTP={clearOtp}
-            />
-          </div>
+    <div className="flex h-screen">
+      <div className="w-1/2 h-screen relative">
+        <Image src={images.LOGIN_IMAGE} fill alt="Login Image" objectFit="cover" />
+      </div>
+      <div className="w-1/2 h-full flex flex-col justify-center items-center ">
+        <div className="w-full max-w-[412px] flex flex-col items-center">
+          <button onClick={handleBack} className="self-start">
+            <IconLeftArrow height={24} width={24} className="cursor-pointer" />
+          </button>
+          <h1 className="text-[28px] font-bold text-black mt-[12px]">Login</h1>
+          <p className="text-sm font-normal text-[#6B7280] mb-5">
+            Kode verifikasi telah dikirimkan ke <span className="text-[#0089cf]">{noHP}</span>
+          </p>
+          <div className="flex flex-col items-center justify-center mb-5">
+            <div className="mb-5">
+              <OTPInput
+                length={6}
+                onComplete={handleComplete}
+                isError={false}
+                onhandleChange={() => {}}
+                isDisable={false}
+                isClearOTP={clearOtp}
+              />
+            </div>
 
-          {timeOutOTP ? (
-            <p className="text-sm font-normal text-[#6B7280] self-center">
-              Tidak dapat kode?{' '}
-              <button
-                className="text-semibold cursor-pointer text-[#0089cf]"
-                onClick={() => {
-                  setCountDownTimeInMilliseconds(2 * 60 * 1000)
-                  startCountDownTime()
-                  setTimeOutOTP(false)
-                  setInputOTP('')
-                  setClearOtp(!clearOtp)
-                }}
-              >
-                Kirim ulang
-              </button>
-            </p>
-          ) : (
-            <p className="text-sm font-normal text-[#6B7280] self-center">
-              OTP Kadaluarsa dalam{' '}
-              <span className="font-semibold cursor-pointer text-[#0089cf]">
-                {countDownTime.minutes}:{countDownTime.seconds}
-              </span>
-            </p>
-          )}
+            {timeOutOTP ? (
+              <p className="text-sm font-normal text-[#6B7280] self-center">
+                Tidak dapat kode?{' '}
+                <button
+                  className="text-semibold cursor-pointer text-[#0089cf]"
+                  onClick={() => {
+                    setCountDownTimeInMilliseconds(2 * 60 * 1000)
+                    startCountDownTime()
+                    setTimeOutOTP(false)
+                    setInputOTP('')
+                    setClearOtp(!clearOtp)
+                  }}
+                >
+                  Kirim ulang
+                </button>
+              </p>
+            ) : (
+              <p className="text-sm font-normal text-[#6B7280] self-center">
+                OTP Kadaluarsa dalam{' '}
+                <span className="font-semibold cursor-pointer text-[#0089cf]">
+                  {countDownTime.minutes}:{countDownTime.seconds}
+                </span>
+              </p>
+            )}
+          </div>
+          <Button
+            className="next-button flex rounded-md justify-center items-center border-white focus:outline-none focus:shadow-outline w-full h-[48px] "
+            disabled={inputOTP.length < 6}
+            loader={isLoading}
+            onClick={onSubmit}
+          >
+            Verifikasi OTP
+          </Button>
         </div>
-        <Button
-          className="flex bg-[#386293] hover:bg-blue-700 mt-[20px] shadowtext-white font-bold border-2 border-white focus:outline-none focus:shadow-outline rounded-lg items-center justify-center w-full h-[48px]"
-          disabled={inputOTP.length <= 0}
-          loader={isLoading}
-          onClick={onSubmit}
-        >
-          Verifikasi OTP
-        </Button>
       </div>
 
       {/* Modals */}

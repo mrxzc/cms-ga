@@ -118,7 +118,6 @@ export function ManagementBallroom() {
   }))
 
   const handlePageChange = (newPage: number) => {
-    // Update your state or logic to fetch data for the new page
     setParam(prevParam => ({ ...prevParam, page: newPage }))
   }
 
@@ -136,7 +135,7 @@ export function ManagementBallroom() {
   ]
 
   return (
-    <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
+    <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-y-auto !important">
       <div className="bg-white px-4 py-4 rounded-xl mb-4 text-[#235696] flex justify-between">
         <Stack spacing={2}>
           <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
