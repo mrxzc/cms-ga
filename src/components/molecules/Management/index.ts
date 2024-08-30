@@ -1,6 +1,7 @@
 // Import from specific files
 import { Management as ManagementRoom } from './Room/index'
 import { AddRoom } from './Room/AddRoom/index'
+import { EditRoom } from './Room/EditRoom/index'
 import { VehicleManagement as ManagementVehicle } from './Vehicle/index'
 import { AddVehicle } from './Vehicle/AddVehicle/index'
 import { AddManpower } from './Manpower/AddManpower/index'
@@ -17,6 +18,7 @@ import { TimeLimit } from './TimeLimit/index'
 export {
   ManagementRoom,
   AddRoom,
+  EditRoom,
   ManagementVehicle,
   AddVehicle,
   AddManpower,

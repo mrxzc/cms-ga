@@ -94,10 +94,10 @@ export default function LoginPage() {
                 }}
                 name="email"
                 control={control}
-                className="w-[400px] h-[44px]"
+                className="w-full h-[44px] self-center"
               />
             </div>
-            <div className="mb-6">
+            <div className="mb-6 ">
               <p className="text-[black] text-sm">
                 Kata Sandi<span className="text-[red]">*</span>
               </p>
@@ -108,7 +108,7 @@ export default function LoginPage() {
                 }}
                 name="password"
                 control={control}
-                className="w-[400px] h-[44px]"
+                className="w-full h-[44px] self-center"
               />
             </div>
             <div className="flex items-center justify-center">
@@ -121,13 +121,6 @@ export default function LoginPage() {
             </div>
 
             <div className="flex items-center justify-center mb-[80px] mt-4">
-              {/* <div className='flex items-center justify-center h-full '>
-                <input type='checkbox' id='rememberMe' name='rememberMe' className='mr-1' />
-                <label htmlFor='rememberMe' className='text-sm'>
-                  Remember Me
-                </label>
-              </div> */}
-
               <Link href="/forgot-password" className=" text-blue-500 hover:underline font-semibold text-[14px]">
                 Lupa Kata Sandi?
               </Link>
