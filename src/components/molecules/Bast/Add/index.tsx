@@ -7,15 +7,11 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
-
-const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
 const schema = Yup.object().shape({
   km: Yup.string().required('KM wajib diisi'),
@@ -27,11 +23,6 @@ const schema = Yup.object().shape({
 
 export function Add() {
   const router = useRouter()
-
-  const [descriptionData, setDescriptionData] = useState('')
-  const handleDescriptionChange = (data: string) => {
-    setDescriptionData(data)
-  }
 
   const [images, setImages] = useState<File[]>([])
   const handleImageChange = (newImages: File[]) => {
@@ -61,6 +52,8 @@ export function Add() {
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
+      {images && <></>}
+      {imagesOut && <></>}
       <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center ">
         <Stack spacing={2}>
           <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
