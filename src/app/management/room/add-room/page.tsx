@@ -4,7 +4,7 @@ export const metadata = {
   title: 'Add Room',
 }
 
-export default function AddingAsset() {
+export default function AddingRoom() {
   return (
     <>
       <AddRoomPage />
