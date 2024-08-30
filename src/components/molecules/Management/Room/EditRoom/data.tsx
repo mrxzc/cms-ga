@@ -23,3 +23,15 @@ export const optionsFloor = [
   { label: 'Lantai 9', value: '9' },
   { label: 'Lantai 10', value: '10' },
 ]
+
+export const optionsLocation = [
+  { label: 'Head Office', value: 'ACC' },
+  { label: 'Berijalan', value: 'BERIJALAN' },
+]
+
+export const optionsFacility = [
+  { value: 'kursi', name: 'Kursi' },
+  { value: 'meja', name: 'Meja' },
+  { value: 'proyektor', name: 'Proyektor' },
+  { value: 'speaker', name: 'Speaker' },
+]

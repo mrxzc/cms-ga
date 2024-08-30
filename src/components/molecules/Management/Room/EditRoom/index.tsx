@@ -8,7 +8,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import React, { useEffect, useState } from 'react'
 import { Control, useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
@@ -18,7 +18,7 @@ import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { apiSubmitUpdateRoom } from '@services/cms/room/api'
-import { optionsCapacity, optionsFloor } from './data'
+import { optionsCapacity, optionsFacility, optionsFloor, optionsLocation } from './data'
 import { useGetRoomDetail } from '@services/cms/room/query'
 import { EditRoomProps, IRoomDetailParams } from '@interfaces/room'
 
@@ -30,29 +30,33 @@ const schema = Yup.object().shape({
   roomTitle: Yup.string().required('Title Room wajib diisi'),
   floor: Yup.object().required('Lantai Ruangan wajib dipilih'),
   capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
+  selectedFacilities: Yup.array(),
 })
 
-export function EditRoom({ category = 'Meeting Room', roomId = '' }: EditRoomProps) {
-  const router = useRouter()
+export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
+  const [param, setParam] = useState<IRoomDetailParams>({
+    roomId: '',
+  })
 
-  const [isChecked, setIsChecked] = useState(false)
+  const router = useRouter()
+  const pathname = usePathname()
+  const slug = pathname.split('/').pop()
+
+  const { data: rooms } = useGetRoomDetail(param)
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
+  const [selectedFacility, setSelectedFacility] = useState<string[]>([])
+  const [isChecked, setIsChecked] = useState(true)
+  const convertList = selectedFacility.join(',')
 
-  const handleImageChange = (newImages: File[]) => {
-    setImages(newImages)
-  }
-
-  const { handleSubmit, control, setValue, getValues } = useForm<any>({
+  const { handleSubmit, control, setValue, getValues, watch } = useForm<any>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      selectedFacilities: selectedFacility,
+    },
     mode: 'all',
   })
-
-  const optionsLocation = [
-    { label: 'Head Office', value: 'ACC' },
-    { label: 'Berijalan', value: 'BERIJALAN' },
-  ]
 
   const breadcrumbs = [
     <Link href="/management/room" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
@@ -63,6 +67,10 @@ export function EditRoom({ category = 'Meeting Room', roomId = '' }: EditRoomPro
     </Typography>,
   ]
 
+  const handleImageChange = (newImages: File[]) => {
+    setImages(newImages)
+  }
+
   const handleDescriptionChange = (data: string) => {
     setDescriptionData(data)
   }
@@ -70,20 +78,6 @@ export function EditRoom({ category = 'Meeting Room', roomId = '' }: EditRoomPro
   const handleTermsChange = (data: string) => {
     setTermsData(data)
   }
-
-  useEffect(() => {
-    setValue('isActive', isChecked)
-  }, [isChecked])
-
-  const [selectedFacility, setSelectedFacility] = useState<string[]>([])
-  const convertList = selectedFacility.join(',')
-
-  const optionsFacility = [
-    { value: 'kursi', name: 'Kursi' },
-    { value: 'meja', name: 'Meja' },
-    { value: 'proyektor', name: 'Proyektor' },
-    { value: 'speaker', name: 'Speaker' },
-  ]
 
   const handleFacilitySelectionChange = (newSelectedValues: any) => {
     setSelectedFacility(newSelectedValues)
@@ -98,25 +92,26 @@ export function EditRoom({ category = 'Meeting Room', roomId = '' }: EditRoomPro
       for (const image of images) {
         formData.append('fileImages', image)
       }
-      formData.append('lantaiRuangan', payload.floor.value.toString()) // Convert to string
+      formData.append('lantaiRuangan', payload.floor.value.toString())
       formData.append('flagActive', payload.isActive ? 'Y' : 'N')
       formData.append('location', payload.location.value)
-      formData.append('kapasitas', payload.capacity.value.toString()) // Convert to string
+      formData.append('kapasitas', payload.capacity.value.toString())
       formData.append('deskripsi', descriptionData)
       formData.append('termsCondition', termsData)
       formData.append('fasilitas', convertList)
       formData.append('kategoriMenu', category)
+      formData.append('roomId', slug)
 
       // 2. Panggil fungsi API (pastikan apiSubmitCreateRoom bisa menangani FormData)
       const response = await apiSubmitUpdateRoom(formData)
 
       // 3. Tangani respons
       if (response.status === 'T') {
-        toast.success('Ruangan berhasil dibuat!')
+        toast.success('Data ruangan berhasil diubah!')
         router.push('/management/room')
       } else {
         // Tampilkan pesan error yang lebih spesifik jika ada
-        let errorMessage = 'Gagal membuat ruangan.'
+        let errorMessage = 'Gagal mengubah data ruangan.'
         if (response.message) {
           errorMessage += ` ${response.message}`
         } else if (response.error && response.error.length > 0) {
@@ -135,7 +130,7 @@ export function EditRoom({ category = 'Meeting Room', roomId = '' }: EditRoomPro
         toast.error('Tidak ada respons dari server. Periksa koneksi internet Anda.')
       } else {
         // Error lain saat menyiapkan permintaan
-        toast.error('Terjadi kesalahan saat membuat ruangan.')
+        toast.error('Terjadi kesalahan saat mengubah ruangan.')
       }
     }
   }
@@ -145,20 +140,17 @@ export function EditRoom({ category = 'Meeting Room', roomId = '' }: EditRoomPro
     handleUpdateRoom(data)
   }
 
-  const [param, setParam] = useState<IRoomDetailParams>({
-    roomId: '',
-  })
-
-  const { data: rooms } = useGetRoomDetail(param)
+  useEffect(() => {
+    setValue('isActive', isChecked)
+  }, [isChecked, watch('isActive')])
 
   useEffect(() => {
-    if (roomId) {
-      setParam({ roomId: roomId })
+    if (slug) {
+      setParam({ roomId: slug })
     }
-  }, [])
+  }, [slug])
 
   useEffect(() => {
-    // Set default values when rooms data is available
     if (rooms?.data) {
       setValue('isActive', rooms.data.flagActive === 'Y')
       setValue('location', { label: rooms.data.location, value: rooms.data.location })
@@ -167,12 +159,13 @@ export function EditRoom({ category = 'Meeting Room', roomId = '' }: EditRoomPro
       setValue('floor', floorOption)
       const capacityOption = optionsCapacity.find(option => option.value === rooms?.data?.kapasitas.toString())
       setValue('capacity', capacityOption)
-      setDescriptionData(rooms.data.deskripsi)
-      setTermsData(rooms.data.termsCondition)
-      setSelectedFacility(rooms.data.fasilitas)
+
+      // Handle potential undefined values
+      setDescriptionData(rooms.data.deskripsi ?? '')
+      setTermsData(rooms.data.termsCondition ?? '')
+      setSelectedFacility(rooms.data.fasilitas ?? [])
     }
   }, [rooms, setValue])
-
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
       <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center ">
@@ -285,8 +278,8 @@ export function EditRoom({ category = 'Meeting Room', roomId = '' }: EditRoomPro
             <div className="w-[650px]">
               <RHFMultiSelect
                 data={optionsFacility}
-                name="fruits"
-                label="Pilih Buah"
+                name="selectedFacilities"
+                label="Pilih Fasilitas"
                 control={control as Control<any>}
                 onValuesChange={handleFacilitySelectionChange}
               />

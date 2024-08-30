@@ -6,6 +6,7 @@ import {
   IRoomDetail,
   ICreateRoomPayload,
   IUpdateRoomPayload,
+  IDeleteRoomParams,
 } from '@interfaces/room'
 import { IBookingTime } from '@interfaces/time'
 
@@ -31,11 +32,15 @@ export function apiSubmitCreateRoom(payload: ICreateRoomPayload): Promise<APIBas
 }
 
 export function apiSubmitUpdateRoom(payload: IUpdateRoomPayload): Promise<APIBaseResponse> {
-  return api.post<undefined, APIBaseResponse>('/cms/master/room/update', payload, {
+  return api.put<undefined, APIBaseResponse>('/cms/master/room/update', payload, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   })
+}
+
+export async function apiDeleteRoom(params: IDeleteRoomParams): Promise<APIBaseResponse<null>> {
+  return api.delete<null, APIBaseResponse<null>>('/cms/master/room/delete', { params })
 }
 
 export function apiGetBookingTime(): Promise<APIBaseResponse<IBookingTime[]>> {
