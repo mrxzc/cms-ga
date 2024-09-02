@@ -6,9 +6,9 @@ import { Add as CarTypeAdd } from './CarType/Add/index'
 import { Edit as CarTypeEdit } from './CarType/Edit/index'
 import { List as CarTypeList } from './CarType/List/index'
 
-import { Add as FuelAdd } from './Fuel/Add/index'
-import { Edit as FuelEdit } from './Fuel/Edit/index'
-import { List as FuelList } from './Fuel/List/index'
+import { Add as CarFuelAdd } from './CarFuel/Add/index'
+import { Edit as CarFuelEdit } from './CarFuel/Edit/index'
+import { List as CarFuelList } from './CarFuel/List/index'
 
 import { Add as LocationAdd } from './Location/Add/index'
 import { Edit as LocationEdit } from './Location/Edit/index'
@@ -49,9 +49,9 @@ export {
   CarTypeAdd,
   CarTypeEdit,
   CarTypeList,
-  FuelAdd,
-  FuelEdit,
-  FuelList,
+  CarFuelAdd,
+  CarFuelEdit,
+  CarFuelList,
   LocationAdd,
   LocationEdit,
   LocationList,

@@ -11,13 +11,13 @@ import { Modal } from '@components/atoms/ModalCustom'
 import Pagination from '@components/atoms/Pagination'
 import { IOTPLoginResponse } from '@interfaces/auth'
 import {
-  IGcmCarBrand,
-  IGcmCarBrandDeletePayload,
-  IGcmCarBrandListParams,
-  IGcmCarBrandToggleStatusPayload,
-} from '@interfaces/gcmCarBrand'
-import { mutateDeleteCarBrand, mutateToggleStatusCarBrand } from '@services/gcm/carBrand/mutation'
-import { useGetCarBrand } from '@services/gcm/carBrand/query'
+  IGcmCarFuel,
+  IGcmCarFuelDeletePayload,
+  IGcmCarFuelListParams,
+  IGcmCarFuelToggleStatusPayload,
+} from '@interfaces/gcmCarFuel'
+import { mutateDeleteCarFuel, mutateToggleStatusCarFuel } from '@services/gcm/carFuel/mutation'
+import { useGetCarFuel } from '@services/gcm/carFuel/query'
 import { GetCookie } from '@store/storage'
 import { debounce } from 'lodash'
 import Image from 'next/image'
@@ -33,24 +33,24 @@ export function List() {
 
   const [keywords, setKeywords] = useState<string>()
 
-  const [selectedCarBrand, setSelectedCarBrand] = useState<IGcmCarBrand>()
+  const [selectedCarFuel, setSelectedCarFuel] = useState<IGcmCarFuel>()
 
   const defaultParams = {
     search: '',
     page: 1,
     size: 10,
   }
-  const [params, setParams] = useState<IGcmCarBrandListParams>(defaultParams)
+  const [params, setParams] = useState<IGcmCarFuelListParams>(defaultParams)
 
-  const { data, isFetching, refetch } = useGetCarBrand(params, dataUser?.idUser)
+  const { data, isFetching, refetch } = useGetCarFuel(params, dataUser?.idUser)
 
-  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = mutateToggleStatusCarBrand()
+  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = mutateToggleStatusCarFuel()
   const {
     mutate: mutateDelete,
     isPending: isDeletePending,
     isSuccess: isDeleteSuccess,
     reset: deleteReset,
-  } = mutateDeleteCarBrand()
+  } = mutateDeleteCarFuel()
 
   const handleSearch = useCallback(
     debounce(input => {
@@ -76,7 +76,7 @@ export function List() {
     <div className="mb-[600px]">
       <div className="px-4 py-8">
         <div className="bg-white px-6 py-3 rounded mb-4 flex justify-between">
-          <div className="text-extra-small regular-12">Master Data - Manage Brand Mobil</div>
+          <div className="text-extra-small regular-12">Master Data - Manage Bahan Bakar</div>
           <div className="flex">
             <button type="button" className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]">
               <IconDownload className="-mt-0.5" />
@@ -86,7 +86,7 @@ export function List() {
             <button
               type="button"
               className="flex gap-1.5 items-center text-extra-small regular-12 text-[#252525]"
-              onClick={() => router.push('/master/car-brand/add')}
+              onClick={() => router.push('/master/car-fuel/add')}
             >
               <IconPlus color="white" className="bg-[#505050] p-1 rounded-full -mt-0.5" width={16} height={16} />
               <span>Add New</span>
@@ -95,7 +95,7 @@ export function List() {
         </div>
 
         <div className="bg-white rounded-lg mb-4 p-6 relative">
-          <div className="text-heading s semibold-18 mb-6">Master Data Brand Mobil</div>
+          <div className="text-heading s semibold-18 mb-6">Master Data Bahan Bakar</div>
 
           {/* Table controller */}
           <div className="mb-4">
@@ -104,7 +104,7 @@ export function List() {
 
               <input
                 type="text"
-                placeholder="Cari brand mobil"
+                placeholder="Cari bahan bakar"
                 className="flex-1 text-paragraph regular-14 mt-1"
                 value={keywords ?? ''}
                 onChange={e => {
@@ -170,7 +170,7 @@ export function List() {
                     </tr>
                   </thead>
                   <tbody className="table-body text-paragraph regular-14">
-                    {data?.data?.map((location: IGcmCarBrand, index, arr) => (
+                    {data?.data?.map((location: IGcmCarFuel, index, arr) => (
                       <tr
                         key={`location-${location?.noSr}`}
                         className={`${index != arr.length - 1 ? 'border-b border-[#E6E5E6]' : ''}`}
@@ -185,7 +185,7 @@ export function List() {
                               defaultChecked={location?.flagActive}
                               type="checkbox"
                               onChange={val => {
-                                const payload: IGcmCarBrandToggleStatusPayload = {
+                                const payload: IGcmCarFuelToggleStatusPayload = {
                                   noSr: location?.noSr,
                                   flagActive: val?.target?.checked,
                                 }
@@ -201,7 +201,7 @@ export function List() {
                               type="button"
                               className="mr-3"
                               onClick={() => {
-                                router.push(`/master/car-brand/${location?.noSr}/edit`)
+                                router.push(`/master/car-fuel/${location?.noSr}/edit`)
                               }}
                             >
                               <IconEditing width={20} height={20} className="hover:cursor-pointer" />
@@ -209,7 +209,7 @@ export function List() {
                             <button
                               type="button"
                               onClick={() => {
-                                setSelectedCarBrand(location)
+                                setSelectedCarFuel(location)
                                 setIsConfimationModalOpen(true)
                               }}
                             >
@@ -303,9 +303,9 @@ export function List() {
                   } bg-[#fe4040] text-white max-w-[145px] max-h-[45px] px-12 py-3 rounded-xl flex items-center justify-center`}
                   type="button"
                   onClick={() => {
-                    if (selectedCarBrand) {
-                      const payload: IGcmCarBrandDeletePayload = {
-                        noSr: selectedCarBrand?.noSr,
+                    if (selectedCarFuel) {
+                      const payload: IGcmCarFuelDeletePayload = {
+                        noSr: selectedCarFuel?.noSr,
                         flagActive: false,
                       }
                       mutateDelete({ payload, idUser: dataUser?.idUser })

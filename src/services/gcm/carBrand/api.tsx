@@ -30,7 +30,7 @@ export function apiGetCarBrand(
   const headers = {
     idUser,
   }
-  return api.get<IGcmCarBrand[], APIBaseResponse<IGcmCarBrand[]>>('/cms/master/location/list', { params, headers })
+  return api.get<IGcmCarBrand[], APIBaseResponse<IGcmCarBrand[]>>('/cms/master/carBrand/list', { params, headers })
 }
 
 export function apiGetCarBrandDetail(
@@ -42,7 +42,7 @@ export function apiGetCarBrandDetail(
   const headers = {
     idUser,
   }
-  return api.get<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/location/detail', { params, headers })
+  return api.get<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/detail', { params, headers })
 }
 
 export function apiCreateCarBrand(
@@ -54,7 +54,7 @@ export function apiCreateCarBrand(
   const headers = {
     idUser,
   }
-  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/location/create', payload, { headers })
+  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/create', payload, { headers })
 }
 
 export function apiUpdateCarBrand(
@@ -66,7 +66,7 @@ export function apiUpdateCarBrand(
   const headers = {
     idUser,
   }
-  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/location/update', payload, { headers })
+  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/update', payload, { headers })
 }
 
 export function apiToggleStatusCarBrand(
@@ -78,7 +78,7 @@ export function apiToggleStatusCarBrand(
   const headers = {
     idUser,
   }
-  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/location/toggleFlagActive', payload, {
+  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/toggleFlagActive', payload, {
     headers,
   })
 }
@@ -89,5 +89,5 @@ export function apiDeleteCarBrand(payload: IGcmCarBrandDeletePayload, idUser: st
   const headers = {
     idUser,
   }
-  return api.post<{}, APIBaseResponse<{}>>('/cms/master/location/delete', payload, { headers })
+  return api.post<{}, APIBaseResponse<{}>>('/cms/master/carBrand/delete', payload, { headers })
 }

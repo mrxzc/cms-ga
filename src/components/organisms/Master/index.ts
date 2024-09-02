@@ -6,9 +6,9 @@ import { CarTypeAddPage } from './CarType/Add'
 import { CarTypeEditPage } from './CarType/Edit'
 import { CarTypeListPage } from './CarType/List'
 
-import { FuelAddPage } from './Fuel/Add'
-import { FuelEditPage } from './Fuel/Edit'
-import { FuelListPage } from './Fuel/List'
+import { CarFuelAddPage } from './CarFuel/Add'
+import { CarFuelEditPage } from './CarFuel/Edit'
+import { CarFuelListPage } from './CarFuel/List'
 
 import { LocationAddPage } from './Location/Add'
 import { LocationEditPage } from './Location/Edit'
@@ -48,9 +48,9 @@ export {
   CarTypeAddPage,
   CarTypeEditPage,
   CarTypeListPage,
-  FuelAddPage,
-  FuelEditPage,
-  FuelListPage,
+  CarFuelAddPage,
+  CarFuelEditPage,
+  CarFuelListPage,
   LocationAddPage,
   LocationEditPage,
   LocationListPage,

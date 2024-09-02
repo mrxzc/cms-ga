@@ -271,7 +271,7 @@ const MENU_HEADER = [
           {
             id: '6.4.3',
             name: 'Manage Bahan Bakar',
-            href: '/master/fuel',
+            href: '/master/car-fuel',
           },
         ],
       },
