@@ -10,6 +10,10 @@ import { CarFuelAddPage } from './CarFuel/Add'
 import { CarFuelEditPage } from './CarFuel/Edit'
 import { CarFuelListPage } from './CarFuel/List'
 
+import { CarYearAddPage } from './CarYear/Add'
+import { CarYearEditPage } from './CarYear/Edit'
+import { CarYearListPage } from './CarYear/List'
+
 import { LocationAddPage } from './Location/Add'
 import { LocationEditPage } from './Location/Edit'
 import { LocationListPage } from './Location/List'
@@ -25,10 +29,6 @@ import { RoomFacilityListPage } from './RoomFacility/List'
 import { RoomFloorAddPage } from './RoomFloor/Add'
 import { RoomFloorEditPage } from './RoomFloor/Edit'
 import { RoomFloorListPage } from './RoomFloor/List'
-
-import { YearAddPage } from './Year/Add'
-import { YearEditPage } from './Year/Edit'
-import { YearListPage } from './Year/List'
 
 import { EvaluationAddPage } from './Evaluation/Add'
 import { EvaluationEditPage } from './Evaluation/Edit'
@@ -51,6 +51,9 @@ export {
   CarFuelAddPage,
   CarFuelEditPage,
   CarFuelListPage,
+  CarYearAddPage,
+  CarYearEditPage,
+  CarYearListPage,
   LocationAddPage,
   LocationEditPage,
   LocationListPage,
@@ -63,9 +66,6 @@ export {
   RoomFloorAddPage,
   RoomFloorEditPage,
   RoomFloorListPage,
-  YearAddPage,
-  YearEditPage,
-  YearListPage,
   EvaluationAddPage,
   EvaluationEditPage,
   EvaluationListPage,
