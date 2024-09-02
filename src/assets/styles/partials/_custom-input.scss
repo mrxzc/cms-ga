@@ -1,0 +1,13 @@
+.custom-input {
+  input {
+    outline: none;
+  }
+}
+
+.custom-input:has(input:focus) {
+  border: 1px solid #4994ec;
+}
+
+.custom-input:has(input:user-invalid) {
+  border: 1px solid #ec4949;
+}
