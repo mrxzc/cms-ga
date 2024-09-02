@@ -42,7 +42,7 @@ export function List() {
   }
   const [params, setParams] = useState<IGcmLocationListParams>(defaultParams)
 
-  const { data, isLoading, refetch } = useGetLocation(params, dataUser?.idUser)
+  const { data, isFetching, refetch } = useGetLocation(params, dataUser?.idUser)
 
   const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = mutateToggleStatusLocation()
   const {
@@ -117,7 +117,7 @@ export function List() {
           {/* Table controller */}
 
           {/* Table */}
-          {isLoading && (
+          {isFetching && (
             <div className="relative mb-6">
               <div className="rounded-lg border border-[#E6E5E6] overflow-auto">
                 <table className="table-fixed custom-table">
@@ -156,7 +156,7 @@ export function List() {
             </div>
           )}
 
-          {!isLoading && data?.data?.length ? (
+          {!isFetching && data?.data?.length ? (
             <div className="relative mb-6">
               <div className="rounded-lg border border-[#E6E5E6] overflow-auto">
                 <table className="table-fixed custom-table">
@@ -225,7 +225,7 @@ export function List() {
             </div>
           ) : null}
 
-          {!isLoading && !data?.data?.length ? (
+          {!isFetching && !data?.data?.length ? (
             <div className="w-full flex flex-col justify-center items-center my-20">
               <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
               <div className="text-extra-small regular-12 mb-4">Saat ini belum ada yang tersedia</div>
@@ -249,7 +249,7 @@ export function List() {
 
           {/* Pagination */}
           <Pagination
-            isLoading={isLoading}
+            isLoading={isFetching}
             pagination={data?.pagination}
             clicked={(page: number) => {
               setParams({ ...params, page })

@@ -38,8 +38,8 @@ export function Add() {
 
   useEffect(() => {
     if (isCreateSuccess) {
-      createReset()
       setTimeout(() => {
+        createReset()
         router.push('/master/location')
       }, 3000)
     }

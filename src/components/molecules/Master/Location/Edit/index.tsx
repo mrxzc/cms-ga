@@ -22,11 +22,11 @@ export function Edit() {
 
   const {
     data,
-    isLoading,
+    isFetching,
     isRefetching,
     isSuccess: isFetchSuccess,
     isError: isFetchError,
-    isRefetchError: isRefetchError,
+    isRefetchError,
     refetch,
   } = useGetLocationDetail({ noSr: paramsPage?.location }, dataUser?.idUser)
 
@@ -51,8 +51,8 @@ export function Edit() {
 
   useEffect(() => {
     if (isUpdateSuccess) {
-      updateReset()
       setTimeout(() => {
+        updateReset()
         router.push('/master/location')
       }, 3000)
     }
@@ -81,9 +81,9 @@ export function Edit() {
         </div>
 
         <div className="bg-white rounded-lg mb-4 p-6 relative">
-          <p className="text-heading s semibold-18 text-[#235696] mb-10">Edit Lokasi</p>
+          <p className="text-heading s semibold-18 mb-10">Edit Lokasi</p>
 
-          {(isLoading || isRefetching) && (
+          {(isFetching || isRefetching) && (
             <div className="flex items-center justify-center my-20">
               <IconSpinner width={100} height={100} className="animate-spin"></IconSpinner>
             </div>
