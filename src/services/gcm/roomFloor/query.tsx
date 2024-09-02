@@ -6,7 +6,7 @@ import { apiGetRoomFloor, apiGetRoomFloorDetail } from './api'
 // Get RoomFloor
 export const useGetRoomFloor = (params: IGcmRoomFloorListParams, idUser: string) => {
   return useQuery({
-    queryKey: ['/cms/master/location/list', params],
+    queryKey: ['/cms/master/roomFloor/list', params],
     queryFn: async () =>
       apiGetRoomFloor(params, idUser).catch((error: Error) => {
         toast.error(error?.message)
@@ -17,7 +17,7 @@ export const useGetRoomFloor = (params: IGcmRoomFloorListParams, idUser: string)
 // Get RoomFloor Detail
 export const useGetRoomFloorDetail = (params: IGcmRoomFloorDetailParams, idUser: string) => {
   return useQuery({
-    queryKey: ['/cms/master/location/detail', params],
+    queryKey: ['/cms/master/roomFloor/detail', params],
     queryFn: async () =>
       apiGetRoomFloorDetail(params, idUser).catch((error: Error) => {
         toast.error(error?.message)

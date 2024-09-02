@@ -30,7 +30,7 @@ export function apiGetRoomFloor(
   const headers = {
     idUser,
   }
-  return api.get<IGcmRoomFloor[], APIBaseResponse<IGcmRoomFloor[]>>('/cms/master/location/list', { params, headers })
+  return api.get<IGcmRoomFloor[], APIBaseResponse<IGcmRoomFloor[]>>('/cms/master/roomFloor/list', { params, headers })
 }
 
 export function apiGetRoomFloorDetail(
@@ -42,7 +42,7 @@ export function apiGetRoomFloorDetail(
   const headers = {
     idUser,
   }
-  return api.get<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/location/detail', { params, headers })
+  return api.get<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/detail', { params, headers })
 }
 
 export function apiCreateRoomFloor(
@@ -54,7 +54,7 @@ export function apiCreateRoomFloor(
   const headers = {
     idUser,
   }
-  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/location/create', payload, { headers })
+  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/create', payload, { headers })
 }
 
 export function apiUpdateRoomFloor(
@@ -66,7 +66,7 @@ export function apiUpdateRoomFloor(
   const headers = {
     idUser,
   }
-  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/location/update', payload, { headers })
+  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/update', payload, { headers })
 }
 
 export function apiToggleStatusRoomFloor(
@@ -78,7 +78,7 @@ export function apiToggleStatusRoomFloor(
   const headers = {
     idUser,
   }
-  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/location/toggleFlagActive', payload, {
+  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/toggleFlagActive', payload, {
     headers,
   })
 }
@@ -89,5 +89,5 @@ export function apiDeleteRoomFloor(payload: IGcmRoomFloorDeletePayload, idUser: 
   const headers = {
     idUser,
   }
-  return api.post<{}, APIBaseResponse<{}>>('/cms/master/location/delete', payload, { headers })
+  return api.post<{}, APIBaseResponse<{}>>('/cms/master/roomFloor/delete', payload, { headers })
 }

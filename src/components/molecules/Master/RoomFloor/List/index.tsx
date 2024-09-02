@@ -86,7 +86,7 @@ export function List() {
             <button
               type="button"
               className="flex gap-1.5 items-center text-extra-small regular-12 text-[#252525]"
-              onClick={() => router.push('/master/location/add')}
+              onClick={() => router.push('/master/room-floor/add')}
             >
               <IconPlus color="white" className="bg-[#505050] p-1 rounded-full -mt-0.5" width={16} height={16} />
               <span>Add New</span>
