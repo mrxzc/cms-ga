@@ -11,7 +11,7 @@ const spaceAtBeginning = /^(?!\s)[a-zA-Z0-9_\s-]*$/ // dissalow space at beginni
 const emailPattern = /^[\w\\.-]+@[\w\\.-]+\.\w+$/
 const emailPatterns = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
-const pageWithlist = /^(Home|Profile|Booking-asset|Management|Master|Building|Monitoring|Calendar|Account)/
+const pageWithlist = /^(Home|Profile|Booking-asset|Management|Master|Building|Monitoring|Calendar|Account|User)/
 
 export {
   alphaSpaces,

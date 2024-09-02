@@ -47,7 +47,8 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
   const [selectedFacility, setSelectedFacility] = useState<string[]>([])
-  const [isChecked, setIsChecked] = useState(true)
+  const [isChecked, setIsChecked] = useState(false)
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false)
   const convertList = selectedFacility.join(',')
 
   const { handleSubmit, control, setValue, getValues, watch } = useForm<any>({
@@ -148,7 +149,14 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     if (slug) {
       setParam({ roomId: slug })
     }
-  }, [slug])
+  }, [])
+
+  useEffect(() => {
+    if (rooms?.data && !initialDataLoaded) {
+      setValue('isActive', rooms.data.flagActive === 'Y')
+      setInitialDataLoaded(true)
+    }
+  }, [rooms, setValue])
 
   useEffect(() => {
     if (rooms?.data) {
@@ -166,6 +174,31 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
       setSelectedFacility(rooms.data.fasilitas ?? [])
     }
   }, [rooms, setValue])
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      if (!rooms?.data?.fileImages?.length) return // Return early if no images
+
+      const newImages: File[] = []
+
+      for (const imageUrl of rooms.data.fileImages) {
+        try {
+          const response = await fetch(`https://barndev.acc.co.id/gateway/master/v1/file/${imageUrl}`)
+          const blob = await response.blob()
+          const filename = imageUrl.split('/').pop() || 'image.png'
+          const file = new File([blob], filename, { type: blob.type })
+          newImages.push(file)
+        } catch (error) {
+          // Handle error, e.g., show a toast notification
+        }
+      }
+
+      setImages(newImages)
+    }
+
+    fetchImages()
+  }, [rooms])
+
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
       <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center ">

@@ -1,13 +1,13 @@
 'use client'
 
 import React from 'react'
-import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 
@@ -20,7 +20,7 @@ const schema = Yup.object().shape({
   manpowerAsset: Yup.string().required('Manpower asset wajib dipilih'),
 })
 
-export function AddUser() {
+export function DetailVerification() {
   const router = useRouter()
 
   const { handleSubmit, control, setValue } = useForm<any>({
@@ -29,11 +29,11 @@ export function AddUser() {
   })
 
   const breadcrumbs = [
-    <Link href="/account-management/role" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
-      Account Management - User Management
+    <Link href="/user-management" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
+      User Management - List User
     </Link>,
     <Typography key="2" color="text.primary" className="text-heading m semibold-21">
-      Add User Management
+      Detail User
     </Typography>,
   ]
 
@@ -52,31 +52,66 @@ export function AddUser() {
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Add User Management</p>
+        <p className="text-heading s semibold-18 mb-4">Detail User</p>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <div className="flex items-center">
-            <p className="text-paragraph regular-14 w-[160px] mr-10">
-              Email<span className="text-red-500">*</span>
-            </p>
+            <p className="text-paragraph regular-14 w-[160px] mr-10">Kode User</p>
             <TextForm
               control={control}
-              name="email"
-              fieldInput={{ placeholder: 'Masukkan nama user' }}
-              className="w-[350px]"
+              name="code"
+              fieldInput={{ placeholder: 'Masukkan kode user', disabled: true }}
+              className="w-[660px]"
+            />
+          </div>
+          <div className="flex items-center">
+            <p className="text-paragraph regular-14 w-[160px] mr-10">Nama</p>
+            <TextForm
+              control={control}
+              name="name"
+              fieldInput={{ placeholder: 'Masukkan nama user', disabled: true }}
+              className="w-[660px]"
             />
           </div>
 
           <div className="flex items-center">
-            <p className="text-paragraph regular-14 w-[160px] mr-10">
-              Role<span className="text-red-500">*</span>
-            </p>
+            <p className="text-paragraph regular-14 w-[160px] mr-10">Email</p>
+            <TextForm
+              control={control}
+              name="email"
+              fieldInput={{ placeholder: 'Masukkan email user', disabled: true }}
+              className="w-[660px]"
+            />
+          </div>
+
+          <div className="flex items-center">
+            <p className="text-paragraph regular-14 w-[160px] mr-10">No Handphone</p>
+            <TextForm
+              control={control}
+              name="noHandphone"
+              fieldInput={{ placeholder: 'Masukkan no handphone', disabled: true }}
+              className="w-[660px]"
+            />
+          </div>
+
+          <div className="flex items-center">
+            <p className="text-paragraph regular-14 w-[160px] mr-10">Tanggal Lahir</p>
+            <TextForm
+              control={control}
+              name="tanggalLahir"
+              fieldInput={{ placeholder: 'Masukkan tanggal lahir user', disabled: true }}
+              className="w-[660px]"
+            />
+          </div>
+
+          <div className="flex items-center">
+            <p className="text-paragraph regular-14 w-[160px] mr-10">Role</p>
             <SelectForm
               control={control}
               name="role"
               placeholder="Pilih role user"
               options={optionsRole}
               setValue={setValue}
-              className="w-[350px]"
+              className="w-[660px]"
             />
           </div>
 
@@ -84,11 +119,11 @@ export function AddUser() {
 
           <div className="flex justify-end gap-2 items-end">
             <button
-              className="bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
+              className="bg-[#d92b41] text-[white] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
               type="button"
               onClick={() => router.push('/account-management/role')}
             >
-              Cancel
+              Reject
             </button>
             <button
               className="bg-[#235696] text-[#e5f2fc] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
