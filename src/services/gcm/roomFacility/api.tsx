@@ -10,14 +10,14 @@ import {
 } from '@interfaces/gcmRoomFacility'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
-import {
-  dummyCreateRoomFacility,
-  dummyDeleteRoomFacility,
-  dummyGetRoomFacility,
-  dummyGetRoomFacilityDetail,
-  dummyToggleStatusRoomFacility,
-  dummyUpdateRoomFacility,
-} from './dummy'
+// import {
+//   dummyCreateRoomFacility,
+//   dummyDeleteRoomFacility,
+//   dummyGetRoomFacility,
+//   dummyGetRoomFacilityDetail,
+//   dummyToggleStatusRoomFacility,
+//   dummyUpdateRoomFacility,
+// } from './dummy'
 
 const api = httpRequest(API_MASTER)
 
@@ -25,7 +25,7 @@ export function apiGetRoomFacility(
   params: IGcmRoomFacilityListParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFacility[]>> {
-  return dummyGetRoomFacility()
+  // return dummyGetRoomFacility()
 
   const headers = {
     idUser,
@@ -40,7 +40,7 @@ export function apiGetRoomFacilityDetail(
   params: IGcmRoomFacilityDetailParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFacility>> {
-  return dummyGetRoomFacilityDetail()
+  // return dummyGetRoomFacilityDetail()
 
   const headers = {
     idUser,
@@ -55,7 +55,7 @@ export function apiCreateRoomFacility(
   payload: IGcmRoomFacilityCreatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFacility>> {
-  return dummyCreateRoomFacility()
+  // return dummyCreateRoomFacility()
 
   const headers = {
     idUser,
@@ -69,7 +69,7 @@ export function apiUpdateRoomFacility(
   payload: IGcmRoomFacilityUpdatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFacility>> {
-  return dummyUpdateRoomFacility()
+  // return dummyUpdateRoomFacility()
 
   const headers = {
     idUser,
@@ -83,7 +83,7 @@ export function apiToggleStatusRoomFacility(
   payload: IGcmRoomFacilityToggleStatusPayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFacility>> {
-  return dummyToggleStatusRoomFacility()
+  // return dummyToggleStatusRoomFacility()
 
   const headers = {
     idUser,
@@ -101,7 +101,7 @@ export function apiDeleteRoomFacility(
   payload: IGcmRoomFacilityDeletePayload,
   idUser: string
 ): Promise<APIBaseResponse<{}>> {
-  return dummyDeleteRoomFacility()
+  // return dummyDeleteRoomFacility()
 
   const headers = {
     idUser,

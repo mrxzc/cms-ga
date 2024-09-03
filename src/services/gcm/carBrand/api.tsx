@@ -10,14 +10,14 @@ import {
 } from '@interfaces/gcmCarBrand'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
-import {
-  dummyCreateCarBrand,
-  dummyDeleteCarBrand,
-  dummyGetCarBrand,
-  dummyGetCarBrandDetail,
-  dummyToggleStatusCarBrand,
-  dummyUpdateCarBrand,
-} from './dummy'
+// import {
+//   dummyCreateCarBrand,
+//   dummyDeleteCarBrand,
+//   dummyGetCarBrand,
+//   dummyGetCarBrandDetail,
+//   dummyToggleStatusCarBrand,
+//   dummyUpdateCarBrand,
+// } from './dummy'
 
 const api = httpRequest(API_MASTER)
 
@@ -25,7 +25,7 @@ export function apiGetCarBrand(
   params: IGcmCarBrandListParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarBrand[]>> {
-  return dummyGetCarBrand()
+  // return dummyGetCarBrand()
 
   const headers = {
     idUser,
@@ -37,7 +37,7 @@ export function apiGetCarBrandDetail(
   params: IGcmCarBrandDetailParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarBrand>> {
-  return dummyGetCarBrandDetail()
+  // return dummyGetCarBrandDetail()
 
   const headers = {
     idUser,
@@ -49,7 +49,7 @@ export function apiCreateCarBrand(
   payload: IGcmCarBrandCreatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarBrand>> {
-  return dummyCreateCarBrand()
+  // return dummyCreateCarBrand()
 
   const headers = {
     idUser,
@@ -61,7 +61,7 @@ export function apiUpdateCarBrand(
   payload: IGcmCarBrandUpdatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarBrand>> {
-  return dummyUpdateCarBrand()
+  // return dummyUpdateCarBrand()
 
   const headers = {
     idUser,
@@ -73,7 +73,7 @@ export function apiToggleStatusCarBrand(
   payload: IGcmCarBrandToggleStatusPayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarBrand>> {
-  return dummyToggleStatusCarBrand()
+  // return dummyToggleStatusCarBrand()
 
   const headers = {
     idUser,
@@ -84,7 +84,7 @@ export function apiToggleStatusCarBrand(
 }
 
 export function apiDeleteCarBrand(payload: IGcmCarBrandDeletePayload, idUser: string): Promise<APIBaseResponse<{}>> {
-  return dummyDeleteCarBrand()
+  // return dummyDeleteCarBrand()
 
   const headers = {
     idUser,

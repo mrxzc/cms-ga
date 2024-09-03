@@ -10,14 +10,14 @@ import {
 } from '@interfaces/gcmRoomFloor'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
-import {
-  dummyCreateRoomFloor,
-  dummyDeleteRoomFloor,
-  dummyGetRoomFloor,
-  dummyGetRoomFloorDetail,
-  dummyToggleStatusRoomFloor,
-  dummyUpdateRoomFloor,
-} from './dummy'
+// import {
+//   dummyCreateRoomFloor,
+//   dummyDeleteRoomFloor,
+//   dummyGetRoomFloor,
+//   dummyGetRoomFloorDetail,
+//   dummyToggleStatusRoomFloor,
+//   dummyUpdateRoomFloor,
+// } from './dummy'
 
 const api = httpRequest(API_MASTER)
 
@@ -25,7 +25,7 @@ export function apiGetRoomFloor(
   params: IGcmRoomFloorListParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFloor[]>> {
-  return dummyGetRoomFloor()
+  // return dummyGetRoomFloor()
 
   const headers = {
     idUser,
@@ -37,7 +37,7 @@ export function apiGetRoomFloorDetail(
   params: IGcmRoomFloorDetailParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFloor>> {
-  return dummyGetRoomFloorDetail()
+  // return dummyGetRoomFloorDetail()
 
   const headers = {
     idUser,
@@ -49,7 +49,7 @@ export function apiCreateRoomFloor(
   payload: IGcmRoomFloorCreatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFloor>> {
-  return dummyCreateRoomFloor()
+  // return dummyCreateRoomFloor()
 
   const headers = {
     idUser,
@@ -61,7 +61,7 @@ export function apiUpdateRoomFloor(
   payload: IGcmRoomFloorUpdatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFloor>> {
-  return dummyUpdateRoomFloor()
+  // return dummyUpdateRoomFloor()
 
   const headers = {
     idUser,
@@ -73,7 +73,7 @@ export function apiToggleStatusRoomFloor(
   payload: IGcmRoomFloorToggleStatusPayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFloor>> {
-  return dummyToggleStatusRoomFloor()
+  // return dummyToggleStatusRoomFloor()
 
   const headers = {
     idUser,
@@ -84,7 +84,7 @@ export function apiToggleStatusRoomFloor(
 }
 
 export function apiDeleteRoomFloor(payload: IGcmRoomFloorDeletePayload, idUser: string): Promise<APIBaseResponse<{}>> {
-  return dummyDeleteRoomFloor()
+  // return dummyDeleteRoomFloor()
 
   const headers = {
     idUser,

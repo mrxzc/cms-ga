@@ -10,14 +10,14 @@ import {
 } from '@interfaces/gcmLocation'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
-import {
-  dummyCreateLocation,
-  dummyDeleteLocation,
-  dummyGetLocation,
-  dummyGetLocationDetail,
-  dummyToggleStatusLocation,
-  dummyUpdateLocation,
-} from './dummy'
+// import {
+//   dummyCreateLocation,
+//   dummyDeleteLocation,
+//   dummyGetLocation,
+//   dummyGetLocationDetail,
+//   dummyToggleStatusLocation,
+//   dummyUpdateLocation,
+// } from './dummy'
 
 const api = httpRequest(API_MASTER)
 
@@ -25,7 +25,7 @@ export function apiGetLocation(
   params: IGcmLocationListParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmLocation[]>> {
-  return dummyGetLocation()
+  // return dummyGetLocation()
 
   const headers = {
     idUser,
@@ -37,7 +37,7 @@ export function apiGetLocationDetail(
   params: IGcmLocationDetailParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmLocation>> {
-  return dummyGetLocationDetail()
+  // return dummyGetLocationDetail()
 
   const headers = {
     idUser,
@@ -49,7 +49,7 @@ export function apiCreateLocation(
   payload: IGcmLocationCreatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmLocation>> {
-  return dummyCreateLocation()
+  // return dummyCreateLocation()
 
   const headers = {
     idUser,
@@ -61,7 +61,7 @@ export function apiUpdateLocation(
   payload: IGcmLocationUpdatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmLocation>> {
-  return dummyUpdateLocation()
+  // return dummyUpdateLocation()
 
   const headers = {
     idUser,
@@ -73,7 +73,7 @@ export function apiToggleStatusLocation(
   payload: IGcmLocationToggleStatusPayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmLocation>> {
-  return dummyToggleStatusLocation()
+  // return dummyToggleStatusLocation()
 
   const headers = {
     idUser,
@@ -84,7 +84,7 @@ export function apiToggleStatusLocation(
 }
 
 export function apiDeleteLocation(payload: IGcmLocationDeletePayload, idUser: string): Promise<APIBaseResponse<{}>> {
-  return dummyDeleteLocation()
+  // return dummyDeleteLocation()
 
   const headers = {
     idUser,

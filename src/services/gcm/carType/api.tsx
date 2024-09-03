@@ -10,19 +10,19 @@ import {
 } from '@interfaces/gcmCarType'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
-import {
-  dummyCreateCarType,
-  dummyDeleteCarType,
-  dummyGetCarType,
-  dummyGetCarTypeDetail,
-  dummyToggleStatusCarType,
-  dummyUpdateCarType,
-} from './dummy'
+// import {
+//   dummyCreateCarType,
+//   dummyDeleteCarType,
+//   dummyGetCarType,
+//   dummyGetCarTypeDetail,
+//   dummyToggleStatusCarType,
+//   dummyUpdateCarType,
+// } from './dummy'
 
 const api = httpRequest(API_MASTER)
 
 export function apiGetCarType(params: IGcmCarTypeListParams, idUser: string): Promise<APIBaseResponse<IGcmCarType[]>> {
-  return dummyGetCarType()
+  // return dummyGetCarType()
 
   const headers = {
     idUser,
@@ -34,7 +34,7 @@ export function apiGetCarTypeDetail(
   params: IGcmCarTypeDetailParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarType>> {
-  return dummyGetCarTypeDetail()
+  // return dummyGetCarTypeDetail()
 
   const headers = {
     idUser,
@@ -46,7 +46,7 @@ export function apiCreateCarType(
   payload: IGcmCarTypeCreatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarType>> {
-  return dummyCreateCarType()
+  // return dummyCreateCarType()
 
   const headers = {
     idUser,
@@ -58,7 +58,7 @@ export function apiUpdateCarType(
   payload: IGcmCarTypeUpdatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarType>> {
-  return dummyUpdateCarType()
+  // return dummyUpdateCarType()
 
   const headers = {
     idUser,
@@ -70,7 +70,7 @@ export function apiToggleStatusCarType(
   payload: IGcmCarTypeToggleStatusPayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarType>> {
-  return dummyToggleStatusCarType()
+  // return dummyToggleStatusCarType()
 
   const headers = {
     idUser,
@@ -81,7 +81,7 @@ export function apiToggleStatusCarType(
 }
 
 export function apiDeleteCarType(payload: IGcmCarTypeDeletePayload, idUser: string): Promise<APIBaseResponse<{}>> {
-  return dummyDeleteCarType()
+  // return dummyDeleteCarType()
 
   const headers = {
     idUser,

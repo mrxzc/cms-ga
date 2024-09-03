@@ -10,19 +10,19 @@ import {
 } from '@interfaces/gcmCarYear'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
-import {
-  dummyCreateCarYear,
-  dummyDeleteCarYear,
-  dummyGetCarYear,
-  dummyGetCarYearDetail,
-  dummyToggleStatusCarYear,
-  dummyUpdateCarYear,
-} from './dummy'
+// import {
+//   dummyCreateCarYear,
+//   dummyDeleteCarYear,
+//   dummyGetCarYear,
+//   dummyGetCarYearDetail,
+//   dummyToggleStatusCarYear,
+//   dummyUpdateCarYear,
+// } from './dummy'
 
 const api = httpRequest(API_MASTER)
 
 export function apiGetCarYear(params: IGcmCarYearListParams, idUser: string): Promise<APIBaseResponse<IGcmCarYear[]>> {
-  return dummyGetCarYear()
+  // return dummyGetCarYear()
 
   const headers = {
     idUser,
@@ -34,7 +34,7 @@ export function apiGetCarYearDetail(
   params: IGcmCarYearDetailParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarYear>> {
-  return dummyGetCarYearDetail()
+  // return dummyGetCarYearDetail()
 
   const headers = {
     idUser,
@@ -46,7 +46,7 @@ export function apiCreateCarYear(
   payload: IGcmCarYearCreatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarYear>> {
-  return dummyCreateCarYear()
+  // return dummyCreateCarYear()
 
   const headers = {
     idUser,
@@ -58,7 +58,7 @@ export function apiUpdateCarYear(
   payload: IGcmCarYearUpdatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarYear>> {
-  return dummyUpdateCarYear()
+  // return dummyUpdateCarYear()
 
   const headers = {
     idUser,
@@ -70,7 +70,7 @@ export function apiToggleStatusCarYear(
   payload: IGcmCarYearToggleStatusPayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarYear>> {
-  return dummyToggleStatusCarYear()
+  // return dummyToggleStatusCarYear()
 
   const headers = {
     idUser,
@@ -81,7 +81,7 @@ export function apiToggleStatusCarYear(
 }
 
 export function apiDeleteCarYear(payload: IGcmCarYearDeletePayload, idUser: string): Promise<APIBaseResponse<{}>> {
-  return dummyDeleteCarYear()
+  // return dummyDeleteCarYear()
 
   const headers = {
     idUser,
