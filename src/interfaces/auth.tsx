@@ -13,7 +13,7 @@ export interface RegisterCredentials {
 }
 
 export interface ForgotPasswordCredentials {
-  phoneNumber: string
+  email: string
 }
 
 export interface ResetPasswordCredentials {

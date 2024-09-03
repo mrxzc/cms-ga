@@ -84,7 +84,7 @@ export default function LoginPage() {
             <p className=" text-[black] text-heading xs regular-16">Masukkan email dan kata sandi untuk masuk</p>
           </div>
           <form className="rounded-2xl w-full pt-6 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-4">
+            <div className="mb-11">
               <p className="text-[black] text-sm">
                 Email<span className="text-[red]">*</span>
               </p>

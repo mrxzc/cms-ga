@@ -5,6 +5,7 @@ import IconCalendar from '@assets/icons/IconCalendar'
 import IconHomeFill from '@assets/icons/IconHomeFill'
 import IconMasterData from '@assets/icons/IconMasterData'
 import IconMonitorPesan from '@assets/icons/IconMonitorPesan'
+import IconUserManagement from '@assets/icons/IconPerformance'
 import IconUser from '@assets/icons/IconUser'
 
 const MENU_HEADER = [
@@ -309,6 +310,26 @@ const MENU_HEADER = [
       },
     ],
   },
+  {
+    id: '8',
+    name: 'User Management',
+    href: '',
+    icon: 'IconUserManagement',
+    submenu: [
+      {
+        id: '8.1',
+        name: 'List User',
+        href: '/user-management',
+        submenu: [],
+      },
+      {
+        id: '8.2',
+        name: 'Verification Request',
+        href: '/user-management/verification',
+        submenu: [],
+      },
+    ],
+  },
 ]
 
 const ICON_MENU = {
@@ -321,6 +342,7 @@ const ICON_MENU = {
   IconCalendar: ({ color }: { color: string }) => <IconCalendar className="w-6 h-6" color={color} />,
   IconMasterData: ({ color }: { color: string }) => <IconMasterData className="w-6 h-6" color={color} />,
   IconAccountManagement: ({ color }: { color: string }) => <IconAccountManagement className="w-6 h-6" color={color} />,
+  IconUserManagement: ({ color }: { color: string }) => <IconUserManagement className="w-6 h-6" color={color} />,
 }
 
 export { ICON_MENU, MENU_HEADER }

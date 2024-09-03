@@ -28,10 +28,10 @@ export interface IRoomDetail extends IPaginationParams {
   titleRoom: string
   lantaiRuangan: string
   kapasitas: number
-  deskripsi: string
-  termsCondition: string
+  deskripsi?: string
+  termsCondition?: string
   kategoriMenu: string
-  fasilitas: string[]
+  fasilitas?: string[]
   fileImages: string[]
 }
 
@@ -64,5 +64,9 @@ export interface IUpdateRoomPayload {
 
 export interface EditRoomProps {
   category?: string
-  roomId?: string // Tambahkan prop roomId
+  idRoom?: string
+}
+
+export interface IDeleteRoomParams {
+  roomId: number | string // Atau sesuaikan tipe data sesuai kebutuhan
 }

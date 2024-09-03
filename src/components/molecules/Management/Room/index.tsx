@@ -15,14 +15,18 @@ import IconEditing from '@assets/icons/IconEditing'
 import IconDownload from '@assets/icons/IconDownload'
 import IconSearch from '@assets/icons/IconSearch'
 import IconDeleting from '@assets/icons/IconDeleting'
+import IconAlertDelete from '@assets/icons/IconAlertDelete'
 import { useGetRoomList } from '@services/cms/room/query'
 import { IRoomListParams } from '@interfaces/room'
+import { Modal } from '@components/atoms/ModalCustom'
+import { apiDeleteRoom } from '@services/cms/room/api'
+import { toast } from 'react-toastify'
 
 export function Management() {
   const router = useRouter()
-
   const [searchQuery, setSearchQuery] = useState('')
-
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [roomIdToDelete, setRoomIdToDelete] = useState<string | null>(null)
   const [param, setParam] = useState<IRoomListParams>({
     search: searchQuery,
     page: 1,
@@ -32,7 +36,21 @@ export function Management() {
     kategoriMenu: 'Meeting Room',
   })
 
-  const { data: rooms, isLoading, isFetching } = useGetRoomList(param)
+  const { data: rooms, isLoading, isFetching, refetch } = useGetRoomList(param)
+
+  const transformedData = rooms?.data?.map((room, index) => ({
+    ...room,
+    originalIndex: index,
+    ACTION: '',
+  }))
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleBackdropClick = () => {
+    handleCloseModal()
+  }
 
   const handleStatus = (status: string) => {
     if (status === 'Active') {
@@ -41,6 +59,49 @@ export function Management() {
       return <div className="bg-[#fcebee] text-[#b63831] border border-[#e39e9c] rounded">Non-Active</div>
     }
   }
+
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault()
+  }
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value)
+  }
+
+  const handlePageChange = (newPage: number) => {
+    setParam(prevParam => ({ ...prevParam, page: newPage }))
+  }
+
+  const handleDeleteData = async (id: string | null) => {
+    if (id) {
+      try {
+        const response = await apiDeleteRoom({ roomId: id })
+        if (response.status === 'T') {
+          toast.success('Ruangan berhasil dihapus!')
+          refetch()
+        } else {
+          toast.error('Gagal menghapus ruangan.')
+        }
+      } catch (error) {
+        // ...
+      }
+    }
+
+    handleCloseModal()
+  }
+
+  const breadcrumbs = [
+    <Link
+      underline="none"
+      color="#235696"
+      href="/management/asset"
+      onClick={handleClick}
+      key="1"
+      className="text-heading m semibold-21"
+    >
+      Booking Asset Data - Room Data
+    </Link>,
+  ]
 
   const columnHelper = createColumnHelper<any>()
 
@@ -55,7 +116,7 @@ export function Management() {
           <Image
             width={1400}
             height={800}
-            src={`https://barndev.acc.co.id/gateway/v1/api/cms/master${info.getValue()[0]}`}
+            src={`https://barndev.acc.co.id/gateway/master/v1/file${info.getValue()[0]}`}
             alt="Room Image"
             className="w-[140px] h-[80px] object-cover"
           />
@@ -85,11 +146,15 @@ export function Management() {
     }),
     columnHelper.accessor('ACTION', {
       cell: info => {
-        const rowData = info.row.original // Get the original row data
+        const rowData = info.row.original
 
         const handleEditClick = () => {
-          // Assuming 'rowData' has a property 'id' that represents the room ID
           router.push(`/management/room/edit-room/${rowData.idRoom}`)
+        }
+
+        const handleDeleteClick = () => {
+          setRoomIdToDelete(rowData.idRoom) // Simpan ID ke state
+          setIsModalOpen(true)
         }
 
         return (
@@ -97,7 +162,7 @@ export function Management() {
             <button type="button" onClick={handleEditClick}>
               <IconEditing width={20} height={20} className="hover:cursor-pointer" />
             </button>
-            <button type="button">
+            <button type="button" onClick={handleDeleteClick}>
               <IconDeleting width={20} height={20} className="hover:cursor-pointer" />
             </button>
           </div>
@@ -107,16 +172,7 @@ export function Management() {
     }),
   ]
 
-  const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    event.preventDefault()
-  }
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value)
-  }
-
   useEffect(() => {
-    // Perbarui 'param' saat 'searchQuery' berubah
     setParam(prevParam => ({
       ...prevParam,
       search: searchQuery,
@@ -124,85 +180,88 @@ export function Management() {
     }))
   }, [searchQuery])
 
-  const breadcrumbs = [
-    <Link
-      underline="none"
-      color="#235696"
-      href="/management/asset"
-      onClick={handleClick}
-      key="1"
-      className="text-heading m semibold-21"
-    >
-      Booking Asset Data - Room Data
-    </Link>,
-  ]
-
-  const transformedData = rooms?.data?.map((room, index) => ({
-    ...room,
-    originalIndex: index,
-    ACTION: '',
-  }))
-
-  const handlePageChange = (newPage: number) => {
-    setParam(prevParam => ({ ...prevParam, page: newPage }))
-  }
-
   return (
-    <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto !important">
-      <div className="bg-white px-4 py-4 rounded-xl mb-4 text-[#235696] flex justify-between">
-        <Stack spacing={2}>
-          <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
-        <div className="flex">
-          <button type="button" className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]">
-            <IconDownload />
-            Download
-          </button>
-          <div className="divider lg:divider-horizontal" />
-          <button
-            type="button"
-            className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]"
-            onClick={() => router.push('/management/room/add-room')}
-          >
-            <IconPlus color="white" className="bg-[#505050] p-1 rounded-full" width={16} height={16} />
-            Add New
-          </button>
-        </div>
-      </div>
-
-      <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Room Data</p>
-        <div className="flex justify-between mb-4">
-          <div className="search-input h-[38px] px-3 flex items-center justify-center space-x-3 border rounded-lg min-w-[400px]">
-            <IconSearch color="#909090" />
-
-            <input
-              type="text"
-              placeholder="Search..."
-              className="flex-1 text-paragraph regular-14 mt-1"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              style={{
-                outline: 'none',
-              }}
-            />
+    <>
+      <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto !important">
+        <div className="bg-white px-4 py-4 rounded-xl mb-4 text-[#235696] flex justify-between">
+          <Stack spacing={2}>
+            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+              {breadcrumbs}
+            </Breadcrumbs>
+          </Stack>
+          <div className="flex">
+            <button type="button" className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]">
+              <IconDownload />
+              Download
+            </button>
+            <div className="divider lg:divider-horizontal" />
+            <button
+              type="button"
+              className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]"
+              onClick={() => router.push('/management/room/add-room')}
+            >
+              <IconPlus color="white" className="bg-[#505050] p-1 rounded-full" width={16} height={16} />
+              Add New
+            </button>
           </div>
         </div>
 
-        <Table
-          columns={columns}
-          data={transformedData}
-          loading={isLoading || isFetching}
-          pagination={{
-            TOTAL_DATA: rooms?.pagination?.totalRecords ?? 0,
-            PAGE: rooms?.pagination?.currentPage ?? 1,
-            LAST_PAGE: rooms?.pagination?.totalPage ?? 1,
-          }}
-          callback={handlePageChange}
-        />
+        <div className="bg-white px-4 py-4 rounded-xl">
+          <p className="text-heading s semibold-18 mb-4">Room Data</p>
+          <div className="flex justify-between mb-4">
+            <div className="search-input h-[38px] px-3 flex items-center justify-center space-x-3 border rounded-lg min-w-[400px]">
+              <IconSearch color="#909090" />
+
+              <input
+                type="text"
+                placeholder="Search..."
+                className="flex-1 text-paragraph regular-14 mt-1"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                style={{
+                  outline: 'none',
+                }}
+              />
+            </div>
+          </div>
+
+          <Table
+            columns={columns}
+            data={transformedData}
+            loading={isLoading || isFetching}
+            pagination={{
+              TOTAL_DATA: rooms?.pagination?.totalRecords ?? 0,
+              PAGE: rooms?.pagination?.currentPage ?? 1,
+              LAST_PAGE: rooms?.pagination?.totalPage ?? 1,
+            }}
+            callback={handlePageChange}
+          />
+        </div>
       </div>
-    </div>
+
+      <Modal isOpen={isModalOpen} backdropDismiss backdropClick={handleBackdropClick} isFloating={true}>
+        <div className="p-4 bg-white rounded relative flex flex-col items-center">
+          <IconAlertDelete />
+          <h2 className="text-heading m semibold-21 mb-2">Hapus Data</h2>
+          <p className="text-paragraph regular-14 text-[#717171] mb-4">Apakah anda yakin ingin menghapus data ini?</p>
+          <div className="flex justify-center gap-4 items-end">
+            <button
+              className="bg-white border-[#ea394b] border text-[#ea394b] w-full min-w-[180px] max-h-[45px] px-12 py-3 rounded-md text-heading xs semibold-16"
+              type="button"
+              onClick={handleCloseModal}
+            >
+              Batal
+            </button>
+            <button
+              className="bg-[#ea394b] text-white w-full min-w-[180px] max-h-[45px] px-12 py-3 rounded-md text-heading xs semibold-16"
+              type="button"
+              onClick={() => handleDeleteData(roomIdToDelete)}
+            >
+              Ya, Hapus
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </>
   )
 }

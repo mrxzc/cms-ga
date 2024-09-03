@@ -1,9 +1,9 @@
 import OTPLogin from '@components/molecules/Authentication/OTP/OTPLogin'
 
 export const metadata = {
-  title: 'Login OTP',
+  title: 'Set New Password',
 }
 
-export default function OTPLoginPage() {
+export default function SetPasswordLogin() {
   return <OTPLogin />
 }

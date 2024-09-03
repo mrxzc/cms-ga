@@ -1,42 +1,28 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { createColumnHelper } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import React, { useEffect, useState } from 'react'
+import { createColumnHelper } from '@tanstack/react-table'
 
-import { data } from './data'
-import IconPlus from '@assets/icons/IconPlus'
 import Table from '@components/atoms/Table'
 import IconEditing from '@assets/icons/IconEditing'
 import images from '@assets/images'
-import IconDownload from '@assets/icons/IconDownload'
 import IconSearch from '@assets/icons/IconSearch'
+import { data } from './data'
 
-export function User() {
-  const router = useRouter()
-
+export function VerificationUser() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
   const handleStatus = (status: string) => {
-    if (status === 'Y') {
-      return (
-        <input
-          type="checkbox"
-          className="toggle"
-          checked
-          style={{ backgroundColor: '#0089cf', border: '1px solid #c8e9fa' }}
-        />
-      )
+    if (status === 'N') {
+      return <p className="text-[red]">NON ACTIVE</p>
     } else {
-      return (
-        <input type="checkbox" className="toggle" style={{ backgroundColor: '#0089cf', border: '1px solid #c8e9fa' }} />
-      )
+      return <p className="text-[red]">REJECT</p>
     }
   }
 
@@ -47,17 +33,21 @@ export function User() {
       cell: info => info.getValue(),
       header: 'No',
     }),
-    columnHelper.accessor('name', {
+    columnHelper.accessor('idUser', {
       cell: info => info.getValue(),
       header: 'Nama',
     }),
-    columnHelper.accessor('npk', {
+    columnHelper.accessor('name', {
       cell: info => info.getValue(),
       header: 'NPK',
     }),
     columnHelper.accessor('email', {
       cell: info => info.getValue(),
       header: 'Email',
+    }),
+    columnHelper.accessor('noHP', {
+      cell: info => info.getValue(),
+      header: 'No Telepon',
     }),
     columnHelper.accessor('role', {
       cell: info => info.getValue(),
@@ -70,7 +60,9 @@ export function User() {
     columnHelper.accessor('ACTION', {
       cell: () => (
         <div className="flex gap-3 items-center justify-center">
-          <IconEditing width={20} height={20} className="hover:cursor-pointer" />
+          <button>
+            <IconEditing width={20} height={20} />
+          </button>
           <Image src={images.DELETE_ICON} width={20} height={20} alt="Delete Icon" className="hover:cursor-pointer" />
         </div>
       ),
@@ -85,13 +77,13 @@ export function User() {
   const breadcrumbs = [
     <Link
       underline="none"
-      color="#235696"
+      color="black"
       href="/management/asset"
       onClick={handleClick}
       key="1"
-      className="text-heading m semibold-21"
+      className="text-extra-small regular-12"
     >
-      Account Management - User Management
+      User Management - Verification Request
     </Link>,
   ]
 
@@ -112,25 +104,10 @@ export function User() {
             {breadcrumbs}
           </Breadcrumbs>
         </Stack>
-        <div className="flex">
-          <button type="button" className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]">
-            <IconDownload />
-            Download
-          </button>
-          <div className="divider lg:divider-horizontal" />
-          <button
-            type="button"
-            className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]"
-            onClick={() => router.push('/account-management/user/add-user')}
-          >
-            <IconPlus color="white" className="bg-[#505050] p-1 rounded-full" width={16} height={16} />
-            Add New
-          </button>
-        </div>
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">User Management</p>
+        <p className="text-heading s semibold-18 mb-4">List User</p>
         <div className="flex justify-between mb-4">
           <div className="search-input h-[38px] px-3 flex items-center justify-center space-x-3 border rounded-lg min-w-[400px]">
             <IconSearch color="#909090" />
@@ -150,10 +127,10 @@ export function User() {
 
         <Table
           columns={columns}
-          data={data.users} // Gunakan data.roles untuk mengisi tabel
+          data={data.users}
           loading={false}
           pagination={{
-            TOTAL_DATA: data.pagination.total_users, // Gunakan data dari data.pagination
+            TOTAL_DATA: data.pagination.total_users,
             PAGE: currentPage,
             LAST_PAGE: totalPages,
           }}

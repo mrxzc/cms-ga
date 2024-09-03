@@ -4,7 +4,7 @@ export const metadata = {
   title: 'Add Role',
 }
 
-export default function ManagingRole() {
+export default function AddingRoleCMS() {
   return (
     <>
       <AddRolePage />
