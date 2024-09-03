@@ -283,13 +283,13 @@ export function AddVehicle() {
           <div className="flex items-center mt-1">
             <div className="text-heading xs regular-16 w-[160px]">
               Image<span className="text-red-500">*</span>
-              {images.length >= 0 && <p className="text-paragraph regular-14 mt-2">{images.length}/10</p>}
+              {images.length >= 0 && <p className="text-paragraph regular-14 mt-2">{images?.length}/10</p>}
               <p className="text-paragraph regular-14 text-gray-500 ">
                 Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
               </p>
             </div>
             <div className="max-w-[600px]">
-              <ImageGallery setImages={handleImageChange} />
+              <ImageGallery setImages={handleImageChange} images={images} />
             </div>
           </div>
 

@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react'
-import { Control, Controller } from 'react-hook-form'
+import React, { useState, useCallback, useEffect } from 'react'
+import { Control, Controller, useController } from 'react-hook-form'
 import {
   Checkbox,
   FormControl,
@@ -32,6 +32,20 @@ const MenuProps = {
   },
 }
 
+function useSyncedSelectedValues(control: any, name: string, selectedValues: string[]) {
+  const { field } = useController({
+    name,
+    control,
+    defaultValue: selectedValues,
+  })
+
+  useEffect(() => {
+    field.onChange(selectedValues)
+  }, [selectedValues, field.onChange])
+
+  return field
+}
+
 const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, label, control, onValuesChange }) => {
   const [selectedValues, setSelectedValues] = useState<string[]>(
     data.filter(item => item.selectedValue).map(item => item.value)
@@ -39,12 +53,13 @@ const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, 
 
   const isAllSelected = data.length > 0 && selectedValues.length === data.length
   const labelId = `${name}-label`
+  const field = useSyncedSelectedValues(control, name, selectedValues)
 
   const handleChange = (event: SelectChangeEvent<string[]>) => {
     const newSelectedValues = event.target.value as string[]
-    setSelectedValues(
-      newSelectedValues.includes('all') ? (isAllSelected ? [] : data.map(item => item.value)) : newSelectedValues
-    )
+    const allValues = isAllSelected ? [] : data.map(item => item.value)
+
+    setSelectedValues(newSelectedValues.includes('all') ? allValues : newSelectedValues)
 
     // Call the callback to inform the parent
     if (onValuesChange) {
@@ -67,7 +82,7 @@ const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, 
         name={name}
         control={control}
         defaultValue={selectedValues}
-        render={({ field, fieldState: { error } }) => (
+        render={({ fieldState: { error } }) => (
           <>
             <Select
               {...field}

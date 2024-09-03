@@ -60,7 +60,6 @@ export default function AturUlangKataSandi() {
       setIsLoading(false)
       alert('There was an error processing your request. Please try again later.')
     } finally {
-      // Optional cleanup or actions regardless of success or error (e.g., reset form fields)
       SetStorage('email', '')
     }
   }

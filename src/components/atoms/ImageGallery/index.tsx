@@ -30,7 +30,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ file, isMain, onClose }) => {
         <Image
           width={125}
           height={125}
-          src={imageUrl}
+          src={`${imageUrl}`}
           alt="Gambar Ruangan"
           className="w-[125px] h-[125px] object-cover"
         />
@@ -48,12 +48,11 @@ const ImageCard: React.FC<ImageCardProps> = ({ file, isMain, onClose }) => {
   )
 }
 
-const ImageGallery: React.FC<{ setImages: (images: File[]) => void }> = ({ setImages }) => {
-  const [images, setImageGallery] = useState<File[]>([])
-
-  useEffect(() => {
-    setImages(images)
-  }, [images])
+const ImageGallery: React.FC<{ setImages: (imageGallery: File[]) => void; images: File[] }> = ({
+  setImages,
+  images,
+}) => {
+  const [imageGallery, setImageGallery] = useState<File[]>(images) // Initialize with the 'images' prop
 
   const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
@@ -81,18 +80,29 @@ const ImageGallery: React.FC<{ setImages: (images: File[]) => void }> = ({ setIm
   }
 
   const handleCloseImage = (index: number) => {
-    const newImages = images.filter((_, i) => i !== index)
-    setImageGallery(newImages) // Use the renamed state variable
+    const newImages = imageGallery.filter((_, i) => i !== index)
+    setImageGallery(newImages)
   }
+
+  useEffect(() => {
+    setImages(imageGallery)
+  }, [imageGallery])
+
+  useEffect(() => {
+    setImageGallery(images) // Update when 'images' prop changes
+  }, [images])
 
   return (
     <div className="mx-auto">
       <div className="grid grid-cols-5 gap-4 w-[650px]">
-        {images.slice(0, 10).map((image, index) => (
-          <ImageCard key={index} file={image} isMain={index === 0} onClose={() => handleCloseImage(index)} />
-        ))}
+        {imageGallery &&
+          imageGallery
+            .slice(0, 10)
+            .map((image, index) => (
+              <ImageCard key={index} file={image} isMain={index === 0} onClose={() => handleCloseImage(index)} />
+            ))}
       </div>
-      {images.length < 10 && (
+      {imageGallery?.length < 10 && (
         <div className="flex gap-2 items-center mt-1">
           <label htmlFor="fileInput" className="cursor-pointer">
             <div

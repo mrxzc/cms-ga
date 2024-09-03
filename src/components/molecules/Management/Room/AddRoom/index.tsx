@@ -94,10 +94,16 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
       // 1. Siapkan FormData
       const formData: any = new FormData()
       formData.append('titleRoom', payload.roomTitle)
-      // Append images
-      for (const image of images) {
-        formData.append('fileImages', image)
+      if (images && images.length > 0) {
+        for (const image of images) {
+          formData.append('fileImages', image)
+        }
       }
+      // formData.append('fileImages', images)
+      // // // Append images as an array
+      // if (images.length > 0) {
+      //   formData.append('fileImages', images)
+      // }
       formData.append('lantaiRuangan', payload.floor.value.toString()) // Convert to string
       formData.append('flagActive', payload.isActive ? 'Y' : 'N')
       formData.append('location', payload.location.value)
@@ -268,13 +274,13 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
           <div className="flex items-center mt-1">
             <div className="text-heading xs regular-16 w-[160px]">
               Image<span className="text-red-500">*</span>
-              <p className="text-paragraph regular-14 mt-2">{images.length}/10</p>
+              <p className="text-paragraph regular-14 mt-2">{images?.length}/10</p>
               <p className="text-paragraph regular-14 text-gray-500 ">
                 Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
               </p>
             </div>
             <div className="max-w-[600px]">
-              <ImageGallery setImages={handleImageChange} />
+              <ImageGallery setImages={handleImageChange} images={images} />
             </div>
           </div>
 

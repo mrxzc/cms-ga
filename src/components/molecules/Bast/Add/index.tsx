@@ -201,7 +201,7 @@ export function Add() {
               </p> */}
             </div>
             <div className="max-w-[600px]">
-              <ImageGallery setImages={handleImageChange} />
+              <ImageGallery setImages={handleImageChange} images={images} />
             </div>
           </div>
 
@@ -213,7 +213,7 @@ export function Add() {
               </p> */}
             </div>
             <div className="max-w-[600px]">
-              <ImageGallery setImages={handleImageOutChange} />
+              <ImageGallery setImages={handleImageOutChange} images={images} />
             </div>
           </div>
 
