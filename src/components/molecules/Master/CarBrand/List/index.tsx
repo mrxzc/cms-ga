@@ -16,7 +16,7 @@ import {
   IGcmCarBrandListParams,
   IGcmCarBrandToggleStatusPayload,
 } from '@interfaces/gcmCarBrand'
-import { mutateDeleteCarBrand, mutateToggleStatusCarBrand } from '@services/gcm/carBrand/mutation'
+import { useMutateDeleteCarBrand, useMutateToggleStatusCarBrand } from '@services/gcm/carBrand/mutation'
 import { useGetCarBrand } from '@services/gcm/carBrand/query'
 import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
@@ -45,13 +45,13 @@ export function List() {
 
   const { data, isFetching, refetch } = useGetCarBrand(params, dataUser?.idUser)
 
-  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = mutateToggleStatusCarBrand()
+  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = useMutateToggleStatusCarBrand()
   const {
     mutate: mutateDelete,
     isPending: isDeletePending,
     isSuccess: isDeleteSuccess,
     reset: deleteReset,
-  } = mutateDeleteCarBrand()
+  } = useMutateDeleteCarBrand()
 
   const handleSearch = useCallback(
     debounce(input => {

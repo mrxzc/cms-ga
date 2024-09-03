@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { apiCreateCarBrand, apiDeleteCarBrand, apiToggleStatusCarBrand, apiUpdateCarBrand } from './api'
 
 // Create CarBrand
-export const mutateCreateCarBrand = () => {
+export const useMutateCreateCarBrand = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarBrandCreatePayload; idUser: string }) =>
       apiCreateCarBrand(payload, idUser),
@@ -23,7 +23,7 @@ export const mutateCreateCarBrand = () => {
 }
 
 // Update CarBrand
-export const mutateUpdateCarBrand = () => {
+export const useMutateUpdateCarBrand = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarBrandUpdatePayload; idUser: string }) =>
       apiUpdateCarBrand(payload, idUser),
@@ -37,7 +37,7 @@ export const mutateUpdateCarBrand = () => {
 }
 
 // Toggle Status CarBrand
-export const mutateToggleStatusCarBrand = () => {
+export const useMutateToggleStatusCarBrand = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarBrandToggleStatusPayload; idUser: string }) =>
       apiToggleStatusCarBrand(payload, idUser),
@@ -51,7 +51,7 @@ export const mutateToggleStatusCarBrand = () => {
 }
 
 // Delete CarBrand
-export const mutateDeleteCarBrand = () => {
+export const useMutateDeleteCarBrand = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarBrandDeletePayload; idUser: string }) =>
       apiDeleteCarBrand(payload, idUser),

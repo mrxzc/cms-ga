@@ -83,11 +83,11 @@ export function apiToggleStatusLocation(
   })
 }
 
-export function apiDeleteLocation(payload: IGcmLocationDeletePayload, idUser: string): Promise<APIBaseResponse<{}>> {
+export function apiDeleteLocation(payload: IGcmLocationDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
   // return dummyDeleteLocation()
 
   const headers = {
     idUser,
   }
-  return api.post<{}, APIBaseResponse<{}>>('/cms/master/location/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/location/delete', payload, { headers })
 }

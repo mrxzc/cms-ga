@@ -151,7 +151,7 @@ export function dummyToggleStatusCarType(): Promise<APIBaseResponse<IGcmCarType>
   })
 }
 
-export function dummyDeleteCarType(): Promise<APIBaseResponse<{}>> {
+export function dummyDeleteCarType(): Promise<APIBaseResponse<any>> {
   const response = {
     reqId: '413693f6-4903-48c6-8733-25150e748464',
     status: 'T',

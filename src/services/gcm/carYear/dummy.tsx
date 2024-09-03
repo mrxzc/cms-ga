@@ -137,7 +137,7 @@ export function dummyToggleStatusCarYear(): Promise<APIBaseResponse<IGcmCarYear>
   })
 }
 
-export function dummyDeleteCarYear(): Promise<APIBaseResponse<{}>> {
+export function dummyDeleteCarYear(): Promise<APIBaseResponse<any>> {
   const response = {
     reqId: '413693f6-4903-48c6-8733-25150e748464',
     status: 'T',

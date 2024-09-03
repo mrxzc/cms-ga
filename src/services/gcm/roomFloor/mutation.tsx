@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { apiCreateRoomFloor, apiDeleteRoomFloor, apiToggleStatusRoomFloor, apiUpdateRoomFloor } from './api'
 
 // Create RoomFloor
-export const mutateCreateRoomFloor = () => {
+export const useMutateCreateRoomFloor = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFloorCreatePayload; idUser: string }) =>
       apiCreateRoomFloor(payload, idUser),
@@ -23,7 +23,7 @@ export const mutateCreateRoomFloor = () => {
 }
 
 // Update RoomFloor
-export const mutateUpdateRoomFloor = () => {
+export const useMutateUpdateRoomFloor = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFloorUpdatePayload; idUser: string }) =>
       apiUpdateRoomFloor(payload, idUser),
@@ -37,7 +37,7 @@ export const mutateUpdateRoomFloor = () => {
 }
 
 // Toggle Status RoomFloor
-export const mutateToggleStatusRoomFloor = () => {
+export const useMutateToggleStatusRoomFloor = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFloorToggleStatusPayload; idUser: string }) =>
       apiToggleStatusRoomFloor(payload, idUser),
@@ -51,7 +51,7 @@ export const mutateToggleStatusRoomFloor = () => {
 }
 
 // Delete RoomFloor
-export const mutateDeleteRoomFloor = () => {
+export const useMutateDeleteRoomFloor = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFloorDeletePayload; idUser: string }) =>
       apiDeleteRoomFloor(payload, idUser),

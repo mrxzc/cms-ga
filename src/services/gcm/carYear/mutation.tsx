@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { apiCreateCarYear, apiDeleteCarYear, apiToggleStatusCarYear, apiUpdateCarYear } from './api'
 
 // Create CarYear
-export const mutateCreateCarYear = () => {
+export const useMutateCreateCarYear = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarYearCreatePayload; idUser: string }) =>
       apiCreateCarYear(payload, idUser),
@@ -23,7 +23,7 @@ export const mutateCreateCarYear = () => {
 }
 
 // Update CarYear
-export const mutateUpdateCarYear = () => {
+export const useMutateUpdateCarYear = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarYearUpdatePayload; idUser: string }) =>
       apiUpdateCarYear(payload, idUser),
@@ -37,7 +37,7 @@ export const mutateUpdateCarYear = () => {
 }
 
 // Toggle Status CarYear
-export const mutateToggleStatusCarYear = () => {
+export const useMutateToggleStatusCarYear = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarYearToggleStatusPayload; idUser: string }) =>
       apiToggleStatusCarYear(payload, idUser),
@@ -51,7 +51,7 @@ export const mutateToggleStatusCarYear = () => {
 }
 
 // Delete CarYear
-export const mutateDeleteCarYear = () => {
+export const useMutateDeleteCarYear = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarYearDeletePayload; idUser: string }) =>
       apiDeleteCarYear(payload, idUser),

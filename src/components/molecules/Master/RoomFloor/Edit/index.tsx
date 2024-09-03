@@ -5,7 +5,7 @@ import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmRoomFloorUpdateForm, IGcmRoomFloorUpdatePayload } from '@interfaces/gcmRoomFloor'
-import { mutateUpdateRoomFloor } from '@services/gcm/roomFloor/mutation'
+import { useMutateUpdateRoomFloor } from '@services/gcm/roomFloor/mutation'
 import { useGetRoomFloorDetail } from '@services/gcm/roomFloor/query'
 import { GetCookie } from '@store/storage'
 import { useParams, useRouter } from 'next/navigation'
@@ -35,7 +35,7 @@ export function Edit() {
     isPending: isUpdatePending,
     isSuccess: isUpdateSuccess,
     reset: updateReset,
-  } = mutateUpdateRoomFloor()
+  } = useMutateUpdateRoomFloor()
 
   const { handleSubmit, control, formState, reset } = useForm<IGcmRoomFloorUpdateForm>({
     resolver: yupResolver(schema),

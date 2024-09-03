@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { apiCreateRoomFacility, apiDeleteRoomFacility, apiToggleStatusRoomFacility, apiUpdateRoomFacility } from './api'
 
 // Create RoomFacility
-export const mutateCreateRoomFacility = () => {
+export const useMutateCreateRoomFacility = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFacilityCreatePayload; idUser: string }) =>
       apiCreateRoomFacility(payload, idUser),
@@ -23,7 +23,7 @@ export const mutateCreateRoomFacility = () => {
 }
 
 // Update RoomFacility
-export const mutateUpdateRoomFacility = () => {
+export const useMutateUpdateRoomFacility = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFacilityUpdatePayload; idUser: string }) =>
       apiUpdateRoomFacility(payload, idUser),
@@ -37,7 +37,7 @@ export const mutateUpdateRoomFacility = () => {
 }
 
 // Toggle Status RoomFacility
-export const mutateToggleStatusRoomFacility = () => {
+export const useMutateToggleStatusRoomFacility = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFacilityToggleStatusPayload; idUser: string }) =>
       apiToggleStatusRoomFacility(payload, idUser),
@@ -51,7 +51,7 @@ export const mutateToggleStatusRoomFacility = () => {
 }
 
 // Delete RoomFacility
-export const mutateDeleteRoomFacility = () => {
+export const useMutateDeleteRoomFacility = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFacilityDeletePayload; idUser: string }) =>
       apiDeleteRoomFacility(payload, idUser),

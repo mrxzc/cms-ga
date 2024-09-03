@@ -16,7 +16,7 @@ import {
   IGcmRoomFloorListParams,
   IGcmRoomFloorToggleStatusPayload,
 } from '@interfaces/gcmRoomFloor'
-import { mutateDeleteRoomFloor, mutateToggleStatusRoomFloor } from '@services/gcm/roomFloor/mutation'
+import { useMutateDeleteRoomFloor, useMutateToggleStatusRoomFloor } from '@services/gcm/roomFloor/mutation'
 import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
 import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
@@ -45,13 +45,13 @@ export function List() {
 
   const { data, isFetching, refetch } = useGetRoomFloor(params, dataUser?.idUser)
 
-  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = mutateToggleStatusRoomFloor()
+  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = useMutateToggleStatusRoomFloor()
   const {
     mutate: mutateDelete,
     isPending: isDeletePending,
     isSuccess: isDeleteSuccess,
     reset: deleteReset,
-  } = mutateDeleteRoomFloor()
+  } = useMutateDeleteRoomFloor()
 
   const handleSearch = useCallback(
     debounce(input => {

@@ -5,7 +5,7 @@ import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmCarFuelCreateForm, IGcmCarFuelCreatePayload } from '@interfaces/gcmCarFuel'
-import { mutateCreateCarFuel } from '@services/gcm/carFuel/mutation'
+import { useMutateCreateCarFuel } from '@services/gcm/carFuel/mutation'
 import { GetCookie } from '@store/storage'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -22,7 +22,7 @@ export function Add() {
     isPending: isCreatePending,
     isSuccess: isCreateSuccess,
     reset: createReset,
-  } = mutateCreateCarFuel()
+  } = useMutateCreateCarFuel()
 
   const { handleSubmit, control, formState } = useForm<IGcmCarFuelCreateForm>({
     resolver: yupResolver(schema),

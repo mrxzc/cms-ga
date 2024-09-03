@@ -5,7 +5,7 @@ import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmRoomCapacityCreateForm, IGcmRoomCapacityCreatePayload } from '@interfaces/gcmRoomCapacity'
-import { mutateCreateRoomCapacity } from '@services/gcm/roomCapacity/mutation'
+import { useMutateCreateRoomCapacity } from '@services/gcm/roomCapacity/mutation'
 import { GetCookie } from '@store/storage'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -22,7 +22,7 @@ export function Add() {
     isPending: isCreatePending,
     isSuccess: isCreateSuccess,
     reset: createReset,
-  } = mutateCreateRoomCapacity()
+  } = useMutateCreateRoomCapacity()
 
   const { handleSubmit, control, formState } = useForm<IGcmRoomCapacityCreateForm>({
     resolver: yupResolver(schema),

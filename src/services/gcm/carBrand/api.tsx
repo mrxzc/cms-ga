@@ -83,11 +83,11 @@ export function apiToggleStatusCarBrand(
   })
 }
 
-export function apiDeleteCarBrand(payload: IGcmCarBrandDeletePayload, idUser: string): Promise<APIBaseResponse<{}>> {
+export function apiDeleteCarBrand(payload: IGcmCarBrandDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
   // return dummyDeleteCarBrand()
 
   const headers = {
     idUser,
   }
-  return api.post<{}, APIBaseResponse<{}>>('/cms/master/carBrand/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/carBrand/delete', payload, { headers })
 }

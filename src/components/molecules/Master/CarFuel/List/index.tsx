@@ -16,7 +16,7 @@ import {
   IGcmCarFuelListParams,
   IGcmCarFuelToggleStatusPayload,
 } from '@interfaces/gcmCarFuel'
-import { mutateDeleteCarFuel, mutateToggleStatusCarFuel } from '@services/gcm/carFuel/mutation'
+import { useMutateDeleteCarFuel, useMutateToggleStatusCarFuel } from '@services/gcm/carFuel/mutation'
 import { useGetCarFuel } from '@services/gcm/carFuel/query'
 import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
@@ -45,13 +45,13 @@ export function List() {
 
   const { data, isFetching, refetch } = useGetCarFuel(params, dataUser?.idUser)
 
-  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = mutateToggleStatusCarFuel()
+  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = useMutateToggleStatusCarFuel()
   const {
     mutate: mutateDelete,
     isPending: isDeletePending,
     isSuccess: isDeleteSuccess,
     reset: deleteReset,
-  } = mutateDeleteCarFuel()
+  } = useMutateDeleteCarFuel()
 
   const handleSearch = useCallback(
     debounce(input => {

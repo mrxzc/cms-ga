@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { apiCreateLocation, apiDeleteLocation, apiToggleStatusLocation, apiUpdateLocation } from './api'
 
 // Create Location
-export const mutateCreateLocation = () => {
+export const useMutateCreateLocation = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmLocationCreatePayload; idUser: string }) =>
       apiCreateLocation(payload, idUser),
@@ -23,7 +23,7 @@ export const mutateCreateLocation = () => {
 }
 
 // Update Location
-export const mutateUpdateLocation = () => {
+export const useMutateUpdateLocation = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmLocationUpdatePayload; idUser: string }) =>
       apiUpdateLocation(payload, idUser),
@@ -37,7 +37,7 @@ export const mutateUpdateLocation = () => {
 }
 
 // Toggle Status Location
-export const mutateToggleStatusLocation = () => {
+export const useMutateToggleStatusLocation = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmLocationToggleStatusPayload; idUser: string }) =>
       apiToggleStatusLocation(payload, idUser),
@@ -51,7 +51,7 @@ export const mutateToggleStatusLocation = () => {
 }
 
 // Delete Location
-export const mutateDeleteLocation = () => {
+export const useMutateDeleteLocation = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmLocationDeletePayload; idUser: string }) =>
       apiDeleteLocation(payload, idUser),

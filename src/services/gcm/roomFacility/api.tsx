@@ -100,11 +100,11 @@ export function apiToggleStatusRoomFacility(
 export function apiDeleteRoomFacility(
   payload: IGcmRoomFacilityDeletePayload,
   idUser: string
-): Promise<APIBaseResponse<{}>> {
+): Promise<APIBaseResponse<any>> {
   // return dummyDeleteRoomFacility()
 
   const headers = {
     idUser,
   }
-  return api.post<{}, APIBaseResponse<{}>>('/cms/master/roomFacility/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/roomFacility/delete', payload, { headers })
 }

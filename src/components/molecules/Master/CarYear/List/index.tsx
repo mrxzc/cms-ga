@@ -16,7 +16,7 @@ import {
   IGcmCarYearListParams,
   IGcmCarYearToggleStatusPayload,
 } from '@interfaces/gcmCarYear'
-import { mutateDeleteCarYear, mutateToggleStatusCarYear } from '@services/gcm/carYear/mutation'
+import { useMutateDeleteCarYear, useMutateToggleStatusCarYear } from '@services/gcm/carYear/mutation'
 import { useGetCarYear } from '@services/gcm/carYear/query'
 import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
@@ -45,13 +45,13 @@ export function List() {
 
   const { data, isFetching, refetch } = useGetCarYear(params, dataUser?.idUser)
 
-  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = mutateToggleStatusCarYear()
+  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = useMutateToggleStatusCarYear()
   const {
     mutate: mutateDelete,
     isPending: isDeletePending,
     isSuccess: isDeleteSuccess,
     reset: deleteReset,
-  } = mutateDeleteCarYear()
+  } = useMutateDeleteCarYear()
 
   const handleSearch = useCallback(
     debounce(input => {

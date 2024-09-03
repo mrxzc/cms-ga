@@ -16,11 +16,17 @@ const nextConfig = {
   },
   images: {
     // domains: ['via.placeholder.com'], // Deprecated
-    domains: ['via.placeholder.com'], // Tambahkan domain di sini
+    domains: ['via.placeholder.com', 'barndev.acc.co.id'], // Tambahkan domain di sini
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '/.*',
+      },
+      {
+        protocol: 'https',
+        hostname: 'barndev.acc.co.id',
         port: '',
         pathname: '/.*',
       },

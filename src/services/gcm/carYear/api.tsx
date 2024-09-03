@@ -80,11 +80,11 @@ export function apiToggleStatusCarYear(
   })
 }
 
-export function apiDeleteCarYear(payload: IGcmCarYearDeletePayload, idUser: string): Promise<APIBaseResponse<{}>> {
+export function apiDeleteCarYear(payload: IGcmCarYearDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
   // return dummyDeleteCarYear()
 
   const headers = {
     idUser,
   }
-  return api.post<{}, APIBaseResponse<{}>>('/cms/master/carYear/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/carYear/delete', payload, { headers })
 }

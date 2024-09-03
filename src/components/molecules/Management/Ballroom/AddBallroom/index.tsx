@@ -6,18 +6,20 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import { Control, useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
 import SelectForm from '@components/atoms/Form/SelectForm'
 import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { optionsCapacity, optionsFacility, optionsFloor } from './data'
-
 import dynamic from 'next/dynamic'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { optionsCapacity, optionsFloor } from './data'
+import { apiSubmitCreateRoom } from '@services/cms/room/api'
+
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
 const schema = Yup.object().shape({
@@ -26,30 +28,28 @@ const schema = Yup.object().shape({
   roomTitle: Yup.string().required('Title Room wajib diisi'),
   floor: Yup.object().required('Lantai Ruangan wajib dipilih'),
   capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
-  facilityList: Yup.array(),
-  images: Yup.array(),
 })
 
-export function AddBallroom() {
+export function AddBallroom({ category = 'Ballroom' }: { category?: string }) {
   const router = useRouter()
 
   const [isChecked, setIsChecked] = useState(false)
-
-  // const [images, setImages] = useState<(File | null)[]>(Array(10).fill(null));
-
+  const [descriptionData, setDescriptionData] = useState('')
+  const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
+
   const handleImageChange = (newImages: File[]) => {
     setImages(newImages)
   }
 
-  const { handleSubmit, control, setValue } = useForm<any>({
+  const { handleSubmit, control, setValue, getValues } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
 
-  const options = [
-    { label: 'Head Office', value: 1 },
-    { label: 'Berijalan', value: 2 },
+  const optionsLocation = [
+    { label: 'Head Office', value: 'ACC' },
+    { label: 'Berijalan', value: 'BERIJALAN' },
   ]
 
   const breadcrumbs = [
@@ -61,35 +61,87 @@ export function AddBallroom() {
     </Typography>,
   ]
 
-  const [descriptionData, setDescriptionData] = useState('')
   const handleDescriptionChange = (data: string) => {
     setDescriptionData(data)
   }
 
-  const [termsData, setTermsData] = useState('')
   const handleTermsChange = (data: string) => {
     setTermsData(data)
   }
-
-  const facilityList = useWatch({
-    control,
-    name: 'facilityList',
-  })
 
   useEffect(() => {
     setValue('isActive', isChecked)
   }, [isChecked])
 
-  useEffect(() => {
-    setValue('facilityList', facilityList)
-  }, [facilityList, setValue])
+  const [selectedFacility, setSelectedFacility] = useState([])
 
-  useEffect(() => {
-    setValue('images', images)
-  }, [])
+  const convertList = selectedFacility.join(',')
 
-  const onSubmit = () => {
-    /* ... Your submission logic ... */
+  const optionsFacility = [
+    { value: 'kursi', name: 'Kursi' },
+    { value: 'meja', name: 'Meja' },
+    { value: 'proyektor', name: 'Proyektor' },
+    { value: 'speaker', name: 'Speaker' },
+  ]
+
+  const handleFacilitySelectionChange = (newSelectedValues: any) => {
+    setSelectedFacility(newSelectedValues)
+  }
+
+  const handleCreateRoom = async (payload: any) => {
+    try {
+      // 1. Siapkan FormData
+      const formData: any = new FormData()
+      formData.append('titleRoom', payload.roomTitle)
+      // Append images
+      for (const image of images) {
+        formData.append('fileImages', image)
+      }
+      formData.append('lantaiRuangan', payload.floor.value.toString()) // Convert to string
+      formData.append('flagActive', payload.isActive ? 'Y' : 'N')
+      formData.append('location', payload.location.value)
+      formData.append('kapasitas', payload.capacity.value.toString()) // Convert to string
+      formData.append('deskripsi', descriptionData)
+      formData.append('termsCondition', termsData)
+      formData.append('fasilitas', convertList)
+      formData.append('kategoriMenu', category)
+
+      // 2. Panggil fungsi API (pastikan apiSubmitCreateRoom bisa menangani FormData)
+      const response = await apiSubmitCreateRoom(formData)
+
+      // 3. Tangani respons
+      if (response.status === 'T') {
+        toast.success('Ballroom berhasil dibuat!')
+        router.push('/management/ballroom')
+      } else {
+        // Tampilkan pesan error yang lebih spesifik jika ada
+        let errorMessage = 'Gagal membuat ruangan.'
+        if (response.message) {
+          errorMessage += ` ${response.message}`
+        } else if (response.error && response.error.length > 0) {
+          errorMessage += ` ${response.error}`
+        }
+        toast.error(errorMessage)
+      }
+    } catch (error: any) {
+      // Tangani error yang lebih spesifik
+      if (error.response) {
+        // Error dari server (misalnya 400, 500)
+        const { status, data } = error.response
+        toast.error(`Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`)
+      } else if (error.request) {
+        // Permintaan dikirim tapi tidak ada respons
+        toast.error('Tidak ada respons dari server. Periksa koneksi internet Anda.')
+      } else {
+        // Error lain saat menyiapkan permintaan
+        toast.error('Terjadi kesalahan saat membuat ruangan.')
+      }
+    }
+  }
+
+  const onSubmit = async () => {
+    const data = getValues()
+    handleCreateRoom(data)
   }
 
   return (
@@ -125,8 +177,8 @@ export function AddBallroom() {
             <SelectForm
               control={control}
               name="location"
-              placeholder="Pilih kategori pengajuan"
-              options={options}
+              placeholder="Pilih lokasi pengajuan"
+              options={optionsLocation}
               setValue={setValue}
               className="w-[350px]"
             />
@@ -204,10 +256,10 @@ export function AddBallroom() {
             <p className="text-heading xs regular-16 w-[160px]">Fasilitas Ruangan</p>
             <RHFMultiSelect
               data={optionsFacility}
-              name="facilityList"
-              label="Pilih Fasilitas Ruangan"
-              control={control}
-              className=" min-w-[650px]"
+              name="fruits"
+              label="Pilih Buah"
+              control={control as Control<any>}
+              onValuesChange={handleFacilitySelectionChange}
             />
           </div>
 
@@ -216,7 +268,7 @@ export function AddBallroom() {
               <p>
                 Image<span className="text-red-500">*</span>
               </p>
-              {images.length >= 0 && <p className="text-paragraph regular-14 mt-2">{images.length}/10</p>}
+              {images.length > 0 && <p className="text-paragraph regular-14 mt-2">{images.length}/10</p>}
               <p className="text-paragraph regular-14 text-gray-500 ">
                 Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
               </p>

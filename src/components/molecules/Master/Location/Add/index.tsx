@@ -5,7 +5,7 @@ import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmLocationCreateForm, IGcmLocationCreatePayload } from '@interfaces/gcmLocation'
-import { mutateCreateLocation } from '@services/gcm/location/mutation'
+import { useMutateCreateLocation } from '@services/gcm/location/mutation'
 import { GetCookie } from '@store/storage'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -22,7 +22,7 @@ export function Add() {
     isPending: isCreatePending,
     isSuccess: isCreateSuccess,
     reset: createReset,
-  } = mutateCreateLocation()
+  } = useMutateCreateLocation()
 
   const { handleSubmit, control, formState } = useForm<IGcmLocationCreateForm>({
     resolver: yupResolver(schema),

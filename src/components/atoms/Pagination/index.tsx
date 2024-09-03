@@ -19,11 +19,16 @@ export const handleMapPagination = (pagination: IPaginations) => {
   ${pagination?.totalRecords}`
 }
 
-export default function Pagination({ isLoading, showMiddlePage = 5, pagination, clicked = () => {} }: PaginationProps) {
+export default function Pagination({
+  isLoading,
+  showMiddlePage = 5,
+  pagination,
+  clicked = () => {},
+}: Readonly<PaginationProps>) {
   const getPages = () => {
     let arr = []
 
-    if (!pagination) return []
+    if (!pagination?.totalRecords) return []
 
     for (let index = 1; index <= pagination.totalPage; index++) {
       arr.push(index)
@@ -114,6 +119,8 @@ export default function Pagination({ isLoading, showMiddlePage = 5, pagination, 
                   </button>
                 )
               }
+
+              return null
             })}
 
             {pagination.currentPage + showMiddlePage + 1 <= pagination.totalPage &&

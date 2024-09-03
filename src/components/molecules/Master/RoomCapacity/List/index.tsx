@@ -16,7 +16,7 @@ import {
   IGcmRoomCapacityListParams,
   IGcmRoomCapacityToggleStatusPayload,
 } from '@interfaces/gcmRoomCapacity'
-import { mutateDeleteRoomCapacity, mutateToggleStatusRoomCapacity } from '@services/gcm/roomCapacity/mutation'
+import { useMutateDeleteRoomCapacity, useMutateToggleStatusRoomCapacity } from '@services/gcm/roomCapacity/mutation'
 import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
 import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
@@ -45,13 +45,13 @@ export function List() {
 
   const { data, isFetching, refetch } = useGetRoomCapacity(params, dataUser?.idUser)
 
-  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = mutateToggleStatusRoomCapacity()
+  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = useMutateToggleStatusRoomCapacity()
   const {
     mutate: mutateDelete,
     isPending: isDeletePending,
     isSuccess: isDeleteSuccess,
     reset: deleteReset,
-  } = mutateDeleteRoomCapacity()
+  } = useMutateDeleteRoomCapacity()
 
   const handleSearch = useCallback(
     debounce(input => {

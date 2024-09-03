@@ -5,7 +5,7 @@ import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmCarTypeUpdateForm, IGcmCarTypeUpdatePayload } from '@interfaces/gcmCarType'
-import { mutateUpdateCarType } from '@services/gcm/carType/mutation'
+import { useMutateUpdateCarType } from '@services/gcm/carType/mutation'
 import { useGetCarTypeDetail } from '@services/gcm/carType/query'
 import { GetCookie } from '@store/storage'
 import { useParams, useRouter } from 'next/navigation'
@@ -35,7 +35,7 @@ export function Edit() {
     isPending: isUpdatePending,
     isSuccess: isUpdateSuccess,
     reset: updateReset,
-  } = mutateUpdateCarType()
+  } = useMutateUpdateCarType()
 
   const { handleSubmit, control, formState, reset } = useForm<IGcmCarTypeUpdateForm>({
     resolver: yupResolver(schema),

@@ -16,7 +16,7 @@ import {
   IGcmLocationListParams,
   IGcmLocationToggleStatusPayload,
 } from '@interfaces/gcmLocation'
-import { mutateDeleteLocation, mutateToggleStatusLocation } from '@services/gcm/location/mutation'
+import { useMutateDeleteLocation, useMutateToggleStatusLocation } from '@services/gcm/location/mutation'
 import { useGetLocation } from '@services/gcm/location/query'
 import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
@@ -45,13 +45,13 @@ export function List() {
 
   const { data, isFetching, refetch } = useGetLocation(params, dataUser?.idUser)
 
-  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = mutateToggleStatusLocation()
+  const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = useMutateToggleStatusLocation()
   const {
     mutate: mutateDelete,
     isPending: isDeletePending,
     isSuccess: isDeleteSuccess,
     reset: deleteReset,
-  } = mutateDeleteLocation()
+  } = useMutateDeleteLocation()
 
   const handleSearch = useCallback(
     debounce(input => {

@@ -131,7 +131,7 @@ export function dummyToggleStatusRoomCapacity(): Promise<APIBaseResponse<IGcmRoo
   })
 }
 
-export function dummyDeleteRoomCapacity(): Promise<APIBaseResponse<{}>> {
+export function dummyDeleteRoomCapacity(): Promise<APIBaseResponse<any>> {
   const response = {
     reqId: '413693f6-4903-48c6-8733-25150e748464',
     status: 'T',

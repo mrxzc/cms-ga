@@ -83,11 +83,11 @@ export function apiToggleStatusRoomFloor(
   })
 }
 
-export function apiDeleteRoomFloor(payload: IGcmRoomFloorDeletePayload, idUser: string): Promise<APIBaseResponse<{}>> {
+export function apiDeleteRoomFloor(payload: IGcmRoomFloorDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
   // return dummyDeleteRoomFloor()
 
   const headers = {
     idUser,
   }
-  return api.post<{}, APIBaseResponse<{}>>('/cms/master/roomFloor/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/roomFloor/delete', payload, { headers })
 }

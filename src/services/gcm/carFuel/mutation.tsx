@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { apiCreateCarFuel, apiDeleteCarFuel, apiToggleStatusCarFuel, apiUpdateCarFuel } from './api'
 
 // Create CarFuel
-export const mutateCreateCarFuel = () => {
+export const useMutateCreateCarFuel = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarFuelCreatePayload; idUser: string }) =>
       apiCreateCarFuel(payload, idUser),
@@ -23,7 +23,7 @@ export const mutateCreateCarFuel = () => {
 }
 
 // Update CarFuel
-export const mutateUpdateCarFuel = () => {
+export const useMutateUpdateCarFuel = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarFuelUpdatePayload; idUser: string }) =>
       apiUpdateCarFuel(payload, idUser),
@@ -37,7 +37,7 @@ export const mutateUpdateCarFuel = () => {
 }
 
 // Toggle Status CarFuel
-export const mutateToggleStatusCarFuel = () => {
+export const useMutateToggleStatusCarFuel = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarFuelToggleStatusPayload; idUser: string }) =>
       apiToggleStatusCarFuel(payload, idUser),
@@ -51,7 +51,7 @@ export const mutateToggleStatusCarFuel = () => {
 }
 
 // Delete CarFuel
-export const mutateDeleteCarFuel = () => {
+export const useMutateDeleteCarFuel = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarFuelDeletePayload; idUser: string }) =>
       apiDeleteCarFuel(payload, idUser),

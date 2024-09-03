@@ -5,7 +5,7 @@ import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmLocationUpdateForm, IGcmLocationUpdatePayload } from '@interfaces/gcmLocation'
-import { mutateUpdateLocation } from '@services/gcm/location/mutation'
+import { useMutateUpdateLocation } from '@services/gcm/location/mutation'
 import { useGetLocationDetail } from '@services/gcm/location/query'
 import { GetCookie } from '@store/storage'
 import { useParams, useRouter } from 'next/navigation'
@@ -35,7 +35,7 @@ export function Edit() {
     isPending: isUpdatePending,
     isSuccess: isUpdateSuccess,
     reset: updateReset,
-  } = mutateUpdateLocation()
+  } = useMutateUpdateLocation()
 
   const { handleSubmit, control, formState, reset } = useForm<IGcmLocationUpdateForm>({
     resolver: yupResolver(schema),

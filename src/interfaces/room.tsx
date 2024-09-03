@@ -61,3 +61,8 @@ export interface IUpdateRoomPayload {
   fasilitas: string[]
   kategoriMenu: string
 }
+
+export interface EditRoomProps {
+  category?: string
+  roomId?: string // Tambahkan prop roomId
+}

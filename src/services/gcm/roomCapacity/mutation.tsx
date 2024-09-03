@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { apiCreateRoomCapacity, apiDeleteRoomCapacity, apiToggleStatusRoomCapacity, apiUpdateRoomCapacity } from './api'
 
 // Create RoomCapacity
-export const mutateCreateRoomCapacity = () => {
+export const useMutateCreateRoomCapacity = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomCapacityCreatePayload; idUser: string }) =>
       apiCreateRoomCapacity(payload, idUser),
@@ -23,7 +23,7 @@ export const mutateCreateRoomCapacity = () => {
 }
 
 // Update RoomCapacity
-export const mutateUpdateRoomCapacity = () => {
+export const useMutateUpdateRoomCapacity = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomCapacityUpdatePayload; idUser: string }) =>
       apiUpdateRoomCapacity(payload, idUser),
@@ -37,7 +37,7 @@ export const mutateUpdateRoomCapacity = () => {
 }
 
 // Toggle Status RoomCapacity
-export const mutateToggleStatusRoomCapacity = () => {
+export const useMutateToggleStatusRoomCapacity = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomCapacityToggleStatusPayload; idUser: string }) =>
       apiToggleStatusRoomCapacity(payload, idUser),
@@ -51,7 +51,7 @@ export const mutateToggleStatusRoomCapacity = () => {
 }
 
 // Delete RoomCapacity
-export const mutateDeleteRoomCapacity = () => {
+export const useMutateDeleteRoomCapacity = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmRoomCapacityDeletePayload; idUser: string }) =>
       apiDeleteRoomCapacity(payload, idUser),

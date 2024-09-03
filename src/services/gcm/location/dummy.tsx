@@ -143,7 +143,7 @@ export function dummyToggleStatusLocation(): Promise<APIBaseResponse<IGcmLocatio
   })
 }
 
-export function dummyDeleteLocation(): Promise<APIBaseResponse<{}>> {
+export function dummyDeleteLocation(): Promise<APIBaseResponse<any>> {
   const response = {
     reqId: '413693f6-4903-48c6-8733-25150e748464',
     status: 'T',

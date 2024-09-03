@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { apiCreateCarType, apiDeleteCarType, apiToggleStatusCarType, apiUpdateCarType } from './api'
 
 // Create CarType
-export const mutateCreateCarType = () => {
+export const useMutateCreateCarType = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarTypeCreatePayload; idUser: string }) =>
       apiCreateCarType(payload, idUser),
@@ -23,7 +23,7 @@ export const mutateCreateCarType = () => {
 }
 
 // Update CarType
-export const mutateUpdateCarType = () => {
+export const useMutateUpdateCarType = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarTypeUpdatePayload; idUser: string }) =>
       apiUpdateCarType(payload, idUser),
@@ -37,7 +37,7 @@ export const mutateUpdateCarType = () => {
 }
 
 // Toggle Status CarType
-export const mutateToggleStatusCarType = () => {
+export const useMutateToggleStatusCarType = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarTypeToggleStatusPayload; idUser: string }) =>
       apiToggleStatusCarType(payload, idUser),
@@ -51,7 +51,7 @@ export const mutateToggleStatusCarType = () => {
 }
 
 // Delete CarType
-export const mutateDeleteCarType = () => {
+export const useMutateDeleteCarType = () => {
   return useMutation({
     mutationFn: async ({ payload, idUser }: { payload: IGcmCarTypeDeletePayload; idUser: string }) =>
       apiDeleteCarType(payload, idUser),
