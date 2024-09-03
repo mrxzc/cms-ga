@@ -19,6 +19,7 @@ import {
 import { mutateDeleteRoomCapacity, mutateToggleStatusRoomCapacity } from '@services/gcm/roomCapacity/mutation'
 import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
 import { GetCookie } from '@store/storage'
+import { dummiesArray } from '@utils/common'
 import { debounce } from 'lodash'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -131,7 +132,7 @@ export function List() {
                     </tr>
                   </thead>
                   <tbody className="table-body text-paragraph regular-14">
-                    {[1, 2, 3, 4].map(val => (
+                    {dummiesArray().map(val => (
                       <tr key={`location-${val}`} className="animate-pulse">
                         <td className="min-w-[80px]">
                           <div className="w-full h-6 bg-gray-200"></div>
@@ -283,24 +284,24 @@ export function List() {
                 Data yang akan dihapus tidak akan bisa dikembalikan. Yakin ingin melanjutkan?
               </div>
 
-              <div className="grid grid-cols-2 gap-2 justify-items-center">
+              <div className="flex justify-center items-center space-x-3">
                 <button
                   disabled={isDeletePending || isDeleteSuccess}
                   className={`${
                     isDeletePending || isDeleteSuccess ? 'opacity-50' : ''
-                  } bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-xl`}
+                  } text-[#EA394B] border border-[#EA394B] flex-1 max-h-[45px] px-12 py-3 rounded-xl`}
                   type="button"
                   onClick={() => {
                     setIsConfimationModalOpen(false)
                   }}
                 >
-                  Cancel
+                  Batal
                 </button>
                 <button
                   disabled={isDeletePending || isDeleteSuccess}
                   className={`${
                     isDeletePending || isDeleteSuccess ? 'opacity-50' : ''
-                  } bg-[#fe4040] text-white max-w-[145px] max-h-[45px] px-12 py-3 rounded-xl flex items-center justify-center`}
+                  } bg-[#EA394B] text-white flex-1 max-h-[45px] px-12 py-3 rounded-xl flex items-center justify-center`}
                   type="button"
                   onClick={() => {
                     if (selectedRoomCapacity) {
@@ -313,7 +314,7 @@ export function List() {
                   }}
                 >
                   {isDeletePending && <IconSpinner color={'#fbfafa'} className="animate-spin" />}
-                  {!isDeletePending && 'Hapus'}
+                  {!isDeletePending && 'Ya, Hapus'}
                 </button>
               </div>
             </div>
