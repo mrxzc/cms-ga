@@ -6,9 +6,9 @@ import { Add as CarTypeAdd } from './CarType/Add/index'
 import { Edit as CarTypeEdit } from './CarType/Edit/index'
 import { List as CarTypeList } from './CarType/List/index'
 
-import { Add as FuelAdd } from './Fuel/Add/index'
-import { Edit as FuelEdit } from './Fuel/Edit/index'
-import { List as FuelList } from './Fuel/List/index'
+import { Add as CarFuelAdd } from './CarFuel/Add/index'
+import { Edit as CarFuelEdit } from './CarFuel/Edit/index'
+import { List as CarFuelList } from './CarFuel/List/index'
 
 import { Add as LocationAdd } from './Location/Add/index'
 import { Edit as LocationEdit } from './Location/Edit/index'
@@ -26,9 +26,9 @@ import { Add as RoomFloorAdd } from './RoomFloor/Add/index'
 import { Edit as RoomFloorEdit } from './RoomFloor/Edit/index'
 import { List as RoomFloorList } from './RoomFloor/List/index'
 
-import { Add as YearAdd } from './Year/Add/index'
-import { Edit as YearEdit } from './Year/Edit/index'
-import { List as YearList } from './Year/List/index'
+import { Add as CarYearAdd } from './CarYear/Add/index'
+import { Edit as CarYearEdit } from './CarYear/Edit/index'
+import { List as CarYearList } from './CarYear/List/index'
 
 import { Add as EvaluationAdd } from './Evaluation/Add/index'
 import { Edit as EvaluationEdit } from './Evaluation/Edit/index'
@@ -49,9 +49,9 @@ export {
   CarTypeAdd,
   CarTypeEdit,
   CarTypeList,
-  FuelAdd,
-  FuelEdit,
-  FuelList,
+  CarFuelAdd,
+  CarFuelEdit,
+  CarFuelList,
   LocationAdd,
   LocationEdit,
   LocationList,
@@ -64,9 +64,9 @@ export {
   RoomFloorAdd,
   RoomFloorEdit,
   RoomFloorList,
-  YearAdd,
-  YearEdit,
-  YearList,
+  CarYearAdd,
+  CarYearEdit,
+  CarYearList,
   EvaluationAdd,
   EvaluationEdit,
   EvaluationList,

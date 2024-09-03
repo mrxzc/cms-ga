@@ -1,84 +1,168 @@
 'use client'
 
-import TextAreaForm from '@components/atoms/Form/TextAreaForm'
+import IconChevronRight from '@assets/icons/IconChevronRight'
+import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import * as Yup from 'yup'
-
-const schema = Yup.object().shape({
-  title: Yup.string().required('Judul wajib diisi'),
-})
+import { IOTPLoginResponse } from '@interfaces/auth'
+import { IGcmCarBrandUpdateForm, IGcmCarBrandUpdatePayload } from '@interfaces/gcmCarBrand'
+import { useMutateUpdateCarBrand } from '@services/gcm/carBrand/mutation'
+import { useGetCarBrandDetail } from '@services/gcm/carBrand/query'
+import { GetCookie } from '@store/storage'
+import { useParams, useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { schema } from './schema'
 
 export function Edit() {
   const router = useRouter()
 
-  const { handleSubmit, control } = useForm<any>({
+  const dataUser: IOTPLoginResponse = GetCookie('data_user')
+
+  const paramsPage = useParams<{ carBrand: string }>()
+
+  const {
+    data,
+    isFetching,
+    isRefetching,
+    isSuccess: isFetchSuccess,
+    isError: isFetchError,
+    isRefetchError,
+    refetch,
+  } = useGetCarBrandDetail({ noSr: paramsPage?.carBrand }, dataUser?.idUser)
+
+  const {
+    mutate: mutateUpdate,
+    isPending: isUpdatePending,
+    isSuccess: isUpdateSuccess,
+    reset: updateReset,
+  } = useMutateUpdateCarBrand()
+
+  const { handleSubmit, control, formState, reset } = useForm<IGcmCarBrandUpdateForm>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
 
-  const breadcrumbs = [
-    <Link href="/master/car-brand" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
-      Master Data - Manage Brand Mobil
-    </Link>,
-    <Typography key="2" color="text.primary" className="text-heading m semibold-21">
-      Edit Brand Mobil
-    </Typography>,
-  ]
+  const { isValid } = formState
 
-  const onSubmit = () => {}
+  const onSubmit = (form: IGcmCarBrandUpdateForm) => {
+    const payload: IGcmCarBrandUpdatePayload = { ...form }
+    mutateUpdate({ payload, idUser: dataUser?.idUser })
+  }
+
+  useEffect(() => {
+    if (isUpdateSuccess) {
+      setTimeout(() => {
+        updateReset()
+        router.push('/master/car-brand')
+      }, 3000)
+    }
+  }, [isUpdateSuccess])
+
+  useEffect(() => {
+    if (isFetchSuccess && data?.data) {
+      reset({ descGcm: data?.data?.descGcm, noSr: data?.data?.noSr })
+    }
+  }, [isFetchSuccess])
 
   return (
-    <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
-      <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center ">
-        <Stack spacing={2}>
-          <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
-      </div>
+    <div className="mb-[600px]">
+      <div className="px-4 py-8 ">
+        <div className="bg-white px-6 py-3 rounded mb-4 flex items-center space-x-2">
+          <button
+            type="button"
+            onClick={() => {
+              router.push('/master/car-brand')
+            }}
+          >
+            <div className="text-extra-small regular-12 text-[#235696]">Master Data - Manage Brand Mobil</div>
+          </button>
+          <IconChevronRight color={'#909090'} width={24} height={24} className="-mt-0.5" />
+          <div className="text-extra-small regular-12 text-[#252525]">Edit Brand Mobil</div>
+        </div>
 
-      <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Edit Brand Mobil</p>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Title <span className="text-red-500">*</span>
-            </p>
-            <TextAreaForm
-              control={control}
-              name="title"
-              fieldLabel={{ children: 'Title' }}
-              fieldInput={{ rows: 1 }}
-              counter
-              className="w-[350px]"
-            />
-          </div>
+        <div className="bg-white rounded-lg mb-4 p-6 relative">
+          <p className="text-heading s semibold-18 mb-10">Edit Brand Mobil</p>
 
-          <div className="divider" />
+          {(isFetching || isRefetching) && (
+            <div className="flex items-center justify-center my-20">
+              <IconSpinner width={100} height={100} className="animate-spin"></IconSpinner>
+            </div>
+          )}
 
-          <div className="flex justify-end gap-2 items-end">
-            <button
-              className="bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
-              type="button"
-              onClick={() => router.push('/master/car-brand')}
-            >
-              Cancel
-            </button>
-            <button
-              className="bg-[#235696] text-[#e5f2fc] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
-              type="submit"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
+          {(isFetchError || isRefetchError) && (
+            <div className="w-full flex flex-col justify-center items-center my-20">
+              <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
+              <div className="text-extra-small regular-12 mb-4">Saat ini belum ada yang tersedia</div>
+              <button
+                onClick={() => {
+                  refetch()
+                }}
+                type="button"
+                className="next-button h-8 px-4 rounded-lg w-auto text-extra-small semibold-12 text-[#FFFFFF] flex items-center justify-center"
+              >
+                Reload
+              </button>
+            </div>
+          )}
+
+          {isFetchSuccess && (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="flex space-x-20">
+                <p className="text-heading xs regular-16">
+                  Title <span className="text-red-500">*</span>
+                </p>
+
+                <Controller
+                  disabled={!isFetchSuccess}
+                  defaultValue={''}
+                  control={control}
+                  name={'descGcm'}
+                  render={({ field, formState: { errors } }) => (
+                    <div>
+                      <div className="custom-input border border-[#CCCCCC] h-[36px] w-56 px-3 flex items-center rounded-md">
+                        <input
+                          required
+                          placeholder="Isi Brand"
+                          className="custom-input text-paragraph regular-14 w-full mt-1"
+                          type="text"
+                          {...field}
+                        />
+                      </div>
+                      {errors?.['descGcm']?.message && (
+                        <span className="text-xs text-error">{errors?.['descGcm']?.message?.toString()}</span>
+                      )}
+                    </div>
+                  )}
+                ></Controller>
+              </div>
+
+              <div className="my-8" />
+
+              <div className="flex justify-end gap-2 items-end text-heading xs regular-16">
+                <button
+                  disabled={isUpdatePending || isUpdateSuccess}
+                  className={`${
+                    isUpdatePending || isUpdateSuccess ? 'opacity-50' : ''
+                  } bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-xl`}
+                  type="button"
+                  onClick={() => router.push('/master/car-brand')}
+                >
+                  Cancel
+                </button>
+                <button
+                  disabled={isUpdatePending || isUpdateSuccess}
+                  className={`${
+                    isUpdatePending || !isValid || isUpdateSuccess ? 'opacity-50' : ''
+                  } bg-[#235696] text-[#e5f2fc] max-w-[145px] max-h-[45px] px-12 py-3 rounded-xl flex items-center justify-center`}
+                  type="submit"
+                >
+                  {isUpdatePending && <IconSpinner className="animate-spin" />}
+                  {!isUpdatePending && 'Submit'}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   )

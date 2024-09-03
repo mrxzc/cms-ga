@@ -1,3 +1,7 @@
+export const dummiesArray = (number: number = 10) => {
+  return Array.from({ length: number }, (_, i) => i + 1)
+}
+
 export function joinClass(...args: Array<string | boolean | undefined>) {
   return args
     .filter(str => typeof str === 'string')

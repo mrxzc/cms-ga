@@ -1,84 +1,124 @@
 'use client'
 
-import TextAreaForm from '@components/atoms/Form/TextAreaForm'
+import IconChevronRight from '@assets/icons/IconChevronRight'
+import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import Link from 'next/link'
+import { IOTPLoginResponse } from '@interfaces/auth'
+import { IGcmCarTypeCreateForm, IGcmCarTypeCreatePayload } from '@interfaces/gcmCarType'
+import { useMutateCreateCarType } from '@services/gcm/carType/mutation'
+import { GetCookie } from '@store/storage'
 import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import * as Yup from 'yup'
-
-const schema = Yup.object().shape({
-  title: Yup.string().required('Judul wajib diisi'),
-})
+import { useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { schema } from './schema'
 
 export function Add() {
   const router = useRouter()
 
-  const { handleSubmit, control } = useForm<any>({
+  const dataUser: IOTPLoginResponse = GetCookie('data_user')
+
+  const {
+    mutate: mutateCreate,
+    isPending: isCreatePending,
+    isSuccess: isCreateSuccess,
+    reset: createReset,
+  } = useMutateCreateCarType()
+
+  const { handleSubmit, control, formState } = useForm<IGcmCarTypeCreateForm>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
 
-  const breadcrumbs = [
-    <Link href="/master/car-type" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
-      Master Data - Manage Tipe Mobil
-    </Link>,
-    <Typography key="2" color="text.primary" className="text-heading m semibold-21">
-      Add Tipe Mobil
-    </Typography>,
-  ]
+  const { isValid } = formState
 
-  const onSubmit = () => {}
+  const onSubmit = (form: IGcmCarTypeCreateForm) => {
+    const payload: IGcmCarTypeCreatePayload = { ...form }
+    mutateCreate({ payload, idUser: dataUser?.idUser })
+  }
+
+  useEffect(() => {
+    if (isCreateSuccess) {
+      setTimeout(() => {
+        createReset()
+        router.push('/master/car-type')
+      }, 3000)
+    }
+  }, [isCreateSuccess])
 
   return (
-    <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
-      <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center ">
-        <Stack spacing={2}>
-          <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
-      </div>
+    <div className="mb-[600px]">
+      <div className="px-4 py-8 ">
+        <div className="bg-white px-6 py-3 rounded mb-4 flex items-center space-x-2">
+          <button
+            type="button"
+            onClick={() => {
+              router.push('/master/car-type')
+            }}
+          >
+            <div className="text-extra-small regular-12 text-[#235696]">Master Data - Manage Tipe Mobil</div>
+          </button>
+          <IconChevronRight color={'#909090'} width={24} height={24} className="-mt-0.5" />
+          <div className="text-extra-small regular-12 text-[#252525]">Add Tipe Mobil</div>
+        </div>
 
-      <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Add Tipe Mobil</p>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex items-center">
-            <p className="text-heading xs regular-16 w-[160px]">
-              Title <span className="text-red-500">*</span>
-            </p>
-            <TextAreaForm
-              control={control}
-              name="title"
-              fieldLabel={{ children: 'Title' }}
-              fieldInput={{ rows: 1 }}
-              counter
-              className="w-[350px]"
-            />
-          </div>
+        <div className="bg-white rounded-lg mb-4 p-6 relative">
+          <p className="text-heading s semibold-18 mb-10">Add Tipe Mobil</p>
 
-          <div className="divider" />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex space-x-20">
+              <p className="text-heading xs regular-16">
+                Title <span className="text-red-500">*</span>
+              </p>
 
-          <div className="flex justify-end gap-2 items-end">
-            <button
-              className="bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
-              type="button"
-              onClick={() => router.push('/master/car-type')}
-            >
-              Cancel
-            </button>
-            <button
-              className="bg-[#235696] text-[#e5f2fc] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
-              type="submit"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
+              <Controller
+                defaultValue={''}
+                control={control}
+                name={'descGcm'}
+                render={({ field, formState: { errors } }) => (
+                  <div>
+                    <div className="custom-input border border-[#CCCCCC] h-[36px] w-56 px-3 flex items-center rounded-md">
+                      <input
+                        required
+                        placeholder="Isi Title"
+                        className="custom-input text-paragraph regular-14 w-full mt-1"
+                        type="text"
+                        {...field}
+                      />
+                    </div>
+                    {errors?.['descGcm']?.message && (
+                      <span className="text-xs text-error">{errors?.['descGcm']?.message?.toString()}</span>
+                    )}
+                  </div>
+                )}
+              ></Controller>
+            </div>
+
+            <div className="my-8" />
+
+            <div className="flex justify-end gap-2 items-end text-heading xs regular-16">
+              <button
+                disabled={isCreatePending || isCreateSuccess}
+                className={`${
+                  isCreatePending || isCreateSuccess ? 'opacity-50' : ''
+                } bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-xl`}
+                type="button"
+                onClick={() => router.push('/master/car-type')}
+              >
+                Cancel
+              </button>
+              <button
+                disabled={isCreatePending || isCreateSuccess}
+                className={`${
+                  isCreatePending || !isValid || isCreateSuccess ? 'opacity-50' : ''
+                } bg-[#235696] text-[#e5f2fc] max-w-[145px] max-h-[45px] px-12 py-3 rounded-xl flex items-center justify-center`}
+                type="submit"
+              >
+                {isCreatePending && <IconSpinner className="animate-spin" />}
+                {!isCreatePending && 'Submit'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   )

@@ -6,7 +6,7 @@ export default function Container({ children }: { readonly children: React.React
     <section className="bg-primary h-screen w-screen fixed">
       <div className="flex flex-row h-screen">
         <Menu />
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 overflow-auto bg-[#f6f6f6]">{children}</div>
       </div>
       <Navigation />
     </section>
