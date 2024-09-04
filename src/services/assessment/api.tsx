@@ -36,7 +36,6 @@ export function apiGetAssessmentData(
   params: IAssessmentDataParams,
   idUser: string
 ): Promise<APIBaseResponse<IAssessmentData>> {
-  console.log(params, 'assessment data params')
   // return dummyGetAssessmentData()
 
   const headers = {
