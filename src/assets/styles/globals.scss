@@ -11,6 +11,7 @@
 @import './partials/custom-table';
 @import './partials/custom-toggle';
 @import './partials/custom-input';
+@import './partials/custom-date-picker';
 
 @layer components {
   .menu-selection {
@@ -135,4 +136,16 @@
 
 .sidebar .submenu.open {
   max-height: 200px; /* Atau sesuaikan dengan tinggi yang diinginkan */
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
 }
