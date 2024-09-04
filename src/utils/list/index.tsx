@@ -288,6 +288,12 @@ const MENU_HEADER = [
         href: '/master/konten-menu',
         submenu: [],
       },
+      {
+        id: '6.7',
+        name: 'Manage Penilaian',
+        href: '/master/assessment',
+        submenu: [],
+      },
     ],
   },
   {

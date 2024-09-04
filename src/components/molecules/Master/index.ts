@@ -42,7 +42,10 @@ import { Add as BuildingConditionAdd } from './BuildingCondition/Add/index'
 import { Edit as BuildingConditionEdit } from './BuildingCondition/Edit/index'
 import { List as BuildingConditionList } from './BuildingCondition/List/index'
 
+import { List as AssessmentList } from './Assessment/List/index'
+
 export {
+  AssessmentList,
   CarBrandAdd,
   CarBrandEdit,
   CarBrandList,
