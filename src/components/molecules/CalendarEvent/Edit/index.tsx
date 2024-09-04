@@ -223,7 +223,7 @@ export function Edit() {
                       setImages={images => {
                         if (images?.length) {
                           const formData: FormData = new FormData()
-                          formData.append('noIdInfo', '')
+                          formData.append('noIdInfo', paramsPage?.calendarEvent ?? '')
                           formData.append('file', images[0])
                           mutateUpload({ payload: formData, idUser: dataUser?.idUser })
                         }
