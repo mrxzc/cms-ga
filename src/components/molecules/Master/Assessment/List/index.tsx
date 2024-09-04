@@ -17,25 +17,22 @@ import {
   IDeleteAssessmentCriteriaPayload,
   IInsertAssessmentCriteriaPayload,
   IUpdateAssessmentCriteriaPayload,
-} from '@interfaces/assesment'
+} from '@interfaces/gcmAssesment'
 import { IOTPLoginResponse } from '@interfaces/auth'
 import {
   useMutateDeleteAssessmentCriteria,
   useMutateInsertAssessmentCriteria,
   useMutateUpdateAssessmentCriteria,
-} from '@services/assessment/mutation'
-import { useGetAssessmentData, useGetAssessmentList } from '@services/assessment/query'
+} from '@services/gcm/assessment/mutation'
+import { useGetAssessmentData, useGetAssessmentList } from '@services/gcm/assessment/query'
 import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { insertSchema, updateSchema } from './schema'
 
 export function List() {
-  const router = useRouter()
-
   const dataUser: IOTPLoginResponse = GetCookie('data_user')
 
   const dropdownContainerRef = useRef<HTMLDivElement>(null)

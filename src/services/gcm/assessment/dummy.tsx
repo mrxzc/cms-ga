@@ -1,5 +1,5 @@
 import { APIBaseResponse } from '@interfaces/api'
-import { IAssessmentCriteriaResponse, IAssessmentData, IAssessmentList } from '@interfaces/assesment'
+import { IAssessmentCriteriaResponse, IAssessmentData, IAssessmentList } from '@interfaces/gcmAssesment'
 
 export function dummyGetAssessmentList(): Promise<APIBaseResponse<IAssessmentList[]>> {
   const response = {

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { apiGetAssessmentData, apiGetAssessmentList } from './api'
-import { IAssessmentDataParams } from '@interfaces/assesment'
+import { IAssessmentDataParams } from '@interfaces/gcmAssesment'
 
 // Get Assessment List
 export const useGetAssessmentList = (key: string, idUser: string) => {

@@ -7,7 +7,7 @@ import {
   IInsertAssessmentCriteriaPayload,
   IDeleteAssessmentCriteriaPayload,
   IAssessmentCriteriaResponse,
-} from '@interfaces/assesment'
+} from '@interfaces/gcmAssesment'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
 // import {

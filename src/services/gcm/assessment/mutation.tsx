@@ -2,7 +2,7 @@ import {
   IInsertAssessmentCriteriaPayload,
   IUpdateAssessmentCriteriaPayload,
   IDeleteAssessmentCriteriaPayload,
-} from '@interfaces/assesment'
+} from '@interfaces/gcmAssesment'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { apiInsertAssessmentCriteria, apiUpdateAssessmentCriteria, apiDeleteAssessmentCriteria } from './api'
