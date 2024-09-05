@@ -150,7 +150,6 @@ export function Add() {
 
             <div className="grid grid-cols-4 gap-4 mb-6">
               <p className="text-heading xs regular-16">Description</p>
-
               <div className="col-span-3">
                 <ReusableCKEditor
                   config={{
@@ -166,7 +165,7 @@ export function Add() {
             <div className="grid grid-cols-4 gap-4 mb-6">
               <div>
                 <p className="text-heading xs regular-16 mb-1">
-                  Image <span className="text-red-500">*</span>
+                  Image<span className="text-red-500">*</span>
                 </p>
                 <p className="text-extra-small regular-12 text-[#909090]">
                   Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
