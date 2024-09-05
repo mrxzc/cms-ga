@@ -10,11 +10,21 @@ export interface IGcmCarType {
 
 export interface IGcmCarTypeCreateForm {
   descGcm: string
+  capacity: number
+  carBrand: {
+    descGcm: string
+    noSr: string
+  }
 }
 
 export interface IGcmCarTypeUpdateForm {
   noSr: string
   descGcm: string
+  capacity: number
+  carBrand: {
+    descGcm: string
+    noSr: string
+  }
 }
 
 export interface IGcmCarTypeListParams extends ISearchParams, IPaginationParams {}
