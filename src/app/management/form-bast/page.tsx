@@ -1,7 +1,7 @@
 import { BastListPage } from '@components/organisms/Bast'
 
 export const metadata = {
-  title: 'Bast List',
+  title: 'Booking Asset Data - Form BAST',
 }
 
 export default function BastList() {

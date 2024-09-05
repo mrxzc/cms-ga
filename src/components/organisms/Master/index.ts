@@ -41,7 +41,10 @@ import { BuildingConditionAddPage } from './BuildingCondition/Add/index'
 import { BuildingConditionEditPage } from './BuildingCondition/Edit/index'
 import { BuildingConditionListPage } from './BuildingCondition/List/index'
 
+import { AssessmentListPage } from './Assessment/List/index'
+
 export {
+  AssessmentListPage,
   CarBrandAddPage,
   CarBrandEditPage,
   CarBrandListPage,
