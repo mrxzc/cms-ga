@@ -9,8 +9,10 @@ import { Manpower as ManagementManpower } from './Manpower/index'
 import { AddAsset } from './Asset/AddAsset/index'
 import { Management as ManagementAsset } from './Asset/index'
 import { AddBallroom } from './Ballroom/AddBallroom/index'
+import { EditBallroom } from './Ballroom/EditBallroom/index'
 import { ManagementBallroom } from './Ballroom/index'
 import { AddPods } from './Pods/AddPods/index'
+import { EditPods } from './Pods/EditPods/index'
 import { ManagementPods } from './Pods/index'
 import { TimeLimit } from './TimeLimit/index'
 
@@ -30,4 +32,6 @@ export {
   AddPods,
   ManagementPods,
   TimeLimit,
+  EditBallroom,
+  EditPods,
 }

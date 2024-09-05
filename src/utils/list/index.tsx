@@ -178,7 +178,7 @@ const MENU_HEADER = [
   },
   {
     id: '4',
-    name: 'Monitoring Pesan',
+    name: 'Monitoring Pesanan',
     href: '',
     icon: 'IconMonitorPesan',
     submenu: [
@@ -190,9 +190,59 @@ const MENU_HEADER = [
       },
       {
         id: '4.2',
-        name: 'Building Maintenance',
-        href: '/monitoring-pesan/maintenance',
-        submenu: [],
+        name: 'Building Management',
+        href: '',
+        submenu: [
+          {
+            id: '4.2.1',
+            name: 'Building Maintenance System',
+            href: '',
+            submenu: [],
+          },
+          {
+            id: '4.2.2',
+            name: 'EHS Management System',
+            href: '',
+            submenu: [
+              {
+                id: '4.2.2.1',
+                name: 'Waste Management',
+                href: '/monitoring-pesan/management/ehs/waste-management',
+                submenu: [],
+              },
+              {
+                id: '4.2.2.2',
+                name: 'Penggunaan Air',
+                href: '/monitoring-pesan/management/ehs/waste-management',
+                submenu: [],
+              },
+              {
+                id: '4.2.2.3',
+                name: 'Penggunaan BBM',
+                href: '/monitoring-pesan/management/ehs/bbm-management',
+                submenu: [],
+              },
+              {
+                id: '4.2.2.3',
+                name: 'Penggunaan Listrik',
+                href: '/monitoring-pesan/management/ehs/electricity-management',
+                submenu: [],
+              },
+            ],
+          },
+          {
+            id: '4.2.3',
+            name: 'Security Guard',
+            href: '/monitoring-pesan/management/security-guard',
+            submenu: [],
+          },
+          {
+            id: '4.2.4',
+            name: 'Cleaning Service',
+            href: '/monitoring-pesan/management/cleaning-service',
+            submenu: [],
+          },
+        ],
       },
     ],
   },

@@ -21,12 +21,15 @@ import { IRoomListParams } from '@interfaces/room'
 import { Modal } from '@components/atoms/ModalCustom'
 import { apiDeleteRoom } from '@services/cms/room/api'
 import { toast } from 'react-toastify'
+import { API_FILE } from '@utils/environment'
 
 export function Management() {
   const router = useRouter()
+
   const [searchQuery, setSearchQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [roomIdToDelete, setRoomIdToDelete] = useState<string | null>(null)
+
   const [param, setParam] = useState<IRoomListParams>({
     search: searchQuery,
     page: 1,
@@ -116,7 +119,7 @@ export function Management() {
           <Image
             width={1400}
             height={800}
-            src={`https://barndev.acc.co.id/gateway/master/v1/file${info.getValue()[0]}`}
+            src={`${API_FILE}${info.getValue()[0]}`}
             alt="Room Image"
             className="w-[140px] h-[80px] object-cover"
           />
