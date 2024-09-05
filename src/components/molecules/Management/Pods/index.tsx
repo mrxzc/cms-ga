@@ -103,7 +103,7 @@ export function ManagementPods() {
         const rowData = info.row.original
 
         const handleEditClick = () => {
-          router.push(`/management/room/edit-room/${rowData.idRoom}`)
+          router.push(`/management/pods/edit-pods/${rowData.idRoom}`)
         }
 
         const handleDeleteClick = () => {

@@ -193,7 +193,7 @@ export function List() {
                                 mutateToggle({ payload, idUser: dataUser?.idUser })
                               }}
                             />
-                            <span className="slider round"></span>
+                            <span className="slider round" />
                           </label>
                         </td>
                         <td className="text-center min-w-[100px] w-full">
