@@ -1,5 +1,5 @@
-import { BastAddPage } from './Add/index'
-import { BastEditPage } from './Edit/index'
+import { BastInDetailPage } from './Detail/bastIn'
+import { BastOutDetailPage } from './Detail/bastOut'
 import { BastListPage } from './List/index'
 
-export { BastAddPage, BastEditPage, BastListPage }
+export { BastInDetailPage, BastOutDetailPage, BastListPage }
