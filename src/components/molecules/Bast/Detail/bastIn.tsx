@@ -186,7 +186,7 @@ export function Detail() {
                 <div className="grid grid-cols-4 gap-4 mb-6">
                   <p className="text-heading xs regular-16">Deskripsikan kondisi foto mobil</p>
                   <div className="col-span-3">
-                    <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md min-h-36">
+                    <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] p-3 rounded-md min-h-36">
                       {data?.data?.description}
                     </div>
                   </div>
