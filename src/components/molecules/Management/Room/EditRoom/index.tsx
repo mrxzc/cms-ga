@@ -91,15 +91,11 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
       // 1. Prepare FormData
       const formData: any = new FormData()
       formData.append('titleRoom', payload.roomTitle)
-      // Append images
-      // for (const image of images) {
-      //   formData.append('fileImages', image)
-      // }
-      formData.append('fileImages', images)
-      // // Append images as an array
-      // if (images.length > 0) {
-      //   formData.append('fileImages', images)
-      // }
+      if (images && images.length > 0) {
+        for (const image of images) {
+          formData.append('fileImages', image)
+        }
+      }
       formData.append('lantaiRuangan', payload.floor.value.toString())
       formData.append('flagActive', payload.isActive ? 'Y' : 'N')
       formData.append('location', payload.location.value)
@@ -164,6 +160,12 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
 
   useEffect(() => {
     if (rooms?.data) {
+      setIsChecked(rooms.data.flagActive === 'Y')
+    }
+  }, [rooms])
+
+  useEffect(() => {
+    if (rooms?.data) {
       setValue('isActive', rooms.data.flagActive === 'Y')
       setValue('location', { label: rooms.data.location, value: rooms.data.location })
       setValue('roomTitle', rooms.data.titleRoom)
@@ -197,10 +199,8 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
           toast.error('Failed to fetch image')
         }
       }
-
       setImages(newImages)
     }
-
     fetchImages()
   }, [rooms])
 
@@ -320,6 +320,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
                 label="Pilih Fasilitas"
                 control={control as Control<any>}
                 onValuesChange={handleFacilitySelectionChange}
+                choosedValue={selectedFacility}
               />
             </div>
           </div>

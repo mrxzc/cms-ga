@@ -18,6 +18,7 @@ interface RHFMultiSelectProps {
   name: string
   label: string
   control: Control<any>
+  choosedValue?: string[]
   onValuesChange?: (values: string[]) => void
 }
 
@@ -46,10 +47,16 @@ function useSyncedSelectedValues(control: any, name: string, selectedValues: str
   return field
 }
 
-const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, label, control, onValuesChange }) => {
-  const [selectedValues, setSelectedValues] = useState<string[]>(
-    data.filter(item => item.selectedValue).map(item => item.value)
-  )
+const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({
+  data,
+  className,
+  name,
+  label,
+  control,
+  onValuesChange,
+  choosedValue,
+}) => {
+  const [selectedValues, setSelectedValues] = useState<string[]>(choosedValue || [])
 
   const isAllSelected = data.length > 0 && selectedValues.length === data.length
   const labelId = `${name}-label`
@@ -61,20 +68,26 @@ const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, 
 
     setSelectedValues(newSelectedValues.includes('all') ? allValues : newSelectedValues)
 
-    // Call the callback to inform the parent
     if (onValuesChange) {
       onValuesChange(newSelectedValues)
     }
   }
 
   const handleDelete = useCallback(
-    (valueToDelete: string, onChange: (value: string[]) => void) => () => {
+    (valueToDelete: string) => () => {
       const updatedSelected = selectedValues.filter(value => value !== valueToDelete)
       setSelectedValues(updatedSelected)
-      onChange(updatedSelected)
+      field.onChange(updatedSelected)
     },
-    [selectedValues]
+    [selectedValues, field.onChange]
   )
+
+  useEffect(() => {
+    // Update selectedValues ketika choosedValue berubah
+    if (choosedValue) {
+      setSelectedValues(choosedValue)
+    }
+  }, [choosedValue])
 
   return (
     <FormControl className={className}>
@@ -90,17 +103,18 @@ const RHFMultiSelect: React.FC<RHFMultiSelectProps> = ({ data, className, name, 
               labelId={labelId}
               value={selectedValues}
               onChange={handleChange}
-              renderValue={selectedValues => (
+              renderValue={selected => (
                 <div className="flex gap-2">
-                  {selectedValues.map(value => {
+                  {selected.map(value => {
                     const selectedItem = data.find(item => item.value === value)
                     return (
                       <div key={value} className="relative">
                         <div className="flex border border-[#5141fe] rounded-md bg-white">
                           <div className="flex items-center rounded-l-lg p-1">
                             <button
-                              onClick={handleDelete(value, field.onChange)}
+                              onClick={handleDelete(value)}
                               className="w-[12px] h-[12px] hover:cursor-pointer z-[999]"
+                              type="button"
                             >
                               <IconClose />
                             </button>
