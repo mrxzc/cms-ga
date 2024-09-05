@@ -48,9 +48,9 @@ const ImageCard: React.FC<ImageCardProps> = ({ file, isMain, onClose }) => {
   )
 }
 
-const ImageGallery: React.FC<{ setImages: (imageGallery: File[]) => void; images: File[] }> = ({
+const ImageGallery: React.FC<{ setImages: (imageGallery: File[]) => void; images?: File[] }> = ({
   setImages,
-  images,
+  images = [],
 }) => {
   const [imageGallery, setImageGallery] = useState<File[]>(images) // Initialize with the 'images' prop
 
