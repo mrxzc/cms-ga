@@ -7,6 +7,9 @@ import { Detail as MonitoringBallroomDetail } from './Ballroom/Detail'
 import { List as MonitoringKaraokeList } from './Karaoke/List'
 import { Detail as MonitoringKaraokeDetail } from './Karaoke/Detail'
 
+import { List as MonitoringManpowerList } from './Manpower/List'
+import { Detail as MonitoringManpowerDetail } from './Manpower/Detail'
+
 export {
   MonitoringRoomList,
   MonitoringRoomDetail,
@@ -14,4 +17,6 @@ export {
   MonitoringBallroomDetail,
   MonitoringKaraokeList,
   MonitoringKaraokeDetail,
+  MonitoringManpowerList,
+  MonitoringManpowerDetail,
 }

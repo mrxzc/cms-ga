@@ -7,6 +7,9 @@ import { MonitoringBallroomDetailPage } from './Ballroom/Detail'
 import { MonitoringKaraokeListPage } from './Karaoke/List'
 import { MonitoringKaraokeDetailPage } from './Karaoke/Detail'
 
+import { MonitoringManpowerListPage } from './Manpower/List'
+import { MonitoringManpowerDetailPage } from './Manpower/Detail'
+
 export {
   MonitoringRoomListPage,
   MonitoringRoomDetailPage,
@@ -14,4 +17,6 @@ export {
   MonitoringBallroomDetailPage,
   MonitoringKaraokeListPage,
   MonitoringKaraokeDetailPage,
+  MonitoringManpowerListPage,
+  MonitoringManpowerDetailPage,
 }
