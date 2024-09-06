@@ -269,13 +269,13 @@ export function AddPods({ category = 'Pods' }: { category?: string }) {
               <p>
                 Image<span className="text-red-500">*</span>
               </p>
-              {images.length > 0 && <p className="text-paragraph regular-14 mt-2">{images.length}/10</p>}
+              {images.length > 0 && <p className="text-paragraph regular-14 mt-2">{images?.length}/10</p>}
               <p className="text-paragraph regular-14 text-gray-500 ">
                 Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
               </p>
             </div>
             <div className="max-w-[600px]">
-              <ImageGallery setImages={handleImageChange} />
+              <ImageGallery setImages={handleImageChange} images={images} />
             </div>
           </div>
 

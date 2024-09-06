@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
               }}
               name="email"
               control={control}
-              className="w-full h-[44px] self-center mb-11"
+              className="w-full self-center"
             />
             <Button
               className="flex bg-buttonLogin hover:bg-blue-700 shadowtext-white font-bold border-2 border-white focus:outline-none focus:shadow-outline rounded-lg items-center justify-center w-full h-[48px]"

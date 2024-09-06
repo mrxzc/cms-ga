@@ -8,7 +8,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import React, { useEffect, useState } from 'react'
 import { Control, useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
 
@@ -17,50 +17,62 @@ import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
 import { yupResolver } from '@hookform/resolvers/yup'
-// import { ICreateRoomPayload } from '@interfaces/room'
-import { apiSubmitCreateRoom } from '@services/cms/room/api'
-import { optionsCapacity, optionsFloor } from './data'
+import { apiSubmitUpdateRoom } from '@services/cms/room/api'
+import { optionsCapacity, optionsFacility, optionsFloor, optionsLocation } from './data'
+import { useGetRoomDetail } from '@services/cms/room/query'
+import { EditRoomProps, IRoomDetailParams } from '@interfaces/room'
+import { API_FILE } from '@utils/environment'
 
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
   location: Yup.object().required('Lokasi wajib dipilih'),
-  roomTitle: Yup.string().required('Title Room wajib diisi'),
+  roomTitle: Yup.string().required('Title Pods wajib diisi'),
   floor: Yup.object().required('Lantai Ruangan wajib dipilih'),
   capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
+  selectedFacilities: Yup.array(),
 })
 
-export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
-  const router = useRouter()
+export function EditPods({ category = 'Pods' }: EditRoomProps) {
+  const [param, setParam] = useState<IRoomDetailParams>({
+    roomId: '',
+  })
 
-  const [isChecked, setIsChecked] = useState(false)
+  const router = useRouter()
+  const pathname = usePathname()
+  const slug = pathname.split('/').pop()
+
+  const { data: rooms } = useGetRoomDetail(param)
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
+  const [selectedFacility, setSelectedFacility] = useState<string[]>([])
+  const [isChecked, setIsChecked] = useState(false)
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false)
+
+  const convertList = selectedFacility.join(',')
+
+  const { handleSubmit, control, setValue, getValues, watch } = useForm<any>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      selectedFacilities: selectedFacility,
+    },
+    mode: 'all',
+  })
+
+  const breadcrumbs = [
+    <Link href="/management/room" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
+      Booking Asset Data - Pods
+    </Link>,
+    <Typography key="2" color="text.primary" className="text-heading m semibold-21">
+      Edit Pods Data
+    </Typography>,
+  ]
 
   const handleImageChange = (newImages: File[]) => {
     setImages(newImages)
   }
-
-  const { handleSubmit, control, setValue, getValues } = useForm<any>({
-    resolver: yupResolver(schema),
-    mode: 'all',
-  })
-
-  const optionsLocation = [
-    { label: 'Head Office', value: 'ACC' },
-    { label: 'Berijalan', value: 'BERIJALAN' },
-  ]
-
-  const breadcrumbs = [
-    <Link href="/management/room" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
-      Booking Asset Data - Room
-    </Link>,
-    <Typography key="2" color="text.primary" className="text-heading m semibold-21">
-      Add Room Data
-    </Typography>,
-  ]
 
   const handleDescriptionChange = (data: string) => {
     setDescriptionData(data)
@@ -70,59 +82,44 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
     setTermsData(data)
   }
 
-  useEffect(() => {
-    setValue('isActive', isChecked)
-  }, [isChecked])
-
-  const [selectedFacility, setSelectedFacility] = useState([])
-
-  const convertList = selectedFacility.join(',')
-
-  const optionsFacility = [
-    { value: 'kursi', name: 'Kursi' },
-    { value: 'meja', name: 'Meja' },
-    { value: 'proyektor', name: 'Proyektor' },
-    { value: 'speaker', name: 'Speaker' },
-  ]
-
   const handleFacilitySelectionChange = (newSelectedValues: any) => {
     setSelectedFacility(newSelectedValues)
   }
 
-  const handleCreateRoom = async (payload: any) => {
+  const handleUpdateRoom = async (payload: any) => {
     try {
-      // 1. Siapkan FormData
+      // 1. Prepare FormData
       const formData: any = new FormData()
       formData.append('titleRoom', payload.roomTitle)
-      if (images && images.length > 0) {
-        for (const image of images) {
-          formData.append('fileImages', image)
-        }
-      }
-      // formData.append('fileImages', images)
-      // // // Append images as an array
+      // Append images
+      // for (const image of images) {
+      //   formData.append('fileImages', image)
+      // }
+      formData.append('fileImages', images)
+      // // Append images as an array
       // if (images.length > 0) {
       //   formData.append('fileImages', images)
       // }
-      formData.append('lantaiRuangan', payload.floor.value.toString()) // Convert to string
+      formData.append('lantaiRuangan', payload.floor.value.toString())
       formData.append('flagActive', payload.isActive ? 'Y' : 'N')
       formData.append('location', payload.location.value)
-      formData.append('kapasitas', payload.capacity.value.toString()) // Convert to string
+      formData.append('kapasitas', payload.capacity.value.toString())
       formData.append('deskripsi', descriptionData)
       formData.append('termsCondition', termsData)
       formData.append('fasilitas', convertList)
       formData.append('kategoriMenu', category)
+      formData.append('roomId', slug) // Include the roomId in the FormData
 
-      // 2. Panggil fungsi API (pastikan apiSubmitCreateRoom bisa menangani FormData)
-      const response = await apiSubmitCreateRoom(formData)
+      // 2. Call the API function to update the room
+      const response = await apiSubmitUpdateRoom(formData)
 
-      // 3. Tangani respons
+      // 3. Handle the response
       if (response.status === 'T') {
-        toast.success('Ruangan berhasil dibuat!')
+        toast.success('Data ruangan berhasil diubah!')
         router.push('/management/room')
       } else {
-        // Tampilkan pesan error yang lebih spesifik jika ada
-        let errorMessage = 'Gagal membuat ruangan.'
+        // Display a more specific error message if available
+        let errorMessage = 'Gagal mengubah data ruangan.'
         if (response.message) {
           errorMessage += ` ${response.message}`
         } else if (response.error && response.error.length > 0) {
@@ -131,25 +128,81 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
         toast.error(errorMessage)
       }
     } catch (error: any) {
-      // Tangani error yang lebih spesifik
+      // Handle specific errors
       if (error.response) {
-        // Error dari server (misalnya 400, 500)
         const { status, data } = error.response
         toast.error(`Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`)
       } else if (error.request) {
-        // Permintaan dikirim tapi tidak ada respons
         toast.error('Tidak ada respons dari server. Periksa koneksi internet Anda.')
       } else {
-        // Error lain saat menyiapkan permintaan
-        toast.error('Terjadi kesalahan saat membuat ruangan.')
+        toast.error('Terjadi kesalahan saat mengubah ruangan.')
       }
     }
   }
 
   const onSubmit = async () => {
     const data = getValues()
-    handleCreateRoom(data)
+    handleUpdateRoom(data)
   }
+
+  useEffect(() => {
+    setValue('isActive', isChecked)
+  }, [isChecked, watch('isActive')])
+
+  useEffect(() => {
+    if (slug) {
+      setParam({ roomId: slug })
+    }
+  }, [])
+
+  useEffect(() => {
+    if (rooms?.data && !initialDataLoaded) {
+      setValue('isActive', rooms.data.flagActive === 'Y')
+      setInitialDataLoaded(true)
+    }
+  }, [rooms, setValue])
+
+  useEffect(() => {
+    if (rooms?.data) {
+      setValue('isActive', rooms.data.flagActive === 'Y')
+      setValue('location', { label: rooms.data.location, value: rooms.data.location })
+      setValue('roomTitle', rooms.data.titleRoom)
+      const floorOption = optionsFloor.find(option => option.value === rooms?.data?.lantaiRuangan)
+      setValue('floor', floorOption)
+      const capacityOption = optionsCapacity.find(option => option.value === rooms?.data?.kapasitas.toString())
+      setValue('capacity', capacityOption)
+
+      // Handle potential undefined values
+      setDescriptionData(rooms.data.deskripsi ?? '')
+      setTermsData(rooms.data.termsCondition ?? '')
+      setSelectedFacility(rooms.data.fasilitas ?? [])
+    }
+  }, [rooms, setValue])
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      if (!rooms?.data?.fileImages?.length) return
+
+      const newImages: File[] = []
+
+      for (const imageUrl of rooms.data.fileImages) {
+        try {
+          const response = await fetch(`${API_FILE}${imageUrl}`)
+          const blob = await response.blob()
+          const filename = imageUrl.split('/').pop() ?? 'image.png'
+          const file = new File([blob], filename, { type: blob.type })
+          newImages.push(file)
+        } catch (error) {
+          // Handle error, e.g., show a toast notification
+          toast.error('Failed to fetch image')
+        }
+      }
+
+      setImages(newImages)
+    }
+
+    fetchImages()
+  }, [rooms])
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
@@ -162,7 +215,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Add Room Data</p>
+        <p className="text-heading s semibold-18 mb-4">Edit Pods Data</p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Aktif</p>
@@ -173,7 +226,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
                 checked={isChecked}
                 onChange={() => setIsChecked(!isChecked)}
                 value={''}
-              />{' '}
+              />
             </label>
           </div>
 
@@ -184,7 +237,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             <SelectForm
               control={control}
               name="location"
-              placeholder="Pilih lokasi pengajuan"
+              placeholder="Pilih kategori pengajuan"
               options={optionsLocation}
               setValue={setValue}
               className="w-[350px]"
@@ -193,7 +246,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
 
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
-              Title Room<span className="text-red-500">*</span>
+              Title Pods<span className="text-red-500">*</span>
             </p>
             <TextForm
               fieldInput={{ type: 'text', placeholder: 'Isi dengan title ruangan' }}
@@ -263,8 +316,8 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             <div className="w-[650px]">
               <RHFMultiSelect
                 data={optionsFacility}
-                name="fruits"
-                label="Pilih Buah"
+                name="selectedFacilities"
+                label="Pilih Fasilitas"
                 control={control as Control<any>}
                 onValuesChange={handleFacilitySelectionChange}
               />
