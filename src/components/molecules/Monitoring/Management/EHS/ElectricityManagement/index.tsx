@@ -6,9 +6,7 @@ import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import React, { useEffect, useState } from 'react'
 import { createColumnHelper } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
 
-import IconPlus from '@assets/icons/IconPlus'
 import Table from '@components/atoms/Table'
 import IconEye from '@assets/icons/IconEye'
 import IconSearch from '@assets/icons/IconSearch'
@@ -16,19 +14,20 @@ import IconDownload from '@assets/icons/IconDownload'
 import DateRangeInput from '@components/atoms/DateRangeInput'
 import { data } from './data'
 
-export function Manpower() {
-  const router = useRouter()
-
+export function MonitoringElectricityManagement() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [endDate, setEndDate] = useState<Date | null>(null)
 
   const handleStatus = (status: string) => {
-    if (status === 'Active') {
-      return <div className="bg-[#eaf5e9] text-[#457b3b] border border-[#afd5ab] rounded">Active</div>
+    if (status === 'Done') {
+      return <div className="bg-[#eaf5e9] text-[#457b3b] border border-[#afd5ab] rounded">Selesai</div>
+    }
+    if (status === 'Waiting') {
+      return <div className="bg-[#FDF4E2] text-[#F19D38] border border-[#F19D38] rounded">Menunggu Approval</div>
     } else {
-      return <div className="bg-[#fcebee] text-[#b63831] border border-[#e39e9c] rounded">Non-Active</div>
+      return <div className="bg-[#fcebee] text-[#b63831] border border-[#e39e9c] rounded">Tidak Berhasil</div>
     }
   }
 
@@ -39,37 +38,29 @@ export function Manpower() {
       cell: info => info.getValue(),
       header: 'No',
     }),
-    columnHelper.accessor('kodeBooking', {
-      cell: info => info.getValue(),
-      header: 'Kode Booking',
-    }),
     columnHelper.accessor('nama', {
       cell: info => info.getValue(),
       header: 'Nama',
     }),
     columnHelper.accessor('lokasi', {
-      cell: info => `${info.getValue()}`,
+      cell: info => info.getValue(),
       header: 'Lokasi',
     }),
-    columnHelper.accessor('manpower', {
+    columnHelper.accessor('area', {
       cell: info => `${info.getValue()}`,
-      header: 'Manpower',
+      header: 'Area',
     }),
-    columnHelper.accessor('gender', {
+    columnHelper.accessor('cabang', {
       cell: info => `${info.getValue()}`,
-      header: 'Gender',
+      header: 'Cabang',
     }),
-    columnHelper.accessor('kebutuhanManpower', {
+    columnHelper.accessor('kwhMeterExisting', {
       cell: info => `${info.getValue()}`,
-      header: 'Kebutuhan Manpower',
+      header: 'Berat Sampah Existing',
     }),
-    columnHelper.accessor('waktuBooking', {
+    columnHelper.accessor('kwhMeterRequest', {
       cell: info => `${info.getValue()}`,
-      header: 'Waktu Booking',
-    }),
-    columnHelper.accessor('tanggalBooking', {
-      cell: info => `${info.getValue()}`,
-      header: 'Tanggal Booking',
+      header: 'Berat Sampah Request',
     }),
     columnHelper.accessor('tanggalPengajuan', {
       cell: info => `${info.getValue()}`,
@@ -77,7 +68,7 @@ export function Manpower() {
     }),
     columnHelper.accessor('status', {
       cell: info => handleStatus(info.getValue()),
-      header: 'Status', // Sesuai
+      header: 'Status',
     }),
     columnHelper.accessor('ACTION', {
       cell: () => (
@@ -96,13 +87,13 @@ export function Manpower() {
   const breadcrumbs = [
     <Link
       underline="none"
-      color="#235696"
+      color="black"
       href="/management/vehicle"
       onClick={handleClick}
       key="1"
-      className="text-heading m semibold-21"
+      className="text-extra-small regular-12"
     >
-      Booking Asset Data - Manpower Data
+      Monitoring Pesanan - Penggunaan Listrik
     </Link>,
   ]
 
@@ -131,7 +122,7 @@ export function Manpower() {
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Manpower Data</p>
+        <p className="text-heading s semibold-18 mb-4">Monitoring Pesanan - Penggunaan Listrik</p>
         <div className="flex justify-between mb-4">
           <div className="search-input h-[38px] px-3 flex items-center justify-center space-x-3 border rounded-lg min-w-[400px]">
             <IconSearch color="#909090" />
@@ -147,15 +138,6 @@ export function Manpower() {
               }}
             />
           </div>
-          <button
-            className="next-button flex rounded-md justify-center items-center w-[100px] text-white"
-            onClick={() => router.push('/management/manpower/add-manpower')}
-          >
-            <div className="bg-white w-[16px] h-[16px] rounded-full items-center justify-center flex mr-1">
-              <IconPlus width={12} height={12} color="#1e5597" />
-            </div>
-            Add New
-          </button>
         </div>
         <div className="flex justify-between mb-4">
           <DateRangeInput
