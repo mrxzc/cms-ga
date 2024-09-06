@@ -86,7 +86,7 @@ export default function LoginPage() {
           <form className="rounded-2xl w-full pt-6 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-2">
               <p className="text-[black] text-sm">
-                Email/NPK<span className="text-[red]">*</span>
+                Email<span className="text-[red]">*</span>
               </p>
               <TextForm
                 fieldInput={{

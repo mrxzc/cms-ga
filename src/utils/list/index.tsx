@@ -115,22 +115,22 @@ const MENU_HEADER = [
           {
             id: '3-2-1',
             name: 'Waste Management',
-            href: '/building-management/EHS/waste-management',
+            href: '/building-management/ehs/waste-management',
           },
           {
             id: '3-2-2',
             name: 'Penggunaan Air',
-            href: '/building-management/EHS/water-management',
+            href: '/building-management/ehs/water-management',
           },
           {
             id: '3-2-3',
             name: 'Penggunaan BBM',
-            href: '/building-management/EHS/fuel-management',
+            href: '/building-management/ehs/fuel-management',
           },
           {
             id: '3-2-4',
             name: 'Penggunaan Listrik',
-            href: '/building-management/EHS/electricity-management',
+            href: '/building-management/ehs/electricity-management',
           },
         ],
       },
@@ -185,8 +185,45 @@ const MENU_HEADER = [
       {
         id: '4-1',
         name: 'Booking Asset',
-        href: '/monitoring-pesan/booking',
-        submenu: [],
+        href: '',
+        submenu: [
+          {
+            id: '4-1-1',
+            name: 'Room',
+            href: '/monitoring-pesan/booking/room',
+            submenu: [],
+          },
+          {
+            id: '4-1-2',
+            name: 'Ballroom',
+            href: '/monitoring-pesan/booking/ballroom',
+            submenu: [],
+          },
+          {
+            id: '4-1-3',
+            name: 'Karaoke',
+            href: '/monitoring-pesan/booking/karaoke',
+            submenu: [],
+          },
+          {
+            id: '4-1-4',
+            name: 'Vehicle',
+            href: '/monitoring-pesan/booking/vehicle',
+            submenu: [],
+          },
+          {
+            id: '4-1-5',
+            name: 'Asset',
+            href: '/monitoring-pesan/booking/asset',
+            submenu: [],
+          },
+          {
+            id: '4-1-6',
+            name: 'Manpower',
+            href: '/monitoring-pesan/booking/manpower',
+            submenu: [],
+          },
+        ],
       },
       {
         id: '4-2',
@@ -197,7 +234,20 @@ const MENU_HEADER = [
             id: '4-2-1',
             name: 'Building Maintenance System',
             href: '',
-            submenu: [],
+            submenu: [
+              {
+                id: '4-2-1-1',
+                name: 'Pengajuan Perbaikan',
+                href: '/monitoring-pesan/management/maintenance/pengajuan',
+                submenu: [],
+              },
+              {
+                id: '4-2-1-1',
+                name: 'Report Kondisi Cabang',
+                href: '/monitoring-pesan/management/maintenance/report',
+                submenu: [],
+              },
+            ],
           },
           {
             id: '4-2-2',
@@ -213,13 +263,13 @@ const MENU_HEADER = [
               {
                 id: '4-2-2-2',
                 name: 'Penggunaan Air',
-                href: '/monitoring-pesan/management/ehs/waste-management',
+                href: '/monitoring-pesan/management/ehs/water-management',
                 submenu: [],
               },
               {
                 id: '4-2-2-3',
                 name: 'Penggunaan BBM',
-                href: '/monitoring-pesan/management/ehs/bbm-management',
+                href: '/monitoring-pesan/management/ehs/fuel-management',
                 submenu: [],
               },
               {
