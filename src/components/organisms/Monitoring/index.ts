@@ -13,6 +13,9 @@ import { MonitoringManpowerDetailPage } from './Manpower/Detail'
 import { MonitoringPodsListPage } from './Pods/List'
 import { MonitoringPodsDetailPage } from './Pods/Detail'
 
+import { MonitoringVehicleListPage } from './Vehicle/List'
+import { MonitoringVehicleDetailPage } from './Vehicle/Detail'
+
 export {
   MonitoringRoomListPage,
   MonitoringRoomDetailPage,
@@ -24,4 +27,6 @@ export {
   MonitoringManpowerDetailPage,
   MonitoringPodsListPage,
   MonitoringPodsDetailPage,
+  MonitoringVehicleListPage,
+  MonitoringVehicleDetailPage,
 }
