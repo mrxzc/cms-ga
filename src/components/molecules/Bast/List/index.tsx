@@ -1,170 +1,458 @@
 'use client'
 
-import IconPlus from '@assets/icons/IconPlus'
-import DateRangeInput from '@components/atoms/DateRangeInput'
-import Table from '@components/atoms/Table'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
-import Link from '@mui/material/Link'
-import Stack from '@mui/material/Stack'
-import { createColumnHelper } from '@tanstack/react-table'
+import IconChevronBottom from '@assets/icons/IconChevronBottom'
+import IconEye from '@assets/icons/IconEye'
+import IconFilter from '@assets/icons/IconFilter'
+import IconSearch from '@assets/icons/IconSearch'
+import Pagination from '@components/atoms/Pagination'
+import { IOTPLoginResponse } from '@interfaces/auth'
+import { IListBastParams } from '@interfaces/bast'
+import { useGetListBast } from '@services/bast/query'
+import { GetCookie } from '@store/storage'
+import { dummiesArray } from '@utils/common'
+import { debounce } from 'lodash'
+import moment from 'moment'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
-import { data } from './data'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export function List() {
   const router = useRouter()
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const dataUser: IOTPLoginResponse = GetCookie('data_user')
 
-  const [startDate, setStartDate] = useState<Date | null>(null)
-  const [endDate, setEndDate] = useState<Date | null>(null)
+  const inputStartDateRef = useRef<any>(null)
+  const inputEndDateRef = useRef<any>(null)
+  const inputStartDateContainerRef = useRef<HTMLDivElement>(null)
+  const inputEndDateContainerRef = useRef<HTMLDivElement>(null)
 
-  const handleStatus = (status: string) => {
-    if (status === 'Active') {
-      return <div className="bg-[#eaf5e9] text-[#457b3b] border border-[#afd5ab] rounded">Active</div>
-    } else {
-      return <div className="bg-[#fcebee] text-[#b63831] border border-[#e39e9c] rounded">Non-Active</div>
-    }
+  const [isStartDateOpen, setIsStartDateOpen] = useState<boolean>(false)
+  const [isEndDateOpen, setIsEndDateOpen] = useState<boolean>(false)
+
+  const [keywords, setKeywords] = useState<string>()
+
+  const defaultParams: IListBastParams = {
+    startDate: '',
+    endDate: '',
+    categoryForm: '',
+    search: '',
+    page: 1,
+    size: 10,
   }
+  const [params, setParams] = useState<IListBastParams>(defaultParams)
 
-  const columnHelper = createColumnHelper<any>()
+  const { data, isFetching, refetch } = useGetListBast(params, dataUser?.idUser)
 
-  const columns = [
-    columnHelper.accessor('id', {
-      cell: info => info.getValue(),
-      header: 'No',
-    }),
-    columnHelper.accessor('bookingCode', {
-      cell: info => info.getValue(),
-      header: 'Kode Booking',
-    }),
-    columnHelper.accessor('name', {
-      cell: info => info.getValue(),
-      header: 'Nama',
-    }),
-    columnHelper.accessor('location', {
-      cell: info => `${info.getValue()}`,
-      header: 'Lokasi',
-    }),
-    columnHelper.accessor('vehicleType', {
-      cell: info => `${info.getValue()}`,
-      header: 'Jenis Vehicle',
-    }),
-    columnHelper.accessor('detail', {
-      cell: info => `${info.getValue()}`,
-      header: 'Detail Unit',
-    }),
-    columnHelper.accessor('brand', {
-      cell: info => `${info.getValue()}`,
-      header: 'Brand',
-    }),
-    columnHelper.accessor('type', {
-      cell: info => `${info.getValue()}`,
-      header: 'Type',
-    }),
-    columnHelper.accessor('year', {
-      cell: info => `${info.getValue()}`,
-      header: 'Tahun',
-    }),
-    columnHelper.accessor('bookingDate', {
-      cell: info => `${info.getValue()}`,
-      header: 'Tanggal Booking',
-    }),
-    columnHelper.accessor('submissionDate', {
-      cell: info => handleStatus(info.getValue()),
-      header: 'Tanggal Pengajuan',
-    }),
-  ]
-
-  const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    event.preventDefault()
-  }
-
-  const breadcrumbs = [
-    <Link
-      underline="none"
-      color="#235696"
-      href="/management/asset"
-      onClick={handleClick}
-      key="1"
-      className="text-heading m semibold-21"
-    >
-      Manage Bast
-    </Link>,
-  ]
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage)
-  }
+  const handleSearch = useCallback(
+    debounce(input => {
+      setParams({ ...params, page: 1, size: 10, search: input })
+    }, 500),
+    []
+  )
 
   useEffect(() => {
-    setTotalPages(10)
-  }, [])
+    const handleClick = (event: any) => {
+      if (!inputStartDateContainerRef?.current?.contains(event?.target)) {
+        setIsStartDateOpen(false)
+      }
+    }
+
+    window.addEventListener('click', handleClick)
+
+    return () => {
+      window.removeEventListener('click', handleClick)
+    }
+  }, [isStartDateOpen])
+
+  useEffect(() => {
+    const handleClick = (event: any) => {
+      if (!inputEndDateContainerRef?.current?.contains(event?.target)) {
+        setIsEndDateOpen(false)
+      }
+    }
+
+    window.addEventListener('click', handleClick)
+
+    return () => {
+      window.removeEventListener('click', handleClick)
+    }
+  }, [isEndDateOpen])
 
   return (
-    <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full">
-      <div className="bg-white px-4 py-4 rounded-xl mb-4 text-[#235696]">
-        {/* <p className="text-heading m semibold-21 ">Booking Asset Data - Room</p> */}
-        <Stack spacing={2}>
-          <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-            {breadcrumbs}
-          </Breadcrumbs>
-        </Stack>
-      </div>
-
-      <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Bast</p>
-        {/* <div className="flex justify-between mb-4">
-          <SelectInput
-            name="location"
-            options={options}
-            value={selectedOption}
-            onChange={handleChange}
-            placeholder="Semua Lokasi"
-            className="w-[150px]"
-          />
-          <button
-            className="next-button flex rounded-md justify-center items-center w-[100px] text-white"
-            onClick={() => router.push('/management/asset/add-asset')}
-          >
-            <div className="bg-white w-[16px] h-[16px] rounded-full items-center justify-center flex mr-1">
-              <IconPlus width={12} height={12} color="#1e5597" />
-            </div>
-            Add New
-          </button>
-        </div> */}
-
-        <div className="flex justify-between mb-4">
-          <DateRangeInput
-            startDate={startDate}
-            endDate={endDate}
-            onStartDateChange={setStartDate}
-            onEndDateChange={setEndDate}
-          />
-          <button
-            type="button"
-            className="flex gap-2 items-center text-extra-small regular-12 text-[#252525]"
-            onClick={() => router.push('/bast/add')}
-          >
-            <IconPlus color="white" className="bg-[#505050] p-1 rounded-full" width={16} height={16} />
-            Add New
-          </button>
+    <div className="mb-[600px]">
+      <div className="px-4 py-8">
+        <div className="bg-white px-6 py-3 rounded mb-4 flex justify-between">
+          <div className="text-extra-small regular-12">Booking Asset Data - Form BAST</div>
         </div>
 
-        <div className="overflow-x-auto w-screen">
-          <Table
-            columns={columns}
-            data={data}
-            loading={false}
-            pagination={{
-              TOTAL_DATA: 100,
-              PAGE: currentPage,
-              LAST_PAGE: totalPages,
+        <div className="bg-white rounded-lg mb-4 p-6 relative">
+          <div className="text-heading s semibold-18 mb-6">Form BAST</div>
+
+          {/* Table controller */}
+          <div className="mb-4">
+            <div className="mb-4">
+              <div className="flex items-center rounded-lg overflow-hidden">
+                <button
+                  onClick={() => {
+                    setParams({ ...params, categoryForm: 'Bast Out' })
+                  }}
+                  className={`border ${
+                    params?.categoryForm === 'Bast Out'
+                      ? 'bg-[#235696] border-[#235696] text-white'
+                      : 'border-[#D5D5D5] text-[#717171]'
+                  }  rounded-l-lg text-heading xs regular-16 p-3`}
+                >
+                  Form Keluar Kendaraan
+                </button>
+                <button
+                  onClick={() => {
+                    setParams({ ...params, categoryForm: 'Bast In' })
+                  }}
+                  className={`${
+                    params?.categoryForm === 'Bast In'
+                      ? 'bg-[#235696] border-y border-r border-[#235696] text-white'
+                      : 'border-y border-r border-[#D5D5D5] text-[#717171]'
+                  }  rounded-r-lg text-heading xs regular-16 p-3`}
+                >
+                  Form Masuk Kendaraan
+                </button>
+              </div>
+            </div>
+
+            <div className="search-input h-[38px]  max-w-[402px] mb-6 px-3 flex items-center justify-center space-x-3 border border-[#D5D5D5] rounded-lg">
+              <IconSearch color="#909090" />
+
+              <input
+                type="text"
+                placeholder="Cari"
+                className="flex-1 text-paragraph regular-14 mt-1"
+                value={keywords ?? ''}
+                onChange={e => {
+                  setKeywords(e?.target?.value)
+                  handleSearch(e?.target?.value)
+                }}
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <div ref={inputStartDateContainerRef}>
+                <div className="text-paragraph regular-14 mb-1">Start Date</div>
+                <div
+                  onKeyDown={() => {}}
+                  onClick={() => {
+                    setIsStartDateOpen(true)
+                    inputStartDateRef?.current?.showPicker()
+                  }}
+                  className="transition-all duration-300 cursor-pointer search-input h-[38px] w-auto px-3 flex items-center justify-center space-x-3 border border-[#D5D5D5] rounded"
+                >
+                  <span
+                    className={`text-paragraph regular-14 ${
+                      params?.startDate ? 'text-[#0C0C0C]' : 'text-[#B1B1B1]'
+                    } mr-2`}
+                  >
+                    {params?.startDate ? moment(params?.startDate).format('DD/MM/YYYY').toString() : 'DD/MM/YYYY'}
+                  </span>
+                  <IconChevronBottom
+                    width={21}
+                    height={21}
+                    className={`${isStartDateOpen ? 'rotate-180' : 'rotate-0'} transition-all duration-300`}
+                  ></IconChevronBottom>
+                </div>
+                <input
+                  ref={inputStartDateRef}
+                  className="h-0 w-0"
+                  type="date"
+                  onChange={e => {
+                    setParams({
+                      ...params,
+                      page: 1,
+                      startDate: moment(e?.target?.value).format('YYYY-MM-DD HH:mm:ss').toString(),
+                    })
+                    setIsStartDateOpen(false)
+                  }}
+                />
+              </div>
+
+              <div className="text-paragraph regular-14 mt-4">To</div>
+
+              <div ref={inputEndDateContainerRef}>
+                <div className="text-paragraph regular-14 mb-1">End Date</div>
+                <div
+                  onKeyDown={() => {}}
+                  onClick={() => {
+                    setIsEndDateOpen(true)
+                    inputEndDateRef?.current?.showPicker()
+                  }}
+                  className="transition-all duration-300 cursor-pointer search-input h-[38px] w-auto px-3 flex items-center justify-center space-x-3 border border-[#D5D5D5] rounded"
+                >
+                  <span
+                    className={`text-paragraph regular-14 ${
+                      params?.endDate ? 'text-[#0C0C0C]' : 'text-[#B1B1B1]'
+                    } mr-2`}
+                  >
+                    {params?.endDate ? moment(params?.endDate).format('DD/MM/YYYY').toString() : 'DD/MM/YYYY'}
+                  </span>
+                  <IconChevronBottom
+                    width={21}
+                    height={21}
+                    className={`${isEndDateOpen ? 'rotate-180' : 'rotate-0'} transition-all duration-300`}
+                  ></IconChevronBottom>
+                </div>
+                <input
+                  ref={inputEndDateRef}
+                  className="h-0 w-0"
+                  type="date"
+                  onChange={e => {
+                    setParams({
+                      ...params,
+                      page: 1,
+                      endDate: moment(e?.target?.value).format('YYYY-MM-DD HH:mm:ss').toString(),
+                    })
+                    setIsEndDateOpen(false)
+                  }}
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setParams({ ...params, startDate: '', endDate: '' })
+                }}
+                className="-mt-1 border border-[#235696] rounded text-paragraph regular-14 text-[#235696] h-[38px] w-auto px-3"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+          {/* Table controller */}
+
+          {/* Table */}
+          {isFetching && (
+            <div className="relative mb-6">
+              <div className="rounded-lg border border-[#E6E5E6] overflow-auto">
+                <table className="table-fixed custom-table">
+                  <thead className="table-head text-heading xs semibold-16">
+                    <tr>
+                      <th>No</th>
+                      <th>Kode Booking</th>
+                      <th>Nama</th>
+                      <th>
+                        <div className="text-center flex items-center justify-center space-x-2">
+                          <span>Lokasi</span>
+                          <button type="button">
+                            <IconFilter></IconFilter>
+                          </button>
+                        </div>
+                      </th>
+                      <th>
+                        <div className="text-center flex items-center justify-center space-x-2">
+                          <span>Jenis Vehicle</span>
+                          <button type="button">
+                            <IconFilter></IconFilter>
+                          </button>
+                        </div>
+                      </th>
+                      <th className="text-center">Detail Unit</th>
+                      <th>
+                        <div className="text-center flex items-center justify-center space-x-2">
+                          <span>Brand</span>
+                          <button type="button">
+                            <IconFilter></IconFilter>
+                          </button>
+                        </div>
+                      </th>
+                      <th>
+                        <div className="text-center flex items-center justify-center space-x-2">
+                          <span>Type</span>
+                          <button type="button">
+                            <IconFilter></IconFilter>
+                          </button>
+                        </div>
+                      </th>
+                      <th>
+                        <div className="text-center flex items-center justify-center space-x-2">
+                          <span>Tahun</span>
+                          <button type="button">
+                            <IconFilter></IconFilter>
+                          </button>
+                        </div>
+                      </th>
+                      <th className="text-center">Tanggal Booking</th>
+                      <th className="text-center">Tanggal Pengajuan</th>
+                      <th className="text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="table-body text-paragraph regular-14">
+                    {dummiesArray().map(val => (
+                      <tr key={`calendar-${val}`} className="animate-pulse">
+                        <td className="min-w-[80px]">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                        <td className="min-w-[200px]">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                        <td className="text-center min-w-[250px]">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                        <td className="text-center min-w-[150px]">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                        <td className="text-center min-w-[250px]">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                        <td className="text-center min-w-[250px]">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                        <td className="text-center min-w-[200px]">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                        <td className="text-center min-w-[200px]">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                        <td className="text-center min-w-[150px]">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                        <td className="text-center min-w-[250px]">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                        <td className="text-center min-w-[250px]">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                        <td className="text-center min-w-[100px] w-full">
+                          <div className="w-full h-6 bg-gray-200"></div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {!isFetching && data?.data?.length ? (
+            <div className="relative mb-6">
+              <div className="rounded-lg border border-[#E6E5E6] overflow-auto">
+                <table className="table-fixed custom-table">
+                  <thead className="table-head text-heading xs semibold-16">
+                    <tr>
+                      <th>No</th>
+                      <th>Kode Booking</th>
+                      <th>Nama</th>
+                      <th>
+                        <div className="text-center flex items-center justify-center space-x-2">
+                          <span>Lokasi</span>
+                          <button type="button">
+                            <IconFilter></IconFilter>
+                          </button>
+                        </div>
+                      </th>
+                      <th>
+                        <div className="text-center flex items-center justify-center space-x-2">
+                          <span>Jenis Vehicle</span>
+                          <button type="button">
+                            <IconFilter></IconFilter>
+                          </button>
+                        </div>
+                      </th>
+                      <th className="text-center">Detail Unit</th>
+                      <th>
+                        <div className="text-center flex items-center justify-center space-x-2">
+                          <span>Brand</span>
+                          <button type="button">
+                            <IconFilter></IconFilter>
+                          </button>
+                        </div>
+                      </th>
+                      <th>
+                        <div className="text-center flex items-center justify-center space-x-2">
+                          <span>Type</span>
+                          <button type="button">
+                            <IconFilter></IconFilter>
+                          </button>
+                        </div>
+                      </th>
+                      <th>
+                        <div className="text-center flex items-center justify-center space-x-2">
+                          <span>Tahun</span>
+                          <button type="button">
+                            <IconFilter></IconFilter>
+                          </button>
+                        </div>
+                      </th>
+                      <th className="text-center">Tanggal Booking</th>
+                      <th className="text-center">Tanggal Pengajuan</th>
+                      <th className="text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="table-body text-paragraph regular-14">
+                    {data?.data?.map((bast: any, index, arr) => (
+                      <tr
+                        key={`bast-${bast?.noIdInfo}`}
+                        className={`${index != arr.length - 1 ? 'border-b border-[#E6E5E6]' : ''}`}
+                      >
+                        <td className="min-w-[80px]">{bast?.id}</td>
+                        <td className="min-w-[200px]">{bast?.code}</td>
+                        <td className="min-w-[250px]">{bast?.name}</td>
+                        <td className="text-center min-w-[150px]">{bast?.location}</td>
+                        <td className="text-center min-w-[250px]">{bast?.vehicleType}</td>
+                        <td className="text-center min-w-[250px]">{bast?.detailUnit}</td>
+                        <td className="text-center min-w-[200px]">{bast?.brand}</td>
+                        <td className="text-center min-w-[200px]">{bast?.type}</td>
+                        <td className="text-center min-w-[150px]">{bast?.year}</td>
+                        <td className="text-center min-w-[250px]">{bast?.bookingDate}</td>
+                        <td className="text-center min-w-[250px]">{bast?.dtUpload}</td>
+
+                        <td className="text-center min-w-[100px] w-full">
+                          <div className="flex justify-center">
+                            <button
+                              type="button"
+                              className="mr-3"
+                              onClick={() => {
+                                router.push(`/management/form-bast/${bast?.id}`)
+                              }}
+                            >
+                              <IconEye width={20} height={20} className="hover:cursor-pointer mx-auto" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : null}
+
+          {!isFetching && !data?.data?.length ? (
+            <div className="w-full flex flex-col justify-center items-center my-20">
+              <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
+              <div className="text-extra-small regular-12 mb-4">Saat ini belum ada yang tersedia</div>
+              <button
+                onClick={() => {
+                  if (params != defaultParams) {
+                    refetch()
+                    return
+                  }
+                  setKeywords('')
+                  setParams({ ...params, page: 1, size: 10, search: '' })
+                }}
+                type="button"
+                className="next-button h-8 px-4 rounded-lg w-auto text-extra-small semibold-12 text-[#FFFFFF] flex items-center justify-center"
+              >
+                Reload
+              </button>
+            </div>
+          ) : null}
+          {/* Table */}
+
+          {/* Pagination */}
+          <Pagination
+            isLoading={isFetching}
+            pagination={data?.pagination}
+            clicked={(page: number) => {
+              setParams({ ...params, page })
             }}
-            callback={handlePageChange}
-          />
+          ></Pagination>
+          {/* Pagination */}
         </div>
       </div>
     </div>

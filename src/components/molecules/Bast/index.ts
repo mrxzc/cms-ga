@@ -1,5 +1,5 @@
-import { Add as BastAdd } from './Add/index'
-import { Edit as BastEdit } from './Edit/index'
 import { List as BastList } from './List/index'
+import { Detail as BastInDetail } from './Detail/bastIn'
+import { Detail as BastOutDetail } from './Detail/bastOut'
 
-export { BastAdd, BastEdit, BastList }
+export { BastInDetail, BastOutDetail, BastList }
