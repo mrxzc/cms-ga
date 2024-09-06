@@ -21,7 +21,7 @@ import { apiSubmitUpdateRoom } from '@services/cms/room/api'
 import { optionsCapacity, optionsFacility, optionsFloor, optionsLocation } from './data'
 import { useGetRoomDetail } from '@services/cms/room/query'
 import { EditRoomProps, IRoomDetailParams } from '@interfaces/room'
-import { API_FILE } from '@utils/environment'
+import { API_FILE_CMS } from '@utils/environment'
 
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
@@ -62,10 +62,10 @@ export function EditPods({ category = 'Pods' }: EditRoomProps) {
   })
 
   const breadcrumbs = [
-    <Link href="/management/room" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
+    <Link href="/management/room" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
       Booking Asset Data - Pods
     </Link>,
-    <Typography key="2" color="text.primary" className="text-heading m semibold-21">
+    <Typography key="2" color="text.primary" className="text-extra-small regular-12">
       Edit Pods Data
     </Typography>,
   ]
@@ -188,7 +188,7 @@ export function EditPods({ category = 'Pods' }: EditRoomProps) {
 
       for (const imageUrl of pods.data.fileImages) {
         try {
-          const response = await fetch(`${API_FILE}${imageUrl}`)
+          const response = await fetch(`${API_FILE_CMS}${imageUrl}`)
           const blob = await response.blob()
           const filename = imageUrl.split('/').pop() ?? 'image.png'
           const file = new File([blob], filename, { type: blob.type })

@@ -54,10 +54,10 @@ export function AddPods({ category = 'Pods' }: { category?: string }) {
   ]
 
   const breadcrumbs = [
-    <Link href="/management/pods" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
+    <Link href="/management/pods" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
       Booking Asset Data - Pods Data
     </Link>,
-    <Typography key="2" color="text.primary" className="text-heading m semibold-21">
+    <Typography key="2" color="text.primary" className="text-extra-small regular-12">
       Add Pods Data
     </Typography>,
   ]
