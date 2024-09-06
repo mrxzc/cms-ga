@@ -10,6 +10,9 @@ import { MonitoringKaraokeDetailPage } from './Karaoke/Detail'
 import { MonitoringManpowerListPage } from './Manpower/List'
 import { MonitoringManpowerDetailPage } from './Manpower/Detail'
 
+import { MonitoringPodsListPage } from './Pods/List'
+import { MonitoringPodsDetailPage } from './Pods/Detail'
+
 export {
   MonitoringRoomListPage,
   MonitoringRoomDetailPage,
@@ -19,4 +22,6 @@ export {
   MonitoringKaraokeDetailPage,
   MonitoringManpowerListPage,
   MonitoringManpowerDetailPage,
+  MonitoringPodsListPage,
+  MonitoringPodsDetailPage,
 }

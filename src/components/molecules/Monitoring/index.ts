@@ -10,6 +10,9 @@ import { Detail as MonitoringKaraokeDetail } from './Karaoke/Detail'
 import { List as MonitoringManpowerList } from './Manpower/List'
 import { Detail as MonitoringManpowerDetail } from './Manpower/Detail'
 
+import { List as MonitoringPodsList } from './Pods/List'
+import { Detail as MonitoringPodsDetail } from './Pods/Detail'
+
 export {
   MonitoringRoomList,
   MonitoringRoomDetail,
@@ -19,4 +22,6 @@ export {
   MonitoringKaraokeDetail,
   MonitoringManpowerList,
   MonitoringManpowerDetail,
+  MonitoringPodsList,
+  MonitoringPodsDetail,
 }
