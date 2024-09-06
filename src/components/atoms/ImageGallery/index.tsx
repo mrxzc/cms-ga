@@ -41,7 +41,7 @@ const ImageCard: React.FC<ImageCardProps> = ({ file, isMain, onClose }) => {
         </p>
       )}
 
-      <button onClick={onClose} className="w-[12px] h-[12px] hover:cursor-pointer absolute top-2 right-2">
+      <button type="button" onClick={onClose} className="w-[12px] h-[12px] hover:cursor-pointer absolute top-2 right-2">
         <IconClose />
       </button>
     </div>

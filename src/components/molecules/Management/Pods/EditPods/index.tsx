@@ -43,7 +43,7 @@ export function EditPods({ category = 'Pods' }: EditRoomProps) {
   const pathname = usePathname()
   const slug = pathname.split('/').pop()
 
-  const { data: rooms } = useGetRoomDetail(param)
+  const { data: pods } = useGetRoomDetail(param)
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
@@ -91,15 +91,11 @@ export function EditPods({ category = 'Pods' }: EditRoomProps) {
       // 1. Prepare FormData
       const formData: any = new FormData()
       formData.append('titleRoom', payload.roomTitle)
-      // Append images
-      // for (const image of images) {
-      //   formData.append('fileImages', image)
-      // }
-      formData.append('fileImages', images)
-      // // Append images as an array
-      // if (images.length > 0) {
-      //   formData.append('fileImages', images)
-      // }
+      if (images && images.length > 0) {
+        for (const image of images) {
+          formData.append('fileImages', image)
+        }
+      }
       formData.append('lantaiRuangan', payload.floor.value.toString())
       formData.append('flagActive', payload.isActive ? 'Y' : 'N')
       formData.append('location', payload.location.value)
@@ -156,36 +152,41 @@ export function EditPods({ category = 'Pods' }: EditRoomProps) {
   }, [])
 
   useEffect(() => {
-    if (rooms?.data && !initialDataLoaded) {
-      setValue('isActive', rooms.data.flagActive === 'Y')
+    if (pods?.data && !initialDataLoaded) {
+      setValue('isActive', pods.data.flagActive === 'Y')
       setInitialDataLoaded(true)
     }
-  }, [rooms, setValue])
+  }, [pods, setValue])
 
   useEffect(() => {
-    if (rooms?.data) {
-      setValue('isActive', rooms.data.flagActive === 'Y')
-      setValue('location', { label: rooms.data.location, value: rooms.data.location })
-      setValue('roomTitle', rooms.data.titleRoom)
-      const floorOption = optionsFloor.find(option => option.value === rooms?.data?.lantaiRuangan)
+    if (pods?.data) {
+      setIsChecked(pods.data.flagActive === 'Y')
+    }
+  }, [pods])
+  useEffect(() => {
+    if (pods?.data) {
+      setValue('isActive', pods.data.flagActive === 'Y')
+      setValue('location', { label: pods.data.location, value: pods.data.location })
+      setValue('roomTitle', pods.data.titleRoom)
+      const floorOption = optionsFloor.find(option => option.value === pods?.data?.lantaiRuangan)
       setValue('floor', floorOption)
-      const capacityOption = optionsCapacity.find(option => option.value === rooms?.data?.kapasitas.toString())
+      const capacityOption = optionsCapacity.find(option => option.value === pods?.data?.kapasitas.toString())
       setValue('capacity', capacityOption)
 
       // Handle potential undefined values
-      setDescriptionData(rooms.data.deskripsi ?? '')
-      setTermsData(rooms.data.termsCondition ?? '')
-      setSelectedFacility(rooms.data.fasilitas ?? [])
+      setDescriptionData(pods.data.deskripsi ?? '')
+      setTermsData(pods.data.termsCondition ?? '')
+      setSelectedFacility(pods.data.fasilitas ?? [])
     }
-  }, [rooms, setValue])
+  }, [pods, setValue])
 
   useEffect(() => {
     const fetchImages = async () => {
-      if (!rooms?.data?.fileImages?.length) return
+      if (!pods?.data?.fileImages?.length) return
 
       const newImages: File[] = []
 
-      for (const imageUrl of rooms.data.fileImages) {
+      for (const imageUrl of pods.data.fileImages) {
         try {
           const response = await fetch(`${API_FILE}${imageUrl}`)
           const blob = await response.blob()
@@ -202,7 +203,7 @@ export function EditPods({ category = 'Pods' }: EditRoomProps) {
     }
 
     fetchImages()
-  }, [rooms])
+  }, [pods])
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">

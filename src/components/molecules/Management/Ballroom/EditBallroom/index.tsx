@@ -91,15 +91,11 @@ export function EditBallroom({ category = 'Ballroom' }: EditRoomProps) {
       // 1. Prepare FormData
       const formData: any = new FormData()
       formData.append('titleRoom', payload.roomTitle)
-      // Append images
-      // for (const image of images) {
-      //   formData.append('fileImages', image)
-      // }
-      formData.append('fileImages', images)
-      // // Append images as an array
-      // if (images.length > 0) {
-      //   formData.append('fileImages', images)
-      // }
+      if (images && images.length > 0) {
+        for (const image of images) {
+          formData.append('fileImages', image)
+        }
+      }
       formData.append('lantaiRuangan', payload.floor.value.toString())
       formData.append('flagActive', payload.isActive ? 'Y' : 'N')
       formData.append('location', payload.location.value)
@@ -164,6 +160,12 @@ export function EditBallroom({ category = 'Ballroom' }: EditRoomProps) {
 
   useEffect(() => {
     if (ballroom?.data) {
+      setIsChecked(ballroom.data.flagActive === 'Y')
+    }
+  }, [ballroom])
+
+  useEffect(() => {
+    if (ballroom?.data) {
       setValue('isActive', ballroom.data.flagActive === 'Y')
       setValue('location', { label: ballroom.data.location, value: ballroom.data.location })
       setValue('roomTitle', ballroom.data.titleRoom)
@@ -197,10 +199,8 @@ export function EditBallroom({ category = 'Ballroom' }: EditRoomProps) {
           toast.error('Failed to fetch image')
         }
       }
-
       setImages(newImages)
     }
-
     fetchImages()
   }, [ballroom])
 

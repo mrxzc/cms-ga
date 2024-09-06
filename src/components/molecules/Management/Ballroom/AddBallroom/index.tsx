@@ -93,9 +93,10 @@ export function AddBallroom({ category = 'Ballroom' }: { category?: string }) {
       // 1. Siapkan FormData
       const formData: any = new FormData()
       formData.append('titleRoom', payload.roomTitle)
-      // Append images
-      for (const image of images) {
-        formData.append('fileImages', image)
+      if (images && images.length > 0) {
+        for (const image of images) {
+          formData.append('fileImages', image)
+        }
       }
       formData.append('lantaiRuangan', payload.floor.value.toString()) // Convert to string
       formData.append('flagActive', payload.isActive ? 'Y' : 'N')
