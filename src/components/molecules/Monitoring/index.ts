@@ -19,6 +19,15 @@ import { Detail as MonitoringBallroomDetail } from './Ballroom/Detail'
 import { List as MonitoringKaraokeList } from './Karaoke/List'
 import { Detail as MonitoringKaraokeDetail } from './Karaoke/Detail'
 
+import { List as MonitoringManpowerList } from './Manpower/List'
+import { Detail as MonitoringManpowerDetail } from './Manpower/Detail'
+
+import { List as MonitoringPodsList } from './Pods/List'
+import { Detail as MonitoringPodsDetail } from './Pods/Detail'
+
+import { List as MonitoringVehicleList } from './Vehicle/List'
+import { Detail as MonitoringVehicleDetail } from './Vehicle/Detail'
+
 export {
   MonitoringRoomList,
   MonitoringRoomDetail,
@@ -26,6 +35,12 @@ export {
   MonitoringBallroomDetail,
   MonitoringKaraokeList,
   MonitoringKaraokeDetail,
+  MonitoringManpowerList,
+  MonitoringManpowerDetail,
+  MonitoringPodsList,
+  MonitoringPodsDetail,
+  MonitoringVehicleList,
+  MonitoringVehicleDetail,
   MonitoringFuelManagement,
   MonitoringWaterManagement,
   MonitoringWasteManagement,
