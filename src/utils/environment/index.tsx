@@ -3,7 +3,8 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL!
 
 // API
 export const API = process.env.NEXT_PUBLIC_API_URL!
-export const API_FILE = process.env.NEXT_PUBLIC_API_FILE!
+export const API_FILE_BARN = process.env.NEXT_PUBLIC_API_FILE_BARN!
+export const API_FILE_CMS = process.env.NEXT_PUBLIC_API_FILE_CMS!
 export const API_KEY = process.env.NEXT_PUBLIC_API_KEY!
 export const API_TOKEN = process.env.TOKEN!
 

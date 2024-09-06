@@ -30,10 +30,14 @@ export function AddRole() {
   })
 
   const breadcrumbs = [
-    <Link href="/account-management/role" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
+    <Link
+      href="/account-management/role"
+      key="1"
+      className="text-extra-small regular-12 text-[#235696] hover:underline"
+    >
       Account Management - Role Management
     </Link>,
-    <Typography key="2" color="text.primary" className="text-heading m semibold-21">
+    <Typography key="2" color="text.primary" className="text-extra-small regular-12">
       Add Role Management
     </Typography>,
   ]

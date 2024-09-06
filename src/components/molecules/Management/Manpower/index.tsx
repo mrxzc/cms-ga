@@ -1,20 +1,20 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { createColumnHelper } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import React, { useEffect, useState } from 'react'
+import { createColumnHelper } from '@tanstack/react-table'
+import { useRouter } from 'next/navigation'
 
 import IconPlus from '@assets/icons/IconPlus'
 import Table from '@components/atoms/Table'
-import { data } from './data'
 import IconEye from '@assets/icons/IconEye'
 import IconSearch from '@assets/icons/IconSearch'
 import IconDownload from '@assets/icons/IconDownload'
 import DateRangeInput from '@components/atoms/DateRangeInput'
+import { data } from './data'
 
 export function Manpower() {
   const router = useRouter()
@@ -96,11 +96,11 @@ export function Manpower() {
   const breadcrumbs = [
     <Link
       underline="none"
-      color="#235696"
+      color="#000"
       href="/management/vehicle"
       onClick={handleClick}
       key="1"
-      className="text-heading m semibold-21"
+      className="text-extra-small regular-12"
     >
       Booking Asset Data - Manpower Data
     </Link>,
