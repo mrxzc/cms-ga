@@ -21,7 +21,7 @@ import { IRoomListParams } from '@interfaces/room'
 import { Modal } from '@components/atoms/ModalCustom'
 import { apiDeleteRoom } from '@services/cms/room/api'
 import { toast } from 'react-toastify'
-import { API_FILE } from '@utils/environment'
+import { API_FILE_BARN } from '@utils/environment'
 
 export function Management() {
   const router = useRouter()
@@ -96,11 +96,11 @@ export function Management() {
   const breadcrumbs = [
     <Link
       underline="none"
-      color="#235696"
+      color="#000"
       href="/management/asset"
       onClick={handleClick}
       key="1"
-      className="text-heading m semibold-21"
+      className="text-extra-small regular-12"
     >
       Booking Asset Data - Room Data
     </Link>,
@@ -119,7 +119,7 @@ export function Management() {
           <Image
             width={1400}
             height={800}
-            src={`${API_FILE}${info.getValue()[0]}`}
+            src={`${API_FILE_BARN}${info.getValue()[0]}`}
             alt="Room Image"
             className="w-[140px] h-[80px] object-cover"
           />

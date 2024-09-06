@@ -68,11 +68,11 @@ export function Management() {
   const breadcrumbs = [
     <Link
       underline="none"
-      color="#235696"
+      color="black"
       href="/management/asset"
       onClick={handleClick}
       key="1"
-      className="text-heading m semibold-21"
+      className="text-extra-small regular-12"
     >
       Booking Asset Data - Asset Data
     </Link>,

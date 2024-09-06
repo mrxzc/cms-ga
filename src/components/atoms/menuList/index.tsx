@@ -34,16 +34,20 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
   }
 
   const isActive = (item: any): boolean => {
-    if (pathname === item.href) return true
+    if (pathname === item.href) return true // Direct match
+
+    // If the item has a submenu, check if any of its submenus are active or have active descendants
     if (item.submenu) {
-      return item.submenu.some((subItem: any) => isActive(subItem))
+      return item.submenu.some((subItem: any) => isActive(subItem) || isSubMenuActive(subItem))
     }
     return false
   }
 
   const isSubMenuActive = (subItem: any): boolean => {
+    // Direct match or check if any of its descendants are active
     return (
-      pathname === subItem.href || (subItem.submenu && subItem.submenu.some((child: any) => isSubMenuActive(child)))
+      pathname === subItem.href ||
+      (subItem.submenu && subItem.submenu.some((child: any) => isActive(child) || isSubMenuActive(child)))
     )
   }
 
@@ -65,6 +69,7 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
 
   return (
     <div key={index}>
+      {/* Rendering Menu Utama */}
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -91,6 +96,7 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
         </Link>
       </div>
 
+      {/* Rendering Submenu (jika ada dan terbuka) */}
       {item.submenu && item.submenu.length > 0 && isSubmenuOpen(item.id) && (
         <ul className="submenu ml-4">
           {item.submenu.map((subItem: any, subIndex: number) => (
@@ -117,6 +123,7 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
                 )}
               </li>
 
+              {/* Rendering Child Submenu (jika ada dan terbuka) */}
               {subItem.submenu && subItem.submenu.length > 0 && isSubmenuOpen(subItem.id) && (
                 <ul className="submenu ml-4">
                   {subItem.submenu.map((childSubItem: any, childSubIndex: number) => (
@@ -143,6 +150,7 @@ export function MenuList({ item, index }: Readonly<ListInterface>) {
                         )}
                       </li>
 
+                      {/* Rendering Grandchild Submenu (jika ada dan terbuka) */}
                       {childSubItem.submenu && childSubItem.submenu.length > 0 && isSubmenuOpen(childSubItem.id) && (
                         <ul className="submenu ml-4">
                           {childSubItem.submenu.map((grandChildSubItem: any, grandChildSubIndex: number) => (

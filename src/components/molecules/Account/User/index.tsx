@@ -85,11 +85,11 @@ export function User() {
   const breadcrumbs = [
     <Link
       underline="none"
-      color="#235696"
+      color="#000"
       href="/management/asset"
       onClick={handleClick}
       key="1"
-      className="text-heading m semibold-21"
+      className="text-extra-small regular-12"
     >
       Account Management - User Management
     </Link>,

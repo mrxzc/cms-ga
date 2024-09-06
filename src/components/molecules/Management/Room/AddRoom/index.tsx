@@ -54,10 +54,10 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
   ]
 
   const breadcrumbs = [
-    <Link href="/management/room" key="1" className="text-heading m semibold-21 text-[#235696] hover:underline">
+    <Link href="/management/room" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
       Booking Asset Data - Room
     </Link>,
-    <Typography key="2" color="text.primary" className="text-heading m semibold-21">
+    <Typography key="2" color="text.primary" className="text-extra-small regular-12">
       Add Room Data
     </Typography>,
   ]
@@ -99,15 +99,11 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
           formData.append('fileImages', image)
         }
       }
-      // formData.append('fileImages', images)
-      // // // Append images as an array
-      // if (images.length > 0) {
-      //   formData.append('fileImages', images)
-      // }
-      formData.append('lantaiRuangan', payload.floor.value.toString()) // Convert to string
+
+      formData.append('lantaiRuangan', payload.floor.value.toString())
       formData.append('flagActive', payload.isActive ? 'Y' : 'N')
       formData.append('location', payload.location.value)
-      formData.append('kapasitas', payload.capacity.value.toString()) // Convert to string
+      formData.append('kapasitas', payload.capacity.value.toString())
       formData.append('deskripsi', descriptionData)
       formData.append('termsCondition', termsData)
       formData.append('fasilitas', convertList)
