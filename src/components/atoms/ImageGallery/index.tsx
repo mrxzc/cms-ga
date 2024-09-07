@@ -62,6 +62,7 @@ const ImageGallery: React.FC<{ setImages: (imageGallery: File[]) => void; images
         if (file) {
           const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg']
           const maxSizeInBytes = 5 * 1024 * 1024 // 5MB
+          const minSizeInBytes = 10 * 1024 // 10KB
 
           if (!allowedTypes.includes(file.type)) {
             toast.error('Format file harus .png, .jpeg, atau .jpg')
@@ -70,6 +71,11 @@ const ImageGallery: React.FC<{ setImages: (imageGallery: File[]) => void; images
 
           if (file.size > maxSizeInBytes) {
             toast.error('Ukuran file maksimal 5MB')
+            return
+          }
+
+          if (file.size < minSizeInBytes) {
+            toast.error('Ukuran file terlalu kecil. Minimal 10KB')
             return
           }
 

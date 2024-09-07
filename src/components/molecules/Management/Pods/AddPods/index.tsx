@@ -117,7 +117,7 @@ export function AddPods({ category = 'Pods' }: { category?: string }) {
         router.push('/management/pods')
       } else {
         // Tampilkan pesan error yang lebih spesifik jika ada
-        let errorMessage = 'Gagal membuat ruangan.'
+        let errorMessage = 'Gagal membuat pods.'
         if (response.message) {
           errorMessage += ` ${response.message}`
         } else if (response.error && response.error.length > 0) {

@@ -13,6 +13,9 @@ import { MonitoringManpowerDetailPage } from './Manpower/Detail'
 import { MonitoringPodsListPage } from './Pods/List'
 import { MonitoringPodsDetailPage } from './Pods/Detail'
 
+import { MonitoringCleaningServicePage } from './Management/CleaningService'
+import { MonitoringCleaningServiceDetailPage } from './Management/CleaningService/Detail'
+
 import { MonitoringVehicleListPage } from './Vehicle/List'
 import { MonitoringVehicleDetailPage } from './Vehicle/Detail'
 import { MonitoringElectricityManagementPage } from './Management/EHS/ElectricityManagement'
@@ -48,4 +51,6 @@ export {
   MonitoringFuelManagementDetailPage,
   MonitoringWaterManagementDetailPage,
   MonitoringWasteManagementDetailPage,
+  MonitoringCleaningServicePage,
+  MonitoringCleaningServiceDetailPage,
 }
