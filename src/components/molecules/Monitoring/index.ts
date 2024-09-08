@@ -19,6 +19,9 @@ import { Detail as MonitoringVehicleDetail } from './Vehicle/Detail'
 import { List as MonitoringRepairmentList } from './Repairment/List'
 import { Detail as MonitoringRepairmentDetail } from './Repairment/Detail'
 
+import { List as MonitoringAssetList } from './Asset/List'
+import { Detail as MonitoringAssetDetail } from './Asset/Detail'
+
 export {
   MonitoringRoomList,
   MonitoringRoomDetail,
@@ -34,4 +37,6 @@ export {
   MonitoringVehicleDetail,
   MonitoringRepairmentList,
   MonitoringRepairmentDetail,
+  MonitoringAssetList,
+  MonitoringAssetDetail,
 }

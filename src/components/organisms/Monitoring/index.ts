@@ -19,6 +19,9 @@ import { MonitoringVehicleDetailPage } from './Vehicle/Detail'
 import { MonitoringRepairmentListPage } from './Repairment/List'
 import { MonitoringRepairmentDetailPage } from './Repairment/Detail'
 
+import { MonitoringAssetListPage } from './Asset/List'
+import { MonitoringAssetDetailPage } from './Asset/Detail'
+
 export {
   MonitoringRoomListPage,
   MonitoringRoomDetailPage,
@@ -34,4 +37,6 @@ export {
   MonitoringVehicleDetailPage,
   MonitoringRepairmentListPage,
   MonitoringRepairmentDetailPage,
+  MonitoringAssetListPage,
+  MonitoringAssetDetailPage,
 }
