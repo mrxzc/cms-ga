@@ -52,14 +52,14 @@ export function Detail() {
               router.push('/monitoring/Asset')
             }}
           >
-            <div className="text-extra-small regular-12 text-[#235696]">Monitoring Pesanan - Asset</div>
+            <div className="text-extra-small regular-12 text-[#235696]">Monitoring Pesanan - Report Kondisi Cabang</div>
           </button>
           <IconChevronRight color={'#909090'} width={24} height={24} className="-mt-0.5" />
-          <div className="text-extra-small regular-12 text-[#252525]">Asset Detail</div>
+          <div className="text-extra-small regular-12 text-[#252525]">Report Kondisi Cabang Detail</div>
         </div>
 
         <div className="bg-white rounded-lg mb-4 p-6 relative">
-          <p className="text-heading s semibold-18 mb-10">Request Asset</p>
+          <p className="text-heading s semibold-18 mb-10">Report Kondisi Cabang</p>
 
           {/* {(isFetching || isRefetching) && (
             <div className="flex items-center justify-center my-20">
@@ -114,79 +114,34 @@ export function Detail() {
               </div>
 
               <div className="grid grid-cols-4 gap-4 mb-6 items-center">
-                <p className="text-heading xs regular-16">Tanggal Booking</p>
+                <p className="text-heading xs regular-16">Area</p>
                 <div className="col-span-3">
                   <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                    {data?.bookingDate}
+                    {data?.area}
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-4 gap-4 mb-6 items-center">
-                <p className="text-heading xs regular-16">Waktu Booking</p>
+                <p className="text-heading xs regular-16">Cabang</p>
                 <div className="col-span-3">
                   <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                    {data?.bookingTime}
+                    {data?.branch}
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-4 gap-4 mb-6 items-center">
+              <div className="grid grid-cols-4 gap-4 mb-6 ">
                 <p className="text-heading xs regular-16">Keperluan</p>
                 <div className="col-span-3">
-                  <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                    {data?.reason}
+                  <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-20 p-3 rounded-md ">
+                    {data?.description}
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-4 gap-4 mb-6 items-center">
-                <p className="text-heading xs regular-16">Status</p>
-                <div className="col-span-3">
-                  <div>
-                    <div className="max-w-40 text-center rounded bg-[#D3FED7] text-[#4EC558] border border-[#4EC558] text-paragraph semibold-14 px-1 py-2">
-                      {data?.status}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </>
-          {/* )} */}
-        </div>
-
-        <div className="bg-white rounded-lg mb-4 p-6 relative">
-          <p className="text-heading s semibold-18 mb-10">Detail Asset yang dipesan</p>
-
-          {/* {(isFetching || isRefetching) && (
-            <div className="flex items-center justify-center my-20">
-              <IconSpinner width={100} height={100} className="animate-spin"></IconSpinner>
-            </div>
-          )} */}
-
-          {/* {(isFetchError || isRefetchError) && (
-            <div className="w-full flex flex-col justify-center items-center my-20">
-              <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
-              <div className="text-extra-small regular-12 mb-4">Saat ini belum ada yang tersedia</div>
-              <button
-                onClick={() => {
-                  refetch()
-                }}
-                type="button"
-                className="next-button h-8 px-4 rounded-lg w-auto text-extra-small semibold-12 text-[#FFFFFF] flex items-center justify-center"
-              >
-                Reload
-              </button>
-            </div>
-          )} */}
-
-          {/* {isFetchSuccess && data && ( */}
-          <>
-            <div>
               <div className="grid grid-cols-4 gap-4 mb-6">
-                <p className="text-heading xs regular-16">
-                  Produk total: <span className="font-semibold">21 Items</span>
-                </p>
+                <p className="text-heading xs regular-16">Foto Kondisi Cabang</p>
                 <div className="col-span-2">
                   <div
                     ref={dropdownRef}
@@ -200,7 +155,7 @@ export function Detail() {
                     }  flex overflow-hidden`}
                   >
                     <div className="border-l border-y border-[#E6E5E6] bg-[#F5F8FA] h-full w-24 py-3 text-center text-[#3F4254] rounded-l-md">
-                      Proyektor
+                      Halaman
                     </div>
                     <div
                       className={`overflow-hidden flex-1 text-[#717171] relative bg-[#EFF2F5] border border-[#E6E5E6] ${
@@ -208,7 +163,7 @@ export function Detail() {
                       }`}
                     >
                       <div className="flex items-center p-3">
-                        <div className="flex-1 ">12 Items</div>
+                        <div className="flex-1 ">3 Foto</div>
                         <button className="bg-[#EFF2F5]">
                           <IconChevronBottom
                             width={20}
@@ -230,34 +185,6 @@ export function Detail() {
                             <span className="pr-1">&#x2022;</span> Panasonic : 6 Items
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="my-3"></div>
-                  <div className="text-paragraph semibold-14 min-h-[44px] flex overflow-hidden">
-                    <div className="border-l border-y border-[#E6E5E6] bg-[#F5F8FA] h-full w-24 py-3 text-center text-[#3F4254] rounded-l-md">
-                      Meja
-                    </div>
-                    <div
-                      className={`flex-1 text-[#717171] relative bg-[#EFF2F5] border border-[#E6E5E6] rounded-r-md 
-                     `}
-                    >
-                      <div className="flex items-center p-3">
-                        <div className="flex-1 ">1 Items</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="my-3"></div>
-                  <div className="text-paragraph semibold-14 min-h-[44px] flex overflow-hidden">
-                    <div className="border-l border-y border-[#E6E5E6] bg-[#F5F8FA] h-full w-24 py-3 text-center text-[#3F4254] rounded-l-md">
-                      Kursi
-                    </div>
-                    <div
-                      className={`flex-1 text-[#717171] relative bg-[#EFF2F5] border border-[#E6E5E6] rounded-r-md 
-                     `}
-                    >
-                      <div className="flex items-center p-3">
-                        <div className="flex-1 ">3 Items</div>
                       </div>
                     </div>
                   </div>

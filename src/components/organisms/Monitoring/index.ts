@@ -22,6 +22,9 @@ import { MonitoringRepairmentDetailPage } from './Repairment/Detail'
 import { MonitoringAssetListPage } from './Asset/List'
 import { MonitoringAssetDetailPage } from './Asset/Detail'
 
+import { MonitoringBranchConditionReportListPage } from './BranchConditionReport/List'
+import { MonitoringBranchConditionReportDetailPage } from './BranchConditionReport/Detail'
+
 export {
   MonitoringRoomListPage,
   MonitoringRoomDetailPage,
@@ -39,4 +42,6 @@ export {
   MonitoringRepairmentDetailPage,
   MonitoringAssetListPage,
   MonitoringAssetDetailPage,
+  MonitoringBranchConditionReportListPage,
+  MonitoringBranchConditionReportDetailPage,
 }
