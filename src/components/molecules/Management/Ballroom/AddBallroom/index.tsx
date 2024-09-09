@@ -116,7 +116,7 @@ export function AddBallroom({ category = 'Ballroom' }: { category?: string }) {
         router.push('/management/ballroom')
       } else {
         // Tampilkan pesan error yang lebih spesifik jika ada
-        let errorMessage = 'Gagal membuat ruangan.'
+        let errorMessage = 'Gagal membuat ballroom.'
         if (response.message) {
           errorMessage += ` ${response.message}`
         } else if (response.error && response.error.length > 0) {

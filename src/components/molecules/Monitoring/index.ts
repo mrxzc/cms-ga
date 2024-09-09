@@ -10,6 +10,12 @@ import { Detail as MonitoringWasteManagementDetail } from './Management/EHS/Wast
 import { MonitoringElectricityManagement } from './Management/EHS/ElectricityManagement'
 import { Detail as MonitoringElectricityManagementDetail } from './Management/EHS/ElectricityManagement/Detail'
 
+import { MonitoringSecurityGuard } from '@components/molecules/Monitoring/Management/SecurityGuard'
+import { Detail as MonitoringSecurityGuardDetail } from './Management/SecurityGuard/Detail'
+
+import { MonitoringCleaningService } from './Management/CleaningService'
+import { Detail as MonitoringCleaningServiceDetail } from './Management/CleaningService/Detail'
+
 import { List as MonitoringRoomList } from './Room/List'
 import { Detail as MonitoringRoomDetail } from './Room/Detail'
 
@@ -49,4 +55,8 @@ export {
   MonitoringWaterManagementDetail,
   MonitoringWasteManagementDetail,
   MonitoringElectricityManagementDetail,
+  MonitoringSecurityGuard,
+  MonitoringSecurityGuardDetail,
+  MonitoringCleaningService,
+  MonitoringCleaningServiceDetail,
 }

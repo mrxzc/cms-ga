@@ -62,7 +62,7 @@ export function EditPods({ category = 'Pods' }: EditRoomProps) {
   })
 
   const breadcrumbs = [
-    <Link href="/management/room" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
+    <Link href="/management/pods" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
       Booking Asset Data - Pods
     </Link>,
     <Typography key="2" color="text.primary" className="text-extra-small regular-12">
@@ -111,11 +111,11 @@ export function EditPods({ category = 'Pods' }: EditRoomProps) {
 
       // 3. Handle the response
       if (response.status === 'T') {
-        toast.success('Data ruangan berhasil diubah!')
-        router.push('/management/room')
+        toast.success('Data pods berhasil diubah!')
+        router.push('/management/pods')
       } else {
         // Display a more specific error message if available
-        let errorMessage = 'Gagal mengubah data ruangan.'
+        let errorMessage = 'Gagal mengubah data pods.'
         if (response.message) {
           errorMessage += ` ${response.message}`
         } else if (response.error && response.error.length > 0) {
