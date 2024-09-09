@@ -34,6 +34,15 @@ import { Detail as MonitoringPodsDetail } from './Pods/Detail'
 import { List as MonitoringVehicleList } from './Vehicle/List'
 import { Detail as MonitoringVehicleDetail } from './Vehicle/Detail'
 
+import { List as MonitoringRepairmentList } from './Repairment/List'
+import { Detail as MonitoringRepairmentDetail } from './Repairment/Detail'
+
+import { List as MonitoringAssetList } from './Asset/List'
+import { Detail as MonitoringAssetDetail } from './Asset/Detail'
+
+import { List as MonitoringBranchConditionReportList } from './BranchConditionReport/List'
+import { Detail as MonitoringBranchConditionReportDetail } from './BranchConditionReport/Detail'
+
 export {
   MonitoringRoomList,
   MonitoringRoomDetail,
@@ -55,6 +64,12 @@ export {
   MonitoringWaterManagementDetail,
   MonitoringWasteManagementDetail,
   MonitoringElectricityManagementDetail,
+  MonitoringRepairmentList,
+  MonitoringRepairmentDetail,
+  MonitoringAssetList,
+  MonitoringAssetDetail,
+  MonitoringBranchConditionReportList,
+  MonitoringBranchConditionReportDetail,
   MonitoringSecurityGuard,
   MonitoringSecurityGuardDetail,
   MonitoringCleaningService,

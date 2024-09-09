@@ -30,6 +30,15 @@ import { MonitoringWaterManagementDetailPage } from './Management/EHS/WaterManag
 import { MonitoringWasteManagementPage } from './Management/EHS/WasteManagement'
 import { MonitoringWasteManagementDetailPage } from './Management/EHS/WasteManagement/Detail'
 
+import { MonitoringRepairmentListPage } from './Repairment/List'
+import { MonitoringRepairmentDetailPage } from './Repairment/Detail'
+
+import { MonitoringAssetListPage } from './Asset/List'
+import { MonitoringAssetDetailPage } from './Asset/Detail'
+
+import { MonitoringBranchConditionReportListPage } from './BranchConditionReport/List'
+import { MonitoringBranchConditionReportDetailPage } from './BranchConditionReport/Detail'
+
 export {
   MonitoringRoomListPage,
   MonitoringRoomDetailPage,
@@ -51,6 +60,12 @@ export {
   MonitoringFuelManagementDetailPage,
   MonitoringWaterManagementDetailPage,
   MonitoringWasteManagementDetailPage,
+  MonitoringRepairmentListPage,
+  MonitoringRepairmentDetailPage,
+  MonitoringAssetListPage,
+  MonitoringAssetDetailPage,
+  MonitoringBranchConditionReportListPage,
+  MonitoringBranchConditionReportDetailPage,
   MonitoringCleaningServicePage,
   MonitoringCleaningServiceDetailPage,
 }
