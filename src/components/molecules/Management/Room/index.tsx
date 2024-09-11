@@ -110,7 +110,10 @@ export function Management() {
 
   const columns = [
     columnHelper.accessor('originalIndex', {
-      cell: info => info.getValue() + 1,
+      cell: info => {
+        const offset = ((rooms?.pagination?.currentPage ?? 1) - 1) * 10
+        return offset + info.row.index + 1
+      },
       header: 'No',
     }),
     columnHelper.accessor('pathImage', {
@@ -156,7 +159,7 @@ export function Management() {
         }
 
         const handleDeleteClick = () => {
-          setRoomIdToDelete(rowData.idRoom) // Simpan ID ke state
+          setRoomIdToDelete(rowData.idRoom)
           setIsModalOpen(true)
         }
 

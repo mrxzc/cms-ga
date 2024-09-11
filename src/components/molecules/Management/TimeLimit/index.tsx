@@ -1,6 +1,6 @@
 'use client'
 
-import { Breadcrumbs, Stack } from '@mui/material'
+import { Breadcrumbs, Stack, Tooltip } from '@mui/material'
 import React from 'react'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Link from '@mui/material/Link'
@@ -19,6 +19,22 @@ const schema = Yup.object().shape({
       minutes: Yup.number().min(0, 'Durasi menit tidak boleh negatif').required('Durasi menit wajib diisi'),
     })
     .required('Durasi Pinjam Max Room wajib diisi'),
+
+  durationBallroom: Yup.object()
+    .shape({
+      days: Yup.number().min(0, 'Durasi hari tidak boleh negatif').required('Durasi hari wajib diisi'),
+      hours: Yup.number().min(0, 'Durasi jam tidak boleh negatif').required('Durasi jam wajib diisi'),
+      minutes: Yup.number().min(0, 'Durasi menit tidak boleh negatif').required('Durasi menit wajib diisi'),
+    })
+    .required('Durasi Pinjam Max Ballroom wajib diisi'),
+
+  durationKaraoke: Yup.object()
+    .shape({
+      days: Yup.number().min(0, 'Durasi hari tidak boleh negatif').required('Durasi hari wajib diisi'),
+      hours: Yup.number().min(0, 'Durasi jam tidak boleh negatif').required('Durasi jam wajib diisi'),
+      minutes: Yup.number().min(0, 'Durasi menit tidak boleh negatif').required('Durasi menit wajib diisi'),
+    })
+    .required('Durasi Pinjam Max Karaoke wajib diisi'),
 
   durationVehicle: Yup.object()
     .shape({
@@ -83,8 +99,19 @@ export function TimeLimit() {
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
+            {/* Input Room */}
             <section className="mb-6">
-              <h2 className="text-heading xs semibold-16 mb-2">Duration Room</h2>
+              <div className="flex gap-2 items-center flex-row">
+                <h2 className="text-heading xs semibold-16">Duration Room</h2>
+                <Tooltip
+                  title="Pengaturan untuk berapa lama ruangan bisa dibooking oleh pengguna."
+                  className="flex items-center bg-[#424242] "
+                >
+                  <p className="text-[white] ml-1 rounded-full px-1 py-1 bg-[#424242] w-[16px] h-[16px] flex items-center justify-center text-center text-[12px]">
+                    i
+                  </p>
+                </Tooltip>
+              </div>
               <div className="flex items-center">
                 <label htmlFor="durationRoom" className="mr-2 min-w-[250px]">
                   Durasi Pinjam Max Room
@@ -92,8 +119,62 @@ export function TimeLimit() {
                 <DurationInput name="durationRoom" control={methods.control} />
               </div>
             </section>
+
+            {/* Input Ballroom */}
             <section className="mb-6">
-              <h2 className="text-heading xs semibold-16 mb-2">Duration Vehicle</h2>
+              <div className="flex gap-2 items-center flex-row">
+                <h2 className="text-heading xs semibold-16">Duration Ballroom</h2>
+                <Tooltip
+                  title="Atur durasi maksimal peminjaman ballroom disini."
+                  className="flex items-center bg-[#424242] "
+                >
+                  <p className="text-[white] ml-1 rounded-full px-1 py-1 bg-[#424242] w-[16px] h-[16px] flex items-center justify-center text-center text-[12px]">
+                    i
+                  </p>
+                </Tooltip>
+              </div>
+              <div className="flex items-center">
+                <label htmlFor="durationBallroom" className="mr-2 min-w-[250px]">
+                  Durasi Pinjam Max Ballroom
+                </label>
+                <DurationInput name="durationBallroom" control={methods.control} />
+              </div>
+            </section>
+
+            {/* Input Karaoke */}
+            <section className="mb-6">
+              <div className="flex gap-2 items-center flex-row">
+                <h2 className="text-heading xs semibold-16">Duration Karaoke</h2>
+                <Tooltip
+                  title="Atur durasi maksimal peminjaman karaoke disini."
+                  className="flex items-center bg-[#424242] "
+                >
+                  <p className="text-[white] ml-1 rounded-full px-1 py-1 bg-[#424242] w-[16px] h-[16px] flex items-center justify-center text-center text-[12px]">
+                    i
+                  </p>
+                </Tooltip>
+              </div>
+              <div className="flex items-center">
+                <label htmlFor="duration" className="mr-2 min-w-[250px]">
+                  Durasi Pinjam Max Karaoke
+                </label>
+                <DurationInput name="durationKaraoke" control={methods.control} />
+              </div>
+            </section>
+
+            {/* Input Vehicle */}
+            <section className="mb-6">
+              <div className="flex gap-2 items-center flex-row">
+                <h2 className="text-heading xs semibold-16">Duration Vehicle</h2>
+                <Tooltip
+                  title="Atur durasi maksimal peminjaman dan form kendaraan di sini."
+                  className="flex items-center bg-[#424242] "
+                >
+                  <p className="text-[white] ml-1 rounded-full px-1 py-1 bg-[#424242] w-[16px] h-[16px] flex items-center justify-center text-center text-[12px]">
+                    i
+                  </p>
+                </Tooltip>
+              </div>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center">
                   <label htmlFor="durationVehicle" className="mr-2 min-w-[250px]">
@@ -110,8 +191,20 @@ export function TimeLimit() {
                 </div>
               </div>
             </section>
+
+            {/* Input Asset */}
             <section className="mb-6">
-              <h2 className="text-heading xs semibold-16 mb-2">Duration Asset</h2>
+              <div className="flex gap-2 items-center flex-row">
+                <h2 className="text-heading xs semibold-16">Duration Asset</h2>
+                <Tooltip
+                  title="Pengaturan untuk berapa lama asset bisa dibooking oleh pengguna."
+                  className="flex items-center bg-[#424242] "
+                >
+                  <p className="text-[white] ml-1 rounded-full px-1 py-1 bg-[#424242] w-[16px] h-[16px] flex items-center justify-center text-center text-[12px]">
+                    i
+                  </p>
+                </Tooltip>
+              </div>
               <div className="flex items-center">
                 <label htmlFor="durationAsset" className="mr-2 min-w-[250px]">
                   Durasi Pinjam Max Asset
@@ -119,8 +212,20 @@ export function TimeLimit() {
                 <DurationInput name="durationAsset" control={methods.control} />
               </div>
             </section>
+
+            {/* Input Manpower */}
             <section className="mb-6">
-              <h2 className="text-heading xs semibold-16 mb-2">Duration Manpower</h2>
+              <div className="flex gap-2 items-center flex-row">
+                <h2 className="text-heading xs semibold-16">Duration Manpower</h2>
+                <Tooltip
+                  title="Pengaturan untuk berapa lama manpower bisa dibooking oleh pengguna."
+                  className="flex items-center bg-[#424242] "
+                >
+                  <p className="text-[white] ml-1 rounded-full px-1 py-1 bg-[#424242] w-[16px] h-[16px] flex items-center justify-center text-center text-[12px]">
+                    i
+                  </p>
+                </Tooltip>
+              </div>
               <div className="flex items-center">
                 <label htmlFor="durationManpower" className="mr-2 min-w-[250px]">
                   Durasi Pinjam Max Manpower
