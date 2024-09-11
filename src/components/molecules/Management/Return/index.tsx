@@ -58,7 +58,7 @@ export function Return() {
         const rowData = info.row.original
 
         const handleViewDetailClick = () => {
-          router.push(`/management/approval-bucket/${rowData.originalIndex + 1}`)
+          router.push(`/management/product-return/${rowData.originalIndex + 1}`)
         }
 
         return (
