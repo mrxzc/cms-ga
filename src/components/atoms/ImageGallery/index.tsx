@@ -48,11 +48,14 @@ const ImageCard: React.FC<ImageCardProps> = ({ file, isMain, onClose }) => {
   )
 }
 
-const ImageGallery: React.FC<{ setImages: (imageGallery: File[]) => void; images?: File[] }> = ({
-  setImages,
-  images = [],
-}) => {
-  const [imageGallery, setImageGallery] = useState<File[]>(images) // Initialize with the 'images' prop
+interface ImageGalleryProps {
+  setImages: (imageGallery: File[]) => void
+  images?: File[]
+  maxImages?: number
+}
+
+const ImageGallery: React.FC<ImageGalleryProps> = ({ setImages, images = [], maxImages = 10 }) => {
+  const [imageGallery, setImageGallery] = useState<File[]>(images)
 
   const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
@@ -103,12 +106,12 @@ const ImageGallery: React.FC<{ setImages: (imageGallery: File[]) => void; images
       <div className="grid grid-cols-5 gap-4 w-[650px]">
         {imageGallery &&
           imageGallery
-            .slice(0, 10)
+            .slice(0, maxImages)
             .map((image, index) => (
               <ImageCard key={index} file={image} isMain={index === 0} onClose={() => handleCloseImage(index)} />
             ))}
       </div>
-      {imageGallery?.length < 10 && (
+      {imageGallery?.length < maxImages && (
         <div className="flex gap-2 items-center mt-1">
           <label htmlFor="fileInput" className="cursor-pointer">
             <div
