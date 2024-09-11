@@ -14,7 +14,7 @@ import IconEye from '@assets/icons/IconEye'
 import TabNavigation, { Tab } from '@components/atoms/TabNavigation'
 import { data } from './data'
 
-export function Approval() {
+export function Return() {
   const router = useRouter()
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -86,7 +86,7 @@ export function Approval() {
       key="1"
       className="text-extra-small regular-12"
     >
-      Booking Asset Data - Approval Bucket
+      Booking Asset Data - Pengembalian Barang
     </Link>,
   ]
 
@@ -106,9 +106,7 @@ export function Approval() {
 
   const tabs: Tab[] = [
     { label: 'All Product', value: 'allProduct' },
-    { label: 'Vehicle', value: 'vehicle' },
-    { label: 'Ballroom', value: 'ballroom' },
-    { label: 'Manpower', value: 'manpower' },
+    { label: 'Asset', value: 'asset' },
   ]
 
   return (
@@ -122,7 +120,7 @@ export function Approval() {
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Approval Bucket</p>
+        <p className="text-heading s semibold-18 mb-4">Pengembalian Barang</p>
         <div className="mb-4">
           <TabNavigation tabs={tabs} activeTab={activeTab} onChange={handleTabChange} />
         </div>
