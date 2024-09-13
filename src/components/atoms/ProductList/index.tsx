@@ -1,3 +1,4 @@
+import IconDot from '@assets/icons/IconDot'
 import React, { useState } from 'react'
 
 // Define types for our data structure
@@ -66,7 +67,9 @@ const ProductList: React.FC<ProductListProps> = ({ data }) => {
                 <ul className="bg-[#eff2f5] p-4 w-[450px] rounded-b-xl">
                   {category.brands.map((brand, brandIndex) => (
                     <li key={brandIndex} className="py-2 text-left border-b last:border-b-0">
-                      ⚫ {brand.brand} : {brand.quantity} Items
+                      <div className="flex items-center gap-2">
+                        <IconDot color={'#0A0A0A'} /> {brand.brand} : {brand.quantity} Items
+                      </div>
                     </li>
                   ))}
                 </ul>

@@ -18,10 +18,13 @@ import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { apiSubmitUpdateRoom } from '@services/cms/room/api'
-import { optionsCapacity, optionsFacility, optionsFloor, optionsLocation } from './data'
+import { optionsFacility, optionsLocation } from './data'
 import { useGetRoomDetail } from '@services/cms/room/query'
 import { EditRoomProps, IRoomDetailParams } from '@interfaces/room'
 import { API_FILE_CMS } from '@utils/environment'
+import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
+import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
+import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
 
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
@@ -34,24 +37,65 @@ const schema = Yup.object().shape({
   selectedFacilities: Yup.array(),
 })
 
+interface OptionItem {
+  label: string
+  value: string
+}
+
 export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
   const [param, setParam] = useState<IRoomDetailParams>({
     roomId: '',
   })
+
+  const defaultParams = {
+    search: '',
+    page: 1,
+    size: 50,
+  }
+  const [params] = useState<IGcmRoomFloorListParams>(defaultParams)
 
   const router = useRouter()
   const pathname = usePathname()
   const slug = pathname.split('/').pop()
 
   const { data: rooms } = useGetRoomDetail(param)
+  const { data: floorData } = useGetRoomFloor(params)
+  const { data: capacityData } = useGetRoomCapacity(params)
+
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
   const [selectedFacility, setSelectedFacility] = useState<string[]>([])
   const [isChecked, setIsChecked] = useState(false)
   const [initialDataLoaded, setInitialDataLoaded] = useState(false)
-
+  const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
+  const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
+  
   const convertList = selectedFacility.join(',')
+
+  useEffect(() => {
+    if (floorData && floorData.data) {
+      const transformedOptions: OptionItem[] = floorData.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsFloor(transformedOptions)
+    }
+  }, [floorData])
+
+  useEffect(() => {
+    if (capacityData && capacityData.data) {
+      const transformedOptions: OptionItem[] = capacityData.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsCapacity(transformedOptions)
+    }
+  }, [capacityData])
 
   const { handleSubmit, control, setValue, getValues, watch } = useForm<any>({
     resolver: yupResolver(schema),
@@ -136,11 +180,6 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     }
   }
 
-  const onSubmit = async () => {
-    const data = getValues()
-    handleUpdateRoom(data)
-  }
-
   useEffect(() => {
     setValue('isActive', isChecked)
   }, [isChecked, watch('isActive')])
@@ -203,6 +242,11 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     }
     fetchImages()
   }, [rooms])
+
+  const onSubmit = async () => {
+    const data = getValues()
+    handleUpdateRoom(data)
+  }
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">

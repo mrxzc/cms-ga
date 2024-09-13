@@ -43,7 +43,7 @@ export function List() {
   }
   const [params, setParams] = useState<IGcmRoomCapacityListParams>(defaultParams)
 
-  const { data, isFetching, refetch } = useGetRoomCapacity(params, dataUser?.idUser)
+  const { data, isFetching, refetch } = useGetRoomCapacity(params)
 
   const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = useMutateToggleStatusRoomCapacity()
   const {
