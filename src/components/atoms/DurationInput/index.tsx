@@ -25,10 +25,10 @@ const DurationInput: React.FC<DurationInputProps> = ({ name, control, ...props }
 
   const handleInputChange = useCallback(
     (
-        field: { onChange: (value: DurationValue) => void; value: DurationValue },
-        key: keyof DurationValue,
-        max?: number
-      ) =>
+      field: { onChange: (value: DurationValue) => void; value: DurationValue },
+      key: keyof DurationValue,
+      max?: number
+    ) =>
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value
         let newValue = inputValue === '' ? 0 : parseInt(inputValue, 10)
