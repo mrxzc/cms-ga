@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
 import IconChevronRight from '@assets/icons/IconChevronRight'
-import { data } from './data'
 import IconAlertDelete from '@assets/icons/IconAlertDelete'
+import ProductList from '@components/atoms/ProductList'
+import { data } from './data'
 import { Modal } from '@components/atoms/ModalCustom'
 
 export function DetailReturn() {
@@ -145,15 +146,14 @@ export function DetailReturn() {
           {/* Detail Asset yang dipesan */}
           <div className="bg-white rounded-lg mb-4 p-6 relative">
             <p className="text-heading s semibold-18 mb-10">Detail Asset yang dipesan</p>
-
             <div>
-              <div className="grid grid-cols-4 gap-4 mb-6 items-center">
-                <p className="text-heading xs regular-16">Lokasi Vehicle</p>
-                <div className="col-span-3">
-                  <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                    {requestData?.detail?.location}
-                  </div>
-                </div>
+              <div className="grid grid-cols-4 gap-4 mb-6 items-start">
+                <p className="text-heading xs regular-16">
+                  Produk total : <span className="text-heading xs semibold-16">{requestData?.detail?.totalItems}</span>{' '}
+                  Items
+                </p>
+
+                {requestData ? <ProductList data={requestData?.detail} /> : ''}
               </div>
             </div>
           </div>

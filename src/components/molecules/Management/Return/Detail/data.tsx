@@ -9,12 +9,43 @@ export const data = [
     reason: 'Acara Ramadhan',
     status: 'Waiting',
     detail: {
-      location: 'ACC',
-      detailUnit: 'Toyota Innova Reborn 2022',
-      capacity: '1',
-      transmission: 'Manual',
-      platNumber: 'B 1233 - Ganjil',
-      fuel: 'Bensin',
+      totalItems: 21,
+      details: [
+        {
+          category: 'Proyektor',
+          totalItems: 12,
+          brands: [
+            {
+              brand: 'Epson',
+              quantity: 6,
+            },
+            {
+              brand: 'Panasonic',
+              quantity: 6,
+            },
+          ],
+        },
+        {
+          category: 'Camera',
+          totalItems: 1,
+          brands: [],
+        },
+        {
+          category: 'Meja',
+          totalItems: 3,
+          brands: [],
+        },
+        {
+          category: 'TV 52',
+          totalItems: 2,
+          brands: [],
+        },
+        {
+          category: 'Kabel HDMI',
+          totalItems: 3,
+          brands: [],
+        },
+      ],
     },
   },
 ]
