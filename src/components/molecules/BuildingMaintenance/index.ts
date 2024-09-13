@@ -13,6 +13,21 @@ import { Detail as BuildingMaintenanceFuelManagementDetail } from './FuelManagem
 import { List as BuildingMaintenanceElectricityManagementList } from './ElectricityManagement/List'
 import { Detail as BuildingMaintenanceElectricityManagementDetail } from './ElectricityManagement/Detail'
 
+import { List as BuildingMaintenanceRepairmentList } from './Repairment/List'
+import { Detail as BuildingMaintenanceRepairmentDetail } from './Repairment/Detail'
+
+import { List as BuildingMaintenanceAssessmentCSList } from './AssessmentCS/List'
+import { Detail as BuildingMaintenanceAssessmentCSDetail } from './AssessmentCS/Detail'
+
+import { List as BuildingMaintenanceManpowerSGList } from './ManpowerSG/List'
+import { Detail as BuildingMaintenanceManpowerSGDetail } from './ManpowerSG/Detail'
+
+import { List as BuildingMaintenanceManpowerCSList } from './ManpowerCS/List'
+import { Detail as BuildingMaintenanceManpowerCSDetail } from './ManpowerCS/Detail'
+
+import { List as BuildingMaintenanceSOIList } from './SOI/List'
+import { Detail as BuildingMaintenanceSOIDetail } from './SOI/Detail'
+
 export {
   BuildingMaintenanceBranchConditionReportList,
   BuildingMaintenanceBranchConditionReportDetail,
@@ -24,4 +39,14 @@ export {
   BuildingMaintenanceElectricityManagementDetail,
   BuildingMaintenanceWaterManagementList,
   BuildingMaintenanceWaterManagementDetail,
+  BuildingMaintenanceRepairmentList,
+  BuildingMaintenanceRepairmentDetail,
+  BuildingMaintenanceAssessmentCSList,
+  BuildingMaintenanceAssessmentCSDetail,
+  BuildingMaintenanceManpowerSGList,
+  BuildingMaintenanceManpowerSGDetail,
+  BuildingMaintenanceManpowerCSList,
+  BuildingMaintenanceManpowerCSDetail,
+  BuildingMaintenanceSOIList,
+  BuildingMaintenanceSOIDetail,
 }
