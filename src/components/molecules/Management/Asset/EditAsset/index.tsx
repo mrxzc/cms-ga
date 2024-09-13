@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import * as Yup from 'yup'
 
 import SelectForm from '@components/atoms/Form/SelectForm'
@@ -15,8 +15,11 @@ import TextForm from '@components/atoms/Form/TextForm'
 import AddWithTable, { BrandData } from '@components/atoms/AddWithTable'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { toast } from 'react-toastify'
-import { apiSubmitCreateAsset } from '@services/cms/assets/api'
+import { apiSubmitUpdateAsset, apiUploadImageAsset } from '@services/cms/assets/api'
+import { useGetAssetDetail } from '@services/cms/assets/query'
+import { IAssetDetailParams, Ibrand } from '@interfaces/assets'
 import ImageGallery from '@components/atoms/ImageGallery'
+import { API_FILE_CMS } from '@utils/environment'
 
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
@@ -31,17 +34,57 @@ const schema = Yup.object().shape({
   ),
 })
 
-export function AddAsset() {
+export function EditAsset() {
   const router = useRouter()
 
   const [isChecked, setIsChecked] = useState(false)
   const [brands, setBrands] = useState<BrandData[]>([])
   const [images, setImages] = useState<File[]>([])
 
-  const { handleSubmit, control, setValue, getValues } = useForm<any>({
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false)
+  const [param, setParam] = useState<IAssetDetailParams>({
+    noIdAsset: '',
+  })
+
+  const pathname = usePathname()
+  const slug = pathname.split('/').pop()
+
+  const { data: assets } = useGetAssetDetail(param)
+
+  const { handleSubmit, control, setValue, getValues, watch } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
+
+  useEffect(() => {
+    if (slug) {
+      setParam({ noIdAsset: slug })
+    }
+  }, [])
+
+  useEffect(() => {
+    if (assets?.data && !initialDataLoaded) {
+      setValue('isActive', assets.data.flagActive === 'Y')
+      setInitialDataLoaded(true)
+    }
+    setIsChecked(assets?.data?.flagActive === 'Y')
+  }, [assets])
+
+  useEffect(() => {
+    if (assets?.data) {
+      setValue('isActive', assets.data.flagActive === 'Y')
+      setValue('location', { label: assets.data.lokasi, value: assets.data.lokasi })
+      setValue('asset', assets.data.assetName)
+
+      // Handle potential undefined values
+      setBrands(
+        assets.data.brands?.map((brand: Ibrand) => ({
+          ...brand,
+          isActive: true,
+        })) ?? []
+      )
+    }
+  }, [assets, setValue])
 
   const options = [
     { label: 'Head Office', value: 'ACC' },
@@ -53,17 +96,40 @@ export function AddAsset() {
       Booking Asset Data - Asset Data
     </Link>,
     <Typography key="2" color="text.primary" className="text-extra-small regular-12">
-      Add Asset Data
+      Edit Asset Data
     </Typography>,
   ]
 
   useEffect(() => {
     setValue('isActive', isChecked)
-  }, [isChecked])
+  }, [isChecked, watch('isActive')])
 
   useEffect(() => {
     setValue('brands', brands)
   }, [brands, setValue])
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      if (!assets?.data?.pathImage) return
+
+      const newImages: File[] = []
+
+      try {
+        const response = await fetch(`${API_FILE_CMS}${assets?.data?.pathImage}`)
+        const blob = await response.blob()
+        const filename = assets?.data?.pathImage.split('/').pop() ?? 'image.png'
+        const file = new File([blob], filename, { type: blob.type })
+        newImages.push(file)
+      } catch (error) {
+        // Handle error, e.g., show a toast notification
+        toast.error('Failed to fetch image')
+      }
+      // for (const imageUrl of assets.data.pathImage) {
+      // }
+      setImages(newImages)
+    }
+    fetchImages()
+  }, [assets])
 
   const [selectOptions, setSelectOptions] = useState([
     { value: 'Brand X', label: 'Brand X' },
@@ -85,30 +151,83 @@ export function AddAsset() {
     setBrands(brands.filter((_, i) => i !== index))
   }
 
+  const handleImageChange = (newImages: File[]) => {
+    setImages(newImages)
+  }
+
   const handleUpdateSelectOptions = (newOptions: { value: string; label: string }[]) => {
     setSelectOptions(newOptions)
   }
 
+  const handleUploadImageAsset = async (): Promise<boolean> => {
+    try {
+      const formData: FormData = new FormData()
+      if (slug) {
+        formData.append('noIdAsset', slug)
+      }
+      if (images && images.length > 0) {
+        for (const image of images) {
+          formData.append('fileImage', image)
+        }
+      }
+
+      const response = await apiUploadImageAsset(formData)
+      if (response.status === 'T') {
+        toast.success('Gambar asset berhasil diubah!')
+        return true
+      } else {
+        let errorMessage = 'Gagal mengubah gambar asset.'
+        if (response.message) {
+          errorMessage += ` ${response.message}`
+        } else if (response.error && response.error.length > 0) {
+          errorMessage += ` ${response.error}`
+        }
+        toast.error(errorMessage)
+        return false
+      }
+    } catch (error: any) {
+      let errorMessage = 'Terjadi kesalahan saat mengunggah gambar.'
+      if (error.response) {
+        const { status, data } = error.response
+        errorMessage = `Error ${status}: ${data.message || 'Terjadi kesalahan server saat mengunggah gambar.'}`
+      } else if (error.request) {
+        errorMessage = 'Tidak ada respons dari server saat mengunggah gambar. Periksa koneksi internet Anda.'
+      }
+      toast.error(errorMessage)
+      return false
+    }
+  }
+
   const handleCreateAsset = async (payload: any) => {
     try {
-      // 1. Siapkan FormData
       const requestPayload: any = {
+        noIdAsset: slug,
         flagActive: payload.isActive ? 'Y' : 'N',
         assetName: payload.asset,
         lokasi: payload.location.value,
-        brands: brands.map(brand => ({ name: brand.name, stock: brand.stock, flagActive: brand.isActive ? 'Y' : 'N' })),
+        brands: brands.map(brand => ({
+          name: brand.name,
+          stock: brand.stock,
+          flagActive: brand.isActive ? 'Y' : 'N',
+        })),
       }
 
-      // 2. Panggil fungsi API
-      const response = await apiSubmitCreateAsset(requestPayload)
+      const response = await apiSubmitUpdateAsset(requestPayload)
 
-      // 3. Tangani respons
       if (response.status === 'T') {
-        toast.success('Asset berhasil dibuat!')
-        router.push('/management/asset')
+        toast.success('Asset berhasil diperbaharui!')
+
+        // Upload gambar
+        const imageUploadSuccess = await handleUploadImageAsset()
+
+        if (imageUploadSuccess) {
+          // Redirect ke halaman utama hanya jika update asset dan upload gambar berhasil
+          router.push('/management/asset')
+        } else {
+          toast.warning('Asset berhasil diperbaharui, tetapi terjadi masalah saat mengunggah gambar.')
+        }
       } else {
-        // Tampilkan pesan error yang lebih spesifik jika ada
-        let errorMessage = 'Gagal membuat asset.'
+        let errorMessage = 'Gagal memperbaharui asset.'
         if (response.message) {
           errorMessage += ` ${response.message}`
         } else if (response.error && response.error.length > 0) {
@@ -117,23 +236,15 @@ export function AddAsset() {
         toast.error(errorMessage)
       }
     } catch (error: any) {
-      // Tangani error yang lebih spesifik
+      let errorMessage = 'Terjadi kesalahan saat memperbaharui asset.'
       if (error.response) {
-        // Error dari server (misalnya 400, 500)
         const { status, data } = error.response
-        toast.error(`Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`)
+        errorMessage = `Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`
       } else if (error.request) {
-        // Permintaan dikirim tapi tidak ada respons
-        toast.error('Tidak ada respons dari server. Periksa koneksi internet Anda.')
-      } else {
-        // Error lain saat menyiapkan permintaan
-        toast.error('Terjadi kesalahan saat membuat ruangan.')
+        errorMessage = 'Tidak ada respons dari server. Periksa koneksi internet Anda.'
       }
+      toast.error(errorMessage)
     }
-  }
-
-  const handleImageChange = (newImages: File[]) => {
-    setImages(newImages)
   }
 
   const onSubmit = () => {
@@ -153,11 +264,11 @@ export function AddAsset() {
       </div>
 
       <div className="bg-white px-4 py-4 rounded-xl">
-        <p className="text-heading s semibold-18 mb-4">Add Asset Data</p>
+        <p className="text-heading s semibold-18 mb-4">Edit Asset Data</p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Aktif</p>
-            <label className="label cursor-pointer">
+            <label>
               <input
                 type="checkbox"
                 className="toggle toggle-accent"

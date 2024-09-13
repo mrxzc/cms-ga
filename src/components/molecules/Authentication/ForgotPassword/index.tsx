@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
               className="w-full self-center"
             />
             <Button
-              className="flex bg-buttonLogin hover:bg-blue-700 shadowtext-white font-bold border-2 border-white focus:outline-none focus:shadow-outline rounded-lg items-center justify-center w-full h-[48px]"
+              className="flex bg-buttonLogin hover:bg-blue-700 shadowtext-white font-bold border-2 border-white focus:outline-none focus:shadow-outline rounded-lg items-center justify-center w-full h-[48px] mt-2"
               type="submit"
               loader={isLoading}
               disabled={!watch('email')}

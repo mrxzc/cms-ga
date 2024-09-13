@@ -16,7 +16,6 @@ export function Detail() {
 
   useEffect(() => {
     if (slug) {
-      // Find the request data that matches the slug (assuming 'no' is the unique identifier)
       const matchingRequest = data.find(item => item.no.toString() === slug)
       setRequestData(matchingRequest || undefined)
     }

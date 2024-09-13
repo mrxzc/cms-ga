@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 
 import SelectInput from '@components/atoms/Form/Select'
 import IconDelete from '@assets/icons/IconDelete'
 import IconEditing from '@assets/icons/IconEditing'
-import confirmationDanger from '@assets/images/ConfirmationDanger.png'
+import IconAlertDelete from '@assets/icons/IconAlertDelete'
+import TextInput from '../Form/TextInput'
 import { Modal } from '../ModalCustom'
 
 export interface BrandData {
@@ -16,120 +15,153 @@ export interface BrandData {
 
 interface BrandManagementProps {
   initialBrands?: BrandData[]
+  selectOptions: { value: string; label: string }[]
   onAddBrand?: (newBrand: BrandData) => void
   onUpdateBrand?: (updatedBrand: BrandData, index: number) => void
   onDeleteBrand?: (index: number) => void
-  selectOptions: { value: string; label: string }[]
-  onUpdateSelectOptions?: (newOptions: { value: string; label: string }[]) => void // Callback to update selectOptions in the parent
+  onUpdateSelectOptions?: (newOptions: { value: string; label: string }[]) => void
+  onBrandsChange?: (brands: BrandData[]) => void
 }
 
 const AddWithTable: React.FC<BrandManagementProps> = ({
   initialBrands = [],
+  selectOptions,
   onAddBrand,
   onUpdateBrand,
   onDeleteBrand,
-  selectOptions,
   onUpdateSelectOptions,
+  onBrandsChange,
 }) => {
   const [brands, setBrands] = useState<BrandData[]>(initialBrands)
   const [selectedOption, setSelectedOption] = useState<any>(null)
-  const [isConfimationModalOpen, setIsConfimationModalOpen] = useState(false)
-  const router = useRouter()
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false)
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false)
+  const [brandToDelete, setBrandToDelete] = useState<number | null>(null)
 
+  const [editIndex, setEditIndex] = useState<number | null>(null)
+  const [newStock, setNewStock] = useState<number>(0)
+  const [newIsActive, setNewIsActive] = useState<boolean>(true)
+  const [newName, setNewName] = useState<string>('')
+
+  useEffect(() => {
+    setBrands(initialBrands)
+  }, [initialBrands])
+
+  // Handle adding a new brand
   const handleAddBrand = () => {
     if (selectedOption) {
       const newBrand: BrandData = {
         name: selectedOption.value,
-        stock: 0,
-        isActive: true,
+        stock: newStock,
+        isActive: newIsActive,
       }
-      setBrands([...brands, newBrand])
+      const updatedBrands = [...brands, newBrand]
+      setBrands(updatedBrands)
       setSelectedOption(null)
+      setNewStock(0)
+      setNewIsActive(true)
 
-      // Update selectOptions di parent component menggunakan callback
-      if (onUpdateSelectOptions) {
-        onUpdateSelectOptions(selectOptions.filter((option: any) => option.value !== selectedOption.value))
-      }
+      // Send updated brands to parent
+      onBrandsChange?.(updatedBrands)
 
-      // Tambahkan input stock baru untuk brand yang ditambahkan
-      setStockInputs(prev => ({ ...prev, [brands.length]: 0 }))
+      // Update selectOptions in the parent component
+      onUpdateSelectOptions?.(selectOptions.filter(option => option.value !== selectedOption.value))
 
-      if (onAddBrand) {
-        onAddBrand(newBrand)
-      }
+      // Trigger callback for adding a new brand
+      onAddBrand?.(newBrand)
     }
   }
 
-  const handleDeleteBrand = (index: number) => {
-    const deletedBrand = brands[index]
-    const updatedBrands = brands.filter((_, i) => i !== index)
+  const handleUpdateBrand = (index: number, updatedBrand: BrandData) => {
+    const updatedBrands = [...brands]
+    updatedBrands[index] = updatedBrand
     setBrands(updatedBrands)
 
-    // Hapus input stock yang terkait dengan brand yang dihapus
-    const newStockInputs = { ...stockInputs }
-    delete newStockInputs[index]
-    setStockInputs(newStockInputs)
-
-    if (onDeleteBrand) {
-      onDeleteBrand(index)
-    }
-
-    // Tambahkan kembali opsi yang dihapus ke selectOptions di parent component
-    if (onUpdateSelectOptions) {
-      onUpdateSelectOptions([...selectOptions, { value: deletedBrand.name, label: deletedBrand.name }])
-    }
+    // Trigger callback for updating brand
+    onUpdateBrand?.(updatedBrand, index)
+    onBrandsChange?.(updatedBrands)
   }
 
+  // Handle deleting a brand with confirmation
+  const confirmDeleteBrand = (index: number) => {
+    setBrandToDelete(index)
+    setIsModalDeleteOpen(true)
+  }
+
+  const handleDeleteBrand = () => {
+    if (brandToDelete === null) return
+
+    const deletedBrand = brands[brandToDelete]
+    const updatedBrands = brands.filter((_, i) => i !== brandToDelete)
+    setBrands(updatedBrands)
+    setIsModalDeleteOpen(false)
+
+    // Send updated brands to parent
+    onBrandsChange?.(updatedBrands)
+
+    // Trigger delete callback
+    onDeleteBrand?.(brandToDelete)
+
+    // Add deleted option back to selectOptions
+    onUpdateSelectOptions?.([...selectOptions, { value: deletedBrand.name, label: deletedBrand.name }])
+  }
+
+  // Handle brand selection change
   const handleSelectChange = (selectedOption: any) => {
     setSelectedOption(selectedOption)
   }
 
+  // Handle toggling brand active state
   const handleToggleActive = (index: number) => {
-    const updatedBrands = [...brands]
-    updatedBrands[index].isActive = !updatedBrands[index].isActive
-    setBrands(updatedBrands)
+    const updatedBrand = { ...brands[index], isActive: !brands[index].isActive }
+    handleUpdateBrand(index, updatedBrand)
+  }
 
-    if (onUpdateBrand) {
-      onUpdateBrand(updatedBrands[index], index)
+  // Handle stock changes
+  const handleStockChange = (index: number, stock: number) => {
+    const updatedBrand = { ...brands[index], stock }
+    handleUpdateBrand(index, updatedBrand)
+  }
+
+  // Handle opening edit modal
+  const openEditModal = (index: number) => {
+    const brandToEdit = brands[index]
+    setNewName(brandToEdit.name)
+    setEditIndex(index)
+    setIsModalEditOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalDeleteOpen(false)
+    setIsModalEditOpen(false)
+    setEditIndex(null)
+    setBrandToDelete(null)
+  }
+
+  const handleEditBrand = () => {
+    if (editIndex !== null) {
+      const updatedBrand = {
+        ...brands[editIndex],
+        name: newName,
+      }
+
+      handleUpdateBrand(editIndex, updatedBrand)
+      handleCloseModal()
     }
   }
 
-  // State untuk menyimpan nilai input stock dari setiap brand
-  const [stockInputs, setStockInputs] = useState<Record<number, number>>(
-    brands.reduce((acc, brand, index) => ({ ...acc, [index]: brand.stock }), {})
-  )
-
-  // Fungsi untuk menangani perubahan nilai input stock
-  const handleStockInputChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
-    const newStock = parseInt(event.target.value) || 0
-    setStockInputs(prev => ({ ...prev, [index]: newStock }))
-  }
-
-  const memoizedOnUpdateBrand = useCallback(
-    (updatedBrand: BrandData, index: number) => {
-      if (onUpdateBrand) {
-        onUpdateBrand(updatedBrand, index)
-      }
-    },
-    [onUpdateBrand]
-  )
-
   useEffect(() => {
-    const updatedBrands = brands.map((brand, index) => ({
-      ...brand,
-      stock: stockInputs[index] || 0,
-    }))
-    setBrands(updatedBrands)
-
-    updatedBrands.forEach((updatedBrand, index) => {
-      memoizedOnUpdateBrand(updatedBrand, index)
-    })
-  }, [stockInputs, memoizedOnUpdateBrand])
+    if (editIndex !== null && !selectedOption) {
+      // Only update if editing and no selected option
+      const brandToEdit = brands[editIndex]
+      setNewName(brandToEdit.name)
+    }
+  }, [editIndex, selectedOption])
 
   return (
     <div>
-      {/* Formulir Penambahan Brand */}
-      <div className="flex ">
+      {/* Form Add Brand */}
+      <div className="flex">
         <SelectInput
           options={selectOptions}
           value={selectedOption}
@@ -138,16 +170,18 @@ const AddWithTable: React.FC<BrandManagementProps> = ({
           placeholder="Tambah Brand"
           className="w-full mr-2"
         />
+
         <button
           className="bg-white hover:bg-[#95c3fa] hover:cursor-pointer text-[#235696] border border-[#235696] font-bold w-[100px] h-[38px] rounded-lg"
           onClick={handleAddBrand}
           disabled={!selectedOption}
+          type="button"
         >
           + Add
         </button>
       </div>
 
-      {/* Tabel Data Brand */}
+      {/* Brand Table */}
       <div className="overflow-y-auto max-h-[250px] mt-1 hide-scrollbar">
         <table className="w-full max-w-[850px] border-collapse rounded-lg">
           <thead className="bg-[#f5f5f5]">
@@ -159,17 +193,16 @@ const AddWithTable: React.FC<BrandManagementProps> = ({
             </tr>
           </thead>
           <tbody>
-            {brands.map(brand => (
+            {brands.map((brand, index) => (
               <tr key={brand.name}>
                 <td className="border p-2">{brand.name}</td>
                 <td className="border p-2 text-center">
                   <input
                     type="number"
                     className="border border-gray-300 rounded px-2 py-1 text-center w-16"
-                    value={stockInputs[brands.indexOf(brand)] || ''}
-                    onChange={e => handleStockInputChange(brands.indexOf(brand), e)}
+                    value={brand.stock || ''}
+                    onChange={e => handleStockChange(index, parseInt(e.target.value) || 0)}
                   />
-                  <span className="text-gray-500 ml-1">Qty</span>
                 </td>
                 <td className="border p-2 text-center">
                   <label className="switch">
@@ -177,18 +210,22 @@ const AddWithTable: React.FC<BrandManagementProps> = ({
                       type="checkbox"
                       className="toggle toggle-accent"
                       checked={brand.isActive}
-                      onChange={() => handleToggleActive(brands.indexOf(brand))}
+                      onChange={() => handleToggleActive(index)}
                     />
                     <span className="slider round" />
                   </label>
                 </td>
-                <td className="border p-2 text-center items-center justify-center ">
-                  <button className="text-blue-500 hover:underline mr-2" type="button">
+                <td className="border p-2 text-center">
+                  <button
+                    className="text-blue-500 hover:underline mr-2"
+                    onClick={() => openEditModal(index)}
+                    type="button"
+                  >
                     <IconEditing color="#235696" />
                   </button>
                   <button
                     className="text-red-500 hover:underline"
-                    onClick={() => handleDeleteBrand(brands.indexOf(brand))}
+                    onClick={() => confirmDeleteBrand(index)}
                     type="button"
                   >
                     <IconDelete />
@@ -199,42 +236,57 @@ const AddWithTable: React.FC<BrandManagementProps> = ({
           </tbody>
         </table>
       </div>
-      <Modal isOpen={isConfimationModalOpen} backdropClick={() => setIsConfimationModalOpen(!isConfimationModalOpen)}>
-        <div className="mx-3 sm:mx-0 max-w-[350px] bg-white relative p-6 text-center rounded-xl">
-          <div>
-            <Image
-              width={0}
-              height={0}
-              sizes="100"
-              src={confirmationDanger.src}
-              className="mx-auto mb-4 w-28 h-28"
-              alt="confirmation"
-            />
-          </div>
-          <div className="text-heading s semibold-18 text-[#252525] mb-1">Konfirmasi Pindah Menu</div>
-          <div className="text-paragraph regular-14 text-[#717171] mb-8 px-3">
-            Semua data yang telah diisi akan hilang jika beralih ke menu lain. Yakin ingin melanjutkan?
-          </div>
 
-          <div className="grid grid-cols-2 gap-4 justify-items-center">
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={isModalDeleteOpen} backdropDismiss backdropClick={handleCloseModal} isFloating={true}>
+        <div className="p-4 bg-white rounded relative flex flex-col items-center">
+          <IconAlertDelete />
+          <h2 className="text-heading m semibold-21 mb-2">Hapus Data</h2>
+          <p className="text-paragraph regular-14 text-[#717171] mb-4">Apakah anda yakin ingin menghapus data ini?</p>
+          <div className="flex justify-center gap-4 items-end">
             <button
-              onClick={() => {
-                setIsConfimationModalOpen(false)
-                router.push(`/booking-asset/room`, { scroll: false })
-              }}
+              className="bg-white border-[#ea394b] border text-[#ea394b] w-full min-w-[180px] max-h-[45px] px-12 py-3 rounded-md text-heading xs semibold-16"
               type="button"
-              className="exit-button w-full text-center text-[#00376A] rounded-md overflow-hidden h-11"
+              onClick={handleCloseModal}
             >
-              <div className="py-2.5 px-6 text-heading xs semibold-16">Pindah</div>
+              Batal
             </button>
             <button
-              onClick={() => {
-                setIsConfimationModalOpen(false)
-              }}
+              className="bg-[#ea394b] text-white w-full min-w-[180px] max-h-[45px] px-12 py-3 rounded-md text-heading xs semibold-16"
               type="button"
-              className="cancel-button w-full text-center text-white rounded-xl overflow-hidden h-11"
+              onClick={handleDeleteBrand}
             >
-              <div className="py-2.5 px-6 text-heading xs semibold-16">Batal</div>
+              Ya, Hapus
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Edit Brand Modal */}
+      <Modal isOpen={isModalEditOpen} backdropDismiss backdropClick={handleCloseModal} isFloating={true}>
+        <div className="p-4 bg-white rounded relative flex flex-col items-center">
+          <h2 className="text-heading m semibold-21 mb-2">Edit Brand Asset</h2>
+          <TextInput
+            type="text"
+            placeholder="Enter new brand name"
+            value={newName}
+            onChange={e => setNewName(e.target.value)}
+            className="mb-2"
+          />
+          <div className="flex justify-center gap-4 items-center">
+            <button
+              className="bg-[#e5f2fc] text-[#235696] w-full min-w-[180px] max-h-[45px] px-12 py-3 rounded-md text-heading xs semibold-16"
+              type="button"
+              onClick={handleCloseModal}
+            >
+              Cancel
+            </button>
+            <button
+              className="bg-[#235696] text-white w-full min-w-[180px] max-h-[45px] px-12 py-3 rounded-md text-heading xs semibold-16"
+              type="button"
+              onClick={handleEditBrand}
+            >
+              Submit
             </button>
           </div>
         </div>
