@@ -74,8 +74,6 @@ export function Dashboard() {
               options={optionsLocation}
               value={selectedOption}
               onChange={handleChange}
-              isValid={true}
-              isInvalid={false}
             />
           </div>
           <div>

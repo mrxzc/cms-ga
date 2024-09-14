@@ -18,13 +18,15 @@ import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { apiSubmitUpdateRoom } from '@services/cms/room/api'
-import { optionsFacility, optionsLocation } from './data'
+import { optionsFacility } from './data'
 import { useGetRoomDetail } from '@services/cms/room/query'
 import { EditRoomProps, IRoomDetailParams } from '@interfaces/room'
 import { API_FILE_CMS } from '@utils/environment'
 import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
 import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
 import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
+import { OptionItem } from '@interfaces/utils'
+import { useGetLocation } from '@services/gcm/location/query'
 
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
@@ -36,11 +38,6 @@ const schema = Yup.object().shape({
   capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
   selectedFacilities: Yup.array(),
 })
-
-interface OptionItem {
-  label: string
-  value: string
-}
 
 export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
   const [param, setParam] = useState<IRoomDetailParams>({
@@ -61,6 +58,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
   const { data: rooms } = useGetRoomDetail(param)
   const { data: floorData } = useGetRoomFloor(params)
   const { data: capacityData } = useGetRoomCapacity(params)
+  const { data: locations } = useGetLocation(params)
 
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
@@ -70,7 +68,8 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
   const [initialDataLoaded, setInitialDataLoaded] = useState(false)
   const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
   const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
-  
+  const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
+
   const convertList = selectedFacility.join(',')
 
   useEffect(() => {
@@ -96,6 +95,18 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
       setOptionsCapacity(transformedOptions)
     }
   }, [capacityData])
+
+  useEffect(() => {
+    if (locations && locations.data) {
+      const transformedOptions: OptionItem[] = locations.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsLocation(transformedOptions)
+    }
+  }, [locations])
 
   const { handleSubmit, control, setValue, getValues, watch } = useForm<any>({
     resolver: yupResolver(schema),

@@ -22,6 +22,8 @@ import { optionsFacility } from './data'
 import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
 import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
 import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
+import { OptionItem } from '@interfaces/utils'
+import { useGetLocation } from '@services/gcm/location/query'
 
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
@@ -32,11 +34,6 @@ const schema = Yup.object().shape({
   floor: Yup.object().required('Lantai Ruangan wajib dipilih'),
   capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
 })
-
-interface OptionItem {
-  label: string
-  value: string
-}
 
 export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
   const router = useRouter()
@@ -57,9 +54,11 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
 
   const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
   const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
+  const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
 
   const { data: floorData } = useGetRoomFloor(params)
   const { data: capacityData } = useGetRoomCapacity(params)
+  const { data: locations } = useGetLocation(params)
 
   useEffect(() => {
     if (floorData && floorData.data) {
@@ -85,6 +84,18 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
     }
   }, [capacityData])
 
+  useEffect(() => {
+    if (locations && locations.data) {
+      const transformedOptions: OptionItem[] = locations.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsLocation(transformedOptions)
+    }
+  }, [locations])
+
   const handleImageChange = (newImages: File[]) => {
     setImages(newImages)
   }
@@ -105,11 +116,6 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
     resolver: yupResolver(schema),
     mode: 'all',
   })
-
-  const optionsLocation = [
-    { label: 'Head Office', value: 'ACC' },
-    { label: 'Berijalan', value: 'BERIJALAN' },
-  ]
 
   const breadcrumbs = [
     <Link href="/management/room" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
@@ -205,7 +211,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
                 checked={isChecked}
                 onChange={() => setIsChecked(!isChecked)}
                 value={''}
-              />{' '}
+              />
             </label>
           </div>
 
