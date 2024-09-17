@@ -22,7 +22,7 @@ const MetricButton = ({ label, value, total, icon, isActive, onClick }: any) => 
 
   return (
     <div
-      className={`flex items-center p-3 bg-white rounded-lg shadow-sm border w-full hover:cursor-pointer ${
+      className={`flex items-center p-3 bg-white rounded-lg shadow-md border w-full hover:cursor-pointer ${
         isActive ? 'border-blue-500' : 'border-gray-200'
       }`}
       onClick={onClick}

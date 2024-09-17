@@ -66,9 +66,9 @@
   @apply max-w-full sm:max-w-[375px];
 }
 
-.max-container {
-  @apply max-w-full sm:max-w-[640px];
-}
+// .max-container {
+//   @apply max-w-full sm:max-w-[640px];
+// }
 
 .booking-button {
   background: linear-gradient(0deg, #2c598d, #2c598d),
@@ -149,4 +149,36 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type='number'] {
   -moz-appearance: textfield;
+}
+
+:root {
+  --primary: #f1f1f1;
+  --secondary: rgba(190, 190, 190, 0.4);
+  --tertiary: rgba(146, 146, 146, 0.6);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary) var(--primary);
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--primary);
+  border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--secondary);
+  border-radius: 14px;
+  border: 3px solid var(--primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--tertiary);
 }

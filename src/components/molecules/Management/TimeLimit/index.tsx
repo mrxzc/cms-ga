@@ -1,7 +1,7 @@
 'use client'
 
 import { Breadcrumbs, Stack, Tooltip } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Link from '@mui/material/Link'
 import { useRouter } from 'next/navigation'
@@ -10,6 +10,25 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 
 import DurationInput from '@components/atoms/DurationInput'
+import { useGetTimeLimit } from '@services/timelimit/query'
+
+// Define the shape of the duration object
+interface Duration {
+  days: number
+  hours: number
+  minutes: number
+}
+
+// Define the shape of the form data
+interface FormData {
+  durationRoom: Duration
+  durationBallroom: Duration
+  durationKaraoke: Duration
+  durationVehicle: Duration
+  slaForm: Duration
+  durationAsset: Duration
+  durationManpower: Duration
+}
 
 const schema = Yup.object().shape({
   durationRoom: Yup.object()
@@ -72,15 +91,65 @@ const schema = Yup.object().shape({
 export function TimeLimit() {
   const router = useRouter()
 
+  const { data: timeLimit } = useGetTimeLimit({ page: 1, size: 10 })
+
+  const methods = useForm<FormData>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      durationRoom: { days: 0, hours: 0, minutes: 0 },
+      durationBallroom: { days: 0, hours: 0, minutes: 0 },
+      durationKaraoke: { days: 0, hours: 0, minutes: 0 },
+      durationVehicle: { days: 0, hours: 0, minutes: 0 },
+      slaForm: { days: 0, hours: 0, minutes: 0 },
+      durationAsset: { days: 0, hours: 0, minutes: 0 },
+      durationManpower: { days: 0, hours: 0, minutes: 0 },
+    },
+  })
+
   const breadcrumbs = [
     <Link underline="none" color="#000000" href="/management/vehicle" key="1" className="text-extra-small regular-12">
       Booking Asset Data - Time Limit Management
     </Link>,
   ]
 
-  const methods = useForm({
-    resolver: yupResolver(schema),
-  })
+  // const methods = useForm({
+  //   resolver: yupResolver(schema),
+  // })
+
+  useEffect(() => {
+    if (timeLimit?.data) {
+      const newValues: Partial<FormData> = {}
+      timeLimit.data.forEach(item => {
+        switch (item.category) {
+          case 'Room':
+            newValues.durationRoom = item.duration
+            break
+          case 'Ballroom':
+            newValues.durationBallroom = item.duration
+            break
+          case 'Karaoke':
+            newValues.durationKaraoke = item.duration
+            break
+          case 'Vehicle':
+            newValues.durationVehicle = item.duration
+            newValues.slaForm = item.slaForm ? item.slaForm : { days: 0, hours: 0, minutes: 0 }
+            break
+          case 'Asset':
+            newValues.durationAsset = item.duration
+            break
+          case 'Manpower':
+            newValues.durationManpower = item.duration
+            break
+        }
+      })
+      methods.reset(newValues as FormData)
+    }
+  }, [timeLimit?.data, methods])
+
+  // const onSubmit = (data: FormData) => {
+  //   console.log(data)
+  //   // Handle form submission here
+  // }
 
   const onSubmit = () => {}
 
