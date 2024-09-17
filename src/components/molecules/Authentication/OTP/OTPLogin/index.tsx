@@ -147,8 +147,8 @@ export default function OTPLogin() {
             )}
           </div>
           <Button
-            className="next-button flex rounded-md justify-center items-center border-white focus:outline-none focus:shadow-outline w-full h-[48px] "
-            disabled={inputOTP.length < 6}
+            className="flex bg-[#386293] hover:bg-blue-700 mt-[20px] shadowtext-white font-bold border-2 border-white focus:outline-none focus:shadow-outline rounded-lg items-center justify-center w-full h-[48px]"
+            disabled={inputOTP.length <= 0}
             loader={isLoading}
             onClick={onSubmit}
           >

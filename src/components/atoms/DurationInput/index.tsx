@@ -25,10 +25,10 @@ const DurationInput: React.FC<DurationInputProps> = ({ name, control, ...props }
 
   const handleInputChange = useCallback(
     (
-      field: { onChange: (value: DurationValue) => void; value: DurationValue },
-      key: keyof DurationValue,
-      max?: number
-    ) =>
+        field: { onChange: (value: DurationValue) => void; value: DurationValue },
+        key: keyof DurationValue,
+        max?: number
+      ) =>
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value
         let newValue = inputValue === '' ? 0 : parseInt(inputValue, 10)
@@ -57,7 +57,7 @@ const DurationInput: React.FC<DurationInputProps> = ({ name, control, ...props }
         minutesRef.current.focus()
       }
       setLastTyped(null)
-    }, 500)
+    }, 1000)
 
     return () => clearTimeout(timer)
   }, [lastTyped])
@@ -77,7 +77,7 @@ const DurationInput: React.FC<DurationInputProps> = ({ name, control, ...props }
                   type="number"
                   id={`${name}-days`}
                   className="border-l border-t border-b rounded-l h-[40px] pl-2 w-[145px]"
-                  value={field.value.days || ''}
+                  value={field.value.days || 0} // Ensure 0 is displayed
                   onChange={handleInputChange(field, 'days')}
                   onBlur={field.onBlur}
                   ref={daysRef}
@@ -93,14 +93,12 @@ const DurationInput: React.FC<DurationInputProps> = ({ name, control, ...props }
                   type="number"
                   id={`${name}-hours`}
                   className="border-l border-t border-b rounded-l h-[40px] pl-2 w-[145px]"
-                  value={field.value.hours || ''}
+                  value={field.value.hours || 0} // Ensure 0 is displayed
                   onChange={handleInputChange(field, 'hours', 23)}
                   onBlur={field.onBlur}
                   ref={hoursRef}
                 />
-                <p className="border-r border-t border-b rounded-r border-l bg-[#f6f8fa] h-[40px] px-2 items-center flex">
-                  Hour
-                </p>
+                <p className="border-r border-t border-b border-l bg-[#f6f8fa] h-[40px] px-2 items-center flex">Hour</p>
               </div>
 
               {/* Input untuk Minutes */}
@@ -109,12 +107,12 @@ const DurationInput: React.FC<DurationInputProps> = ({ name, control, ...props }
                   type="number"
                   id={`${name}-minutes`}
                   className="border-l border-t border-b rounded-l h-[40px] pl-2 w-[145px]"
-                  value={field.value.minutes || ''}
+                  value={field.value.minutes || 0} // Ensure 0 is displayed
                   onChange={handleInputChange(field, 'minutes', 59)}
                   onBlur={field.onBlur}
                   ref={minutesRef}
                 />
-                <p className="border-r border-t border-b border-l rounded-r bg-[#f6f8fa] h-[40px] px-2 items-center flex">
+                <p className="border-r border-t border-b border-l bg-[#f6f8fa] h-[40px] px-2 items-center flex">
                   Minute
                 </p>
               </div>
