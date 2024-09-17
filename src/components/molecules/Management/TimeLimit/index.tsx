@@ -1,9 +1,9 @@
 'use client'
 
-import { Breadcrumbs, Stack, Tooltip } from '@mui/material'
-import React, { useEffect } from 'react'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Link from '@mui/material/Link'
+import React, { useEffect } from 'react'
+import { Breadcrumbs, Stack, Tooltip } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { FormProvider, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -104,7 +104,7 @@ const schema = Yup.object().shape({
 export function TimeLimit() {
   const router = useRouter()
 
-  const { data: timeLimit } = useGetTimeLimit({ page: 1, size: 10 })
+  const { data: timeLimit, refetch } = useGetTimeLimit({ page: 1, size: 10 })
 
   const methods = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -183,10 +183,12 @@ export function TimeLimit() {
       updateTimeLimitMutation.mutate(updatePayload, {
         onSuccess: () => {
           toast.success('Time limit updated successfully!')
+          refetch()
           // Handle success (e.g., show a success message, redirect, etc.)
         },
         onError: () => {
           toast.error('Error updating time limit!!!')
+          refetch()
           // Handle error (e.g., show an error message)
         },
       })
@@ -230,17 +232,17 @@ export function TimeLimit() {
       createTimeLimitMutation.mutate(createPayload, {
         onSuccess: () => {
           toast.success('Time limit created successfully!')
+          refetch()
           // Handle success (e.g., show a success message, redirect, etc.)
         },
         onError: () => {
           toast.error('Error creating time limit!!!')
+          refetch()
           // Handle error (e.g., show an error message)
         },
       })
     }
   }
-
-  // const onSubmit = () => {}
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
