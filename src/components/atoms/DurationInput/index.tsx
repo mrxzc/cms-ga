@@ -62,6 +62,11 @@ const DurationInput: React.FC<DurationInputProps> = ({ name, control, ...props }
     return () => clearTimeout(timer)
   }, [lastTyped])
 
+  const formatValue = (value: number) => {
+    if (value === 0) return '0'
+    return value.toString().replace(/^0+/, '') // Remove leading zeros
+  }
+
   return (
     <div {...props}>
       <Controller
@@ -74,10 +79,12 @@ const DurationInput: React.FC<DurationInputProps> = ({ name, control, ...props }
               {/* Input untuk Days */}
               <div className="flex flex-row mr-2 items-center">
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="\d*"
                   id={`${name}-days`}
                   className="border-l border-t border-b rounded-l h-[40px] pl-2 w-[145px]"
-                  value={field.value.days || 0} // Ensure 0 is displayed
+                  value={formatValue(field.value.days)}
                   onChange={handleInputChange(field, 'days')}
                   onBlur={field.onBlur}
                   ref={daysRef}
@@ -90,10 +97,12 @@ const DurationInput: React.FC<DurationInputProps> = ({ name, control, ...props }
               {/* Input untuk Hours */}
               <div className="flex flex-row mr-2 items-center">
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="\d*"
                   id={`${name}-hours`}
                   className="border-l border-t border-b rounded-l h-[40px] pl-2 w-[145px]"
-                  value={field.value.hours || 0} // Ensure 0 is displayed
+                  value={formatValue(field.value.hours)}
                   onChange={handleInputChange(field, 'hours', 23)}
                   onBlur={field.onBlur}
                   ref={hoursRef}
@@ -104,10 +113,12 @@ const DurationInput: React.FC<DurationInputProps> = ({ name, control, ...props }
               {/* Input untuk Minutes */}
               <div className="flex flex-row mr-2 items-center">
                 <input
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="\d*"
                   id={`${name}-minutes`}
                   className="border-l border-t border-b rounded-l h-[40px] pl-2 w-[145px]"
-                  value={field.value.minutes || 0} // Ensure 0 is displayed
+                  value={formatValue(field.value.minutes)}
                   onChange={handleInputChange(field, 'minutes', 59)}
                   onBlur={field.onBlur}
                   ref={minutesRef}

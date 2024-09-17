@@ -398,7 +398,7 @@ export function TimeLimit() {
               <button
                 className="bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
                 type="button"
-                onClick={() => router.push('/management/vehicle')}
+                onClick={() => router.push('/')}
               >
                 Cancel
               </button>
