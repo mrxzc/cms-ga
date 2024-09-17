@@ -29,3 +29,53 @@ interface TimeLimitId {
   createdDate: string
   updatedDate: string
 }
+
+interface IBodyCreateTimeLimit {
+  category: string
+  duration: {
+    days: number
+    hours: number
+    minutes: number
+  }
+  sla: {
+    days: number
+    hours: number
+    minutes: number
+  }
+}
+
+export interface IPayloadCreateTimeLimit {
+  items: IBodyCreateTimeLimit[]
+}
+
+interface IBodyUpdateTimeLimit {
+  timeLimitId: number
+  category: string
+  duration: {
+    days: number
+    hours: number
+    minutes: number
+  }
+  sla?: {
+    days: number
+    hours: number
+    minutes: number
+  }
+}
+
+export interface IPayloadUpdateTimeLimit {
+  items: IBodyUpdateTimeLimit[]
+}
+
+interface DataItem {
+  timeLimit: string
+  duration: {
+    days: number
+    hours: number
+    minutes: number
+  }
+}
+
+export interface IResponseUpdateTimeLimit {
+  data: DataItem[]
+}

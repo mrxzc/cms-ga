@@ -11,6 +11,9 @@ import * as Yup from 'yup'
 
 import DurationInput from '@components/atoms/DurationInput'
 import { useGetTimeLimit } from '@services/timelimit/query'
+import { useCreateTimeLimit, useUpdateTimeLimit } from '@services/timelimit/mutation'
+import { IPayloadCreateTimeLimit, IPayloadUpdateTimeLimit } from '@interfaces/time-limit'
+import { toast } from 'react-toastify'
 
 // Define the shape of the duration object
 interface Duration {
@@ -28,6 +31,16 @@ interface FormData {
   slaForm: Duration
   durationAsset: Duration
   durationManpower: Duration
+}
+
+// Define a mapping between categories and form data keys
+const categoryToFormKey: Record<string, keyof FormData> = {
+  Room: 'durationRoom',
+  Ballroom: 'durationBallroom',
+  Karaoke: 'durationKaraoke',
+  Vehicle: 'durationVehicle',
+  Asset: 'durationAsset',
+  Manpower: 'durationManpower',
 }
 
 const schema = Yup.object().shape({
@@ -112,10 +125,6 @@ export function TimeLimit() {
     </Link>,
   ]
 
-  // const methods = useForm({
-  //   resolver: yupResolver(schema),
-  // })
-
   useEffect(() => {
     if (timeLimit?.data) {
       const newValues: Partial<FormData> = {}
@@ -146,12 +155,92 @@ export function TimeLimit() {
     }
   }, [timeLimit?.data, methods])
 
-  // const onSubmit = (data: FormData) => {
-  //   console.log(data)
-  //   // Handle form submission here
-  // }
+  const createTimeLimitMutation = useCreateTimeLimit()
+  const updateTimeLimitMutation = useUpdateTimeLimit()
 
-  const onSubmit = () => {}
+  const onSubmit = (data: FormData) => {
+    if (timeLimit?.data && timeLimit.data.length > 0) {
+      // If timeLimit data exists, use update mutation
+      const updatePayload: IPayloadUpdateTimeLimit = {
+        items: timeLimit.data.map(item => {
+          const formKey = categoryToFormKey[item.category]
+          if (!formKey) {
+            throw new Error(`Invalid category: ${item.category}`)
+          }
+
+          // Ensure SLA is defined, default to { days: 0, hours: 0, minutes: 0 } if not present
+          const sla = item.category === 'Vehicle' && data.slaForm ? data.slaForm : { days: 0, hours: 0, minutes: 0 }
+
+          return {
+            timeLimitId: item.id,
+            category: item.category,
+            duration: data[formKey],
+            sla: sla,
+          }
+        }),
+      }
+
+      updateTimeLimitMutation.mutate(updatePayload, {
+        onSuccess: () => {
+          toast.success('Time limit updated successfully!')
+          // Handle success (e.g., show a success message, redirect, etc.)
+        },
+        onError: () => {
+          toast.error('Error updating time limit!!!')
+          // Handle error (e.g., show an error message)
+        },
+      })
+    } else {
+      // If no timeLimit data exists, use create mutation
+      const createPayload: IPayloadCreateTimeLimit = {
+        items: [
+          {
+            category: 'Room',
+            duration: data.durationRoom,
+            sla: { days: 0, hours: 0, minutes: 0 },
+          },
+          {
+            category: 'Ballroom',
+            duration: data.durationBallroom,
+            sla: { days: 0, hours: 0, minutes: 0 },
+          },
+          {
+            category: 'Karaoke',
+            duration: data.durationKaraoke,
+            sla: { days: 0, hours: 0, minutes: 0 },
+          },
+          {
+            category: 'Vehicle',
+            duration: data.durationVehicle,
+            sla: data.slaForm,
+          },
+          {
+            category: 'Asset',
+            duration: data.durationAsset,
+            sla: { days: 0, hours: 0, minutes: 0 },
+          },
+          {
+            category: 'Manpower',
+            duration: data.durationManpower,
+            sla: { days: 0, hours: 0, minutes: 0 },
+          },
+        ],
+      }
+
+      createTimeLimitMutation.mutate(createPayload, {
+        onSuccess: () => {
+          toast.success('Time limit created successfully!')
+          // Handle success (e.g., show a success message, redirect, etc.)
+        },
+        onError: () => {
+          toast.error('Error creating time limit!!!')
+          // Handle error (e.g., show an error message)
+        },
+      })
+    }
+  }
+
+  // const onSubmit = () => {}
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
