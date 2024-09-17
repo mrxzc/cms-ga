@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: 'Home | BEFAST',
+    default: 'Dashboard | BEFAST',
     template: '%s | BEFAST',
   },
   description: 'Get Result and Performance HC',
