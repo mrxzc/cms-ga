@@ -12,25 +12,42 @@ import Table from '@components/atoms/Table'
 import IconEditing from '@assets/icons/IconEditing'
 import images from '@assets/images'
 import IconSearch from '@assets/icons/IconSearch'
-import { data } from './data'
+import { IDefaultParams } from '@interfaces/api'
+import { useGetUserManagementList } from '@services/account/query'
 
 export function ListUser() {
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const handleStatus = (status: string) => {
-    if (status === 'Y') {
+  const defaultParams: IDefaultParams = {
+    search: searchQuery,
+    page: 1,
+    size: 10,
+  }
+
+  const [params, setParams] = useState<IDefaultParams>(defaultParams)
+
+  const { data: userList, isLoading, isFetching } = useGetUserManagementList(params)
+
+  const transformedData = userList?.data?.map((user, index) => ({
+    ...user,
+    originalIndex: index,
+    ACTION: '',
+  }))
+
+  const handleStatus = (status: boolean) => {
+    if (status) {
       return (
-        <input
-          type="checkbox"
-          className="toggle"
-          checked
-          style={{ backgroundColor: '#0089cf', border: '1px solid #c8e9fa' }}
-        />
+        <label className="switch">
+          <input name={`status-${status}`} defaultChecked={status} type="checkbox" />
+          <span className="slider green round" />
+        </label>
       )
     } else {
       return (
-        <input type="checkbox" className="toggle" style={{ backgroundColor: '#0089cf', border: '1px solid #c8e9fa' }} />
+        <label className="switch">
+          <input name={`status-${status}`} type="checkbox" />
+          <span className="slider green round" />
+        </label>
       )
     }
   }
@@ -38,31 +55,34 @@ export function ListUser() {
   const columnHelper = createColumnHelper<any>()
 
   const columns = [
-    columnHelper.accessor('no', {
-      cell: info => info.getValue(),
+    columnHelper.accessor('originalIndex', {
+      cell: info => {
+        const offset = ((userList?.pagination?.currentPage ?? 1) - 1) * 10
+        return offset + info.row.index + 1
+      },
       header: 'No',
     }),
-    columnHelper.accessor('idUser', {
+    columnHelper.accessor('nameUser', {
       cell: info => info.getValue(),
       header: 'Nama',
     }),
-    columnHelper.accessor('name', {
-      cell: info => info.getValue(),
+    columnHelper.accessor('npk', {
+      cell: info => info.getValue() ?? '-',
       header: 'NPK',
     }),
     columnHelper.accessor('email', {
       cell: info => info.getValue(),
       header: 'Email',
     }),
-    columnHelper.accessor('noHP', {
+    columnHelper.accessor('noHp', {
       cell: info => info.getValue(),
       header: 'No Telepon',
     }),
-    columnHelper.accessor('role', {
-      cell: info => info.getValue(),
+    columnHelper.accessor('roleName', {
+      cell: info => info.getValue() ?? '-',
       header: 'Role',
     }),
-    columnHelper.accessor('status', {
+    columnHelper.accessor('flagActive', {
       cell: info => handleStatus(info.getValue()),
       header: 'Status',
     }),
@@ -83,6 +103,14 @@ export function ListUser() {
     event.preventDefault()
   }
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value)
+  }
+
+  const handlePageChange = (newPage: number) => {
+    setParams(prevParam => ({ ...prevParam, page: newPage }))
+  }
+
   const breadcrumbs = [
     <Link
       underline="none"
@@ -96,14 +124,13 @@ export function ListUser() {
     </Link>,
   ]
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage)
-  }
-
   useEffect(() => {
-    // Ambil totalPages dari data.pagination
-    setTotalPages(data.pagination.total_pages)
-  }, [])
+    setParams(prevParam => ({
+      ...prevParam,
+      search: searchQuery,
+      page: searchQuery ? 1 : prevParam.page,
+    }))
+  }, [searchQuery])
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
@@ -125,8 +152,8 @@ export function ListUser() {
               type="text"
               placeholder="Search..."
               className="flex-1 text-paragraph regular-14 mt-1"
-              value={''}
-              onChange={() => {}}
+              value={searchQuery}
+              onChange={handleSearchChange}
               style={{
                 outline: 'none',
               }}
@@ -136,12 +163,12 @@ export function ListUser() {
 
         <Table
           columns={columns}
-          data={data.users}
-          loading={false}
+          data={transformedData}
+          loading={isLoading || isFetching}
           pagination={{
-            TOTAL_DATA: data.pagination.total_users,
-            PAGE: currentPage,
-            LAST_PAGE: totalPages,
+            TOTAL_DATA: userList?.pagination?.totalRecords ?? 0,
+            PAGE: userList?.pagination?.currentPage ?? 1,
+            LAST_PAGE: userList?.pagination?.totalPage ?? 1,
           }}
           callback={handlePageChange}
         />

@@ -66,6 +66,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
   const [selectedFacility, setSelectedFacility] = useState<string[]>([])
   const [isChecked, setIsChecked] = useState(false)
   const [initialDataLoaded, setInitialDataLoaded] = useState(false)
+
   const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
   const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
   const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
@@ -217,7 +218,8 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
   useEffect(() => {
     if (rooms?.data) {
       setValue('isActive', rooms.data.flagActive === 'Y')
-      setValue('location', { label: rooms.data.location, value: rooms.data.location })
+      const locationOption = optionsLocation.find(option => option.value === rooms?.data?.location)
+      setValue('location', locationOption)
       setValue('roomTitle', rooms.data.titleRoom)
       const floorOption = optionsFloor.find(option => option.value === rooms?.data?.lantaiRuangan)
       setValue('floor', floorOption)

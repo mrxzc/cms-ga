@@ -21,18 +21,11 @@ import httpRequest from '@utils/helper'
 
 const api = httpRequest(API_MASTER)
 
-export function apiGetRoomFacility(
-  params: IGcmRoomFacilityListParams,
-  idUser: string
-): Promise<APIBaseResponse<IGcmRoomFacility[]>> {
+export function apiGetRoomFacility(params: IGcmRoomFacilityListParams): Promise<APIBaseResponse<IGcmRoomFacility[]>> {
   // return dummyGetRoomFacility()
 
-  const headers = {
-    idUser,
-  }
   return api.get<IGcmRoomFacility[], APIBaseResponse<IGcmRoomFacility[]>>('/cms/master/roomFacility/list', {
     params,
-    headers,
   })
 }
 
