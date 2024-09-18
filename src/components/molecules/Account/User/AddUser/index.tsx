@@ -62,12 +62,7 @@ export function AddUser() {
             <p className="text-paragraph regular-14 w-[160px] mr-10">
               Email<span className="text-red-500">*</span>
             </p>
-            <TextForm
-              control={control}
-              name="email"
-              fieldInput={{ placeholder: 'Masukkan nama user' }}
-              className="w-[350px]"
-            />
+            <TextForm control={control} name="email" fieldInput={{ placeholder: 'Isi Email' }} className="w-[350px]" />
           </div>
 
           <div className="flex items-center">

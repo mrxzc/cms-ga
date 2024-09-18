@@ -98,7 +98,12 @@ export function Dashboard() {
         <div className="flex gap-4 ">
           <div className="min-w-[230px]">
             <p>Lokasi</p>
-            <SelectInput name="mySelect" options={optionsLocation} value={selectedOption} onChange={handleChange} />
+            <SelectInput
+              floor_name="mySelect"
+              options={optionsLocation}
+              value={selectedOption}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <p>Tanggal</p>
@@ -191,9 +196,9 @@ export function Dashboard() {
             stockAvailable={5}
             numbering={2}
             floors={[
-              { name: 'Lantai 1', available: '1/6' },
-              { name: 'Lantai 2', available: '1/2' },
-              { name: 'Lantai 3', available: '1/2' },
+              { floor_name: 'Lantai 1', available_rooms: '1/6' },
+              { floor_name: 'Lantai 2', available_rooms: '1/2' },
+              { floor_name: 'Lantai 3', available_rooms: '1/2' },
             ]}
           />
           <DashboardCard
@@ -202,11 +207,7 @@ export function Dashboard() {
             total={1}
             stockAvailable={5}
             numbering={3}
-            floors={[
-              { name: 'Lantai 1', available: '1/6' },
-              { name: 'Lantai 2', available: '1/2' },
-              { name: 'Lantai 3', available: '1/2' },
-            ]}
+            floors={[{ floor_name: 'Lantai 8', available_rooms: '1/1' }]}
           />
           <DashboardCard
             roomType="Karaoke"
@@ -214,11 +215,7 @@ export function Dashboard() {
             total={1}
             stockAvailable={5}
             numbering={4}
-            floors={[
-              { name: 'Lantai 1', available: '1/6' },
-              { name: 'Lantai 2', available: '1/2' },
-              { name: 'Lantai 3', available: '1/2' },
-            ]}
+            floors={[{ floor_name: 'Lantai 5', available_rooms: '1/1' }]}
           />
         </div>
       </div>

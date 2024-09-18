@@ -50,11 +50,12 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
   const [selectedFacility, setSelectedFacility] = useState([])
-  const convertList = selectedFacility.join(',')
 
   const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
   const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
   const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
+
+  const convertList = selectedFacility.join(',')
 
   const { data: floorData } = useGetRoomFloor(params)
   const { data: capacityData } = useGetRoomCapacity(params)

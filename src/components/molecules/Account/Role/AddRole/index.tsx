@@ -1,22 +1,23 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import * as Yup from 'yup'
 
-import { yupResolver } from '@hookform/resolvers/yup'
 import TextForm from '@components/atoms/Form/TextForm'
 import AccessTable from '@components/atoms/AccessTable'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 const schema = Yup.object().shape({
+  roleName: Yup.string().required('Nama Role wajib dipilih'),
+  roleDescription: Yup.string().required('Nama Role wajib dipilih'),
   isActive: Yup.string().required('Aktif wajib dipilih'),
-  manpowerAsset: Yup.string().required('Manpower asset wajib dipilih'),
 })
 
 export function AddRole() {
@@ -83,8 +84,20 @@ export function AddRole() {
             </p>
             <TextForm
               control={control}
-              name="manpowerAsset"
+              name="roleName"
               fieldInput={{ placeholder: 'Masukkan nama role' }}
+              className="w-[350px]"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <p className="text-paragraph regular-14 w-[160px]">
+              Description Role<span className="text-red-500">*</span>
+            </p>
+            <TextForm
+              control={control}
+              name="roleDescription"
+              fieldInput={{ placeholder: 'Masukkan deskripsi role' }}
               className="w-[350px]"
             />
           </div>

@@ -1,41 +1,56 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { createColumnHelper } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import React, { useEffect, useState } from 'react'
+import { createColumnHelper } from '@tanstack/react-table'
+import { useRouter } from 'next/navigation'
 
-import { data } from './data'
 import IconPlus from '@assets/icons/IconPlus'
 import Table from '@components/atoms/Table'
 import IconEditing from '@assets/icons/IconEditing'
 import images from '@assets/images'
 import IconDownload from '@assets/icons/IconDownload'
 import IconSearch from '@assets/icons/IconSearch'
+import { IDefaultParams } from '@interfaces/api'
+import { useGetUserList } from '@services/user/query'
 
 export function User() {
   const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const defaultParams: IDefaultParams = {
+    search: searchQuery,
+    page: 1,
+    size: 10,
+  }
+  const [params, setParams] = useState<IDefaultParams>(defaultParams)
 
-  const handleStatus = (status: string) => {
-    if (status === 'Y') {
+  const { data: userList, isLoading, isFetching } = useGetUserList(params)
+
+  const transformedData = userList?.data?.map((user, index) => ({
+    ...user,
+    originalIndex: index,
+    ACTION: '',
+  }))
+
+  const handleStatus = (status: boolean) => {
+    if (status) {
       return (
-        <input
-          type="checkbox"
-          className="toggle"
-          checked
-          style={{ backgroundColor: '#0089cf', border: '1px solid #c8e9fa' }}
-        />
+        <label className="switch">
+          <input name={`status-${status}`} defaultChecked={status} type="checkbox" />
+          <span className="slider green round" />
+        </label>
       )
     } else {
       return (
-        <input type="checkbox" className="toggle" style={{ backgroundColor: '#0089cf', border: '1px solid #c8e9fa' }} />
+        <label className="switch">
+          <input name={`status-${status}`} type="checkbox" />
+          <span className="slider green round" />
+        </label>
       )
     }
   }
@@ -43,27 +58,26 @@ export function User() {
   const columnHelper = createColumnHelper<any>()
 
   const columns = [
-    columnHelper.accessor('no', {
-      cell: info => info.getValue(),
+    columnHelper.accessor('originalIndex', {
+      cell: info => {
+        const offset = ((userList?.pagination?.currentPage ?? 1) - 1) * 10
+        return offset + info.row.index + 1
+      },
       header: 'No',
     }),
-    columnHelper.accessor('name', {
+    columnHelper.accessor('nameUser', {
       cell: info => info.getValue(),
       header: 'Nama',
-    }),
-    columnHelper.accessor('npk', {
-      cell: info => info.getValue(),
-      header: 'NPK',
     }),
     columnHelper.accessor('email', {
       cell: info => info.getValue(),
       header: 'Email',
     }),
-    columnHelper.accessor('role', {
-      cell: info => info.getValue(),
+    columnHelper.accessor('roleName', {
+      cell: info => info.getValue() ?? '-',
       header: 'Role',
     }),
-    columnHelper.accessor('status', {
+    columnHelper.accessor('flagActive', {
       cell: info => handleStatus(info.getValue()),
       header: 'Status',
     }),
@@ -82,11 +96,19 @@ export function User() {
     event.preventDefault()
   }
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value)
+  }
+
+  const handlePageChange = (newPage: number) => {
+    setParams(prevParam => ({ ...prevParam, page: newPage }))
+  }
+
   const breadcrumbs = [
     <Link
       underline="none"
       color="#000"
-      href="/management/asset"
+      href="/account-management/user"
       onClick={handleClick}
       key="1"
       className="text-extra-small regular-12"
@@ -95,14 +117,13 @@ export function User() {
     </Link>,
   ]
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage)
-  }
-
   useEffect(() => {
-    // Ambil totalPages dari data.pagination
-    setTotalPages(data.pagination.total_pages)
-  }, [])
+    setParams(prevParam => ({
+      ...prevParam,
+      search: searchQuery,
+      page: searchQuery ? 1 : prevParam.page,
+    }))
+  }, [searchQuery])
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
@@ -139,8 +160,8 @@ export function User() {
               type="text"
               placeholder="Search..."
               className="flex-1 text-paragraph regular-14 mt-1"
-              value={''}
-              onChange={() => {}}
+              value={searchQuery}
+              onChange={handleSearchChange}
               style={{
                 outline: 'none',
               }}
@@ -150,12 +171,12 @@ export function User() {
 
         <Table
           columns={columns}
-          data={data.users} // Gunakan data.roles untuk mengisi tabel
-          loading={false}
+          data={transformedData}
+          loading={isLoading || isFetching}
           pagination={{
-            TOTAL_DATA: data.pagination.total_users, // Gunakan data dari data.pagination
-            PAGE: currentPage,
-            LAST_PAGE: totalPages,
+            TOTAL_DATA: userList?.pagination?.totalRecords ?? 0,
+            PAGE: userList?.pagination?.currentPage ?? 1,
+            LAST_PAGE: userList?.pagination?.totalPage ?? 1,
           }}
           callback={handlePageChange}
         />
