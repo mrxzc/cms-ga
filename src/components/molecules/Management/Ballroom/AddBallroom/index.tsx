@@ -17,7 +17,6 @@ import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
 import dynamic from 'next/dynamic'
 import { yupResolver } from '@hookform/resolvers/yup'
-import {} from './data'
 import { apiSubmitCreateRoom } from '@services/cms/room/api'
 import { IDefaultParams } from '@interfaces/api'
 import { OptionItem } from '@interfaces/utils'
@@ -37,15 +36,25 @@ const schema = Yup.object().shape({
 
 export function AddBallroom({ category = 'Ballroom' }: { category?: string }) {
   const router = useRouter()
+
   const defaultParams = {
     search: '',
     page: 1,
     size: 50,
   }
+
+  const optionsFacility = [
+    { value: 'kursi', name: 'Kursi' },
+    { value: 'meja', name: 'Meja' },
+    { value: 'proyektor', name: 'Proyektor' },
+    { value: 'speaker', name: 'Speaker' },
+  ]
+
   const [params] = useState<IDefaultParams>(defaultParams)
   const [isChecked, setIsChecked] = useState(false)
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
+  const [selectedFacility, setSelectedFacility] = useState([])
   const [images, setImages] = useState<File[]>([])
 
   const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
@@ -55,6 +64,93 @@ export function AddBallroom({ category = 'Ballroom' }: { category?: string }) {
   const { data: floorData } = useGetRoomFloor(params)
   const { data: capacityData } = useGetRoomCapacity(params)
   const { data: locations } = useGetLocation(params)
+
+  const { handleSubmit, control, setValue, getValues } = useForm<any>({
+    resolver: yupResolver(schema),
+    mode: 'all',
+  })
+
+  const breadcrumbs = [
+    <Link href="/management/ballroom" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
+      Booking Asset Data - Ballroom
+    </Link>,
+    <Typography key="2" color="text.primary" className="text-extra-small regular-12">
+      Add Ballroom Data
+    </Typography>,
+  ]
+
+  const handleDescriptionChange = (data: string) => {
+    setDescriptionData(data)
+  }
+
+  const handleTermsChange = (data: string) => {
+    setTermsData(data)
+  }
+
+  const handleFacilitySelectionChange = (newSelectedValues: any) => {
+    setSelectedFacility(newSelectedValues)
+  }
+
+  const handleImageChange = (newImages: File[]) => {
+    setImages(newImages)
+  }
+
+  const handleCreateRoom = async (payload: any) => {
+    try {
+      // 1. Siapkan FormData
+      const formData: any = new FormData()
+      formData.append('titleRoom', payload.roomTitle)
+      if (images && images.length > 0) {
+        for (const image of images) {
+          formData.append('fileImages', image)
+        }
+      }
+      formData.append('lantaiRuangan', payload.floor.value.toString())
+      formData.append('flagActive', payload.isActive ? 'Y' : 'N')
+      formData.append('location', payload.location.value)
+      formData.append('kapasitas', payload.capacity.value.toString())
+      formData.append('deskripsi', descriptionData)
+      formData.append('termsCondition', termsData)
+      const convertList = selectedFacility.join(',')
+      formData.append('fasilitas', convertList)
+      formData.append('kategoriMenu', category)
+
+      // 2. Panggil fungsi API (pastikan apiSubmitCreateRoom bisa menangani FormData)
+      const response = await apiSubmitCreateRoom(formData)
+
+      // 3. Tangani respons
+      if (response.status === 'T') {
+        toast.success('Ballroom berhasil dibuat!')
+        router.push('/management/ballroom')
+      } else {
+        // Tampilkan pesan error yang lebih spesifik jika ada
+        let errorMessage = 'Gagal membuat ballroom.'
+        if (response.message) {
+          errorMessage += ` ${response.message}`
+        } else if (response.error && response.error.length > 0) {
+          errorMessage += ` ${response.error}`
+        }
+        toast.error(errorMessage)
+      }
+    } catch (error: any) {
+      // Tangani error yang lebih spesifik
+      if (error.response) {
+        // Error dari server (misalnya 400, 500)
+        const { status, data } = error.response
+        toast.error(`Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`)
+      } else if (error.request) {
+        // Permintaan dikirim tapi tidak ada respons
+        toast.error('Tidak ada respons dari server. Periksa koneksi internet Anda.')
+      } else {
+        // Error lain saat menyiapkan permintaan
+        toast.error('Terjadi kesalahan saat membuat ruangan.')
+      }
+    }
+  }
+
+  useEffect(() => {
+    setValue('isActive', isChecked)
+  }, [isChecked])
 
   useEffect(() => {
     if (floorData && floorData.data) {
@@ -91,103 +187,6 @@ export function AddBallroom({ category = 'Ballroom' }: { category?: string }) {
       setOptionsLocation(transformedOptions)
     }
   }, [locations])
-
-  const handleImageChange = (newImages: File[]) => {
-    setImages(newImages)
-  }
-
-  const { handleSubmit, control, setValue, getValues } = useForm<any>({
-    resolver: yupResolver(schema),
-    mode: 'all',
-  })
-
-  const breadcrumbs = [
-    <Link href="/management/ballroom" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
-      Booking Asset Data - Ballroom
-    </Link>,
-    <Typography key="2" color="text.primary" className="text-extra-small regular-12">
-      Add Ballroom Data
-    </Typography>,
-  ]
-
-  const handleDescriptionChange = (data: string) => {
-    setDescriptionData(data)
-  }
-
-  const handleTermsChange = (data: string) => {
-    setTermsData(data)
-  }
-
-  useEffect(() => {
-    setValue('isActive', isChecked)
-  }, [isChecked])
-
-  const [selectedFacility, setSelectedFacility] = useState([])
-
-  const convertList = selectedFacility.join(',')
-
-  const optionsFacility = [
-    { value: 'kursi', name: 'Kursi' },
-    { value: 'meja', name: 'Meja' },
-    { value: 'proyektor', name: 'Proyektor' },
-    { value: 'speaker', name: 'Speaker' },
-  ]
-
-  const handleFacilitySelectionChange = (newSelectedValues: any) => {
-    setSelectedFacility(newSelectedValues)
-  }
-
-  const handleCreateRoom = async (payload: any) => {
-    try {
-      // 1. Siapkan FormData
-      const formData: any = new FormData()
-      formData.append('titleRoom', payload.roomTitle)
-      if (images && images.length > 0) {
-        for (const image of images) {
-          formData.append('fileImages', image)
-        }
-      }
-      formData.append('lantaiRuangan', payload.floor.value.toString()) // Convert to string
-      formData.append('flagActive', payload.isActive ? 'Y' : 'N')
-      formData.append('location', payload.location.value)
-      formData.append('kapasitas', payload.capacity.value.toString()) // Convert to string
-      formData.append('deskripsi', descriptionData)
-      formData.append('termsCondition', termsData)
-      formData.append('fasilitas', convertList)
-      formData.append('kategoriMenu', category)
-
-      // 2. Panggil fungsi API (pastikan apiSubmitCreateRoom bisa menangani FormData)
-      const response = await apiSubmitCreateRoom(formData)
-
-      // 3. Tangani respons
-      if (response.status === 'T') {
-        toast.success('Ballroom berhasil dibuat!')
-        router.push('/management/ballroom')
-      } else {
-        // Tampilkan pesan error yang lebih spesifik jika ada
-        let errorMessage = 'Gagal membuat ballroom.'
-        if (response.message) {
-          errorMessage += ` ${response.message}`
-        } else if (response.error && response.error.length > 0) {
-          errorMessage += ` ${response.error}`
-        }
-        toast.error(errorMessage)
-      }
-    } catch (error: any) {
-      // Tangani error yang lebih spesifik
-      if (error.response) {
-        // Error dari server (misalnya 400, 500)
-        const { status, data } = error.response
-        toast.error(`Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`)
-      } else if (error.request) {
-        // Permintaan dikirim tapi tidak ada respons
-        toast.error('Tidak ada respons dari server. Periksa koneksi internet Anda.')
-      } else {
-        // Error lain saat menyiapkan permintaan
-        toast.error('Terjadi kesalahan saat membuat ruangan.')
-      }
-    }
-  }
 
   const onSubmit = async () => {
     const data = getValues()

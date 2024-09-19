@@ -1,35 +1,47 @@
 'use client'
 
+// React and Next.js imports
+import React, { useEffect, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import Link from 'next/link'
+import dynamic from 'next/dynamic'
+
+// MUI imports
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
-import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import React, { useEffect, useState } from 'react'
+
+// Third-party library imports
 import { Control, useForm } from 'react-hook-form'
-import { usePathname, useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 
+// Custom component imports
 import SelectForm from '@components/atoms/Form/SelectForm'
 import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
-import { yupResolver } from '@hookform/resolvers/yup'
+
+// API and service imports
 import { apiSubmitUpdateRoom } from '@services/cms/room/api'
-import { optionsFacility } from './data'
 import { useGetRoomDetail } from '@services/cms/room/query'
-import { EditRoomProps, IRoomDetailParams } from '@interfaces/room'
-import { API_FILE_CMS } from '@utils/environment'
-import { IDefaultParams } from '@interfaces/api'
 import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
-import { OptionItem } from '@interfaces/utils'
 import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
 import { useGetLocation } from '@services/gcm/location/query'
 
+// Utility and constant imports
+import { optionsFacility } from './data'
+import { EditRoomProps, IRoomDetailParams } from '@interfaces/room'
+import { API_FILE_CMS } from '@utils/environment'
+import { IDefaultParams } from '@interfaces/api'
+import { OptionItem } from '@interfaces/utils'
+
+// Dynamically import CKEditor component
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
+// Validation schema
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
   location: Yup.object().required('Lokasi wajib dipilih'),
@@ -40,31 +52,25 @@ const schema = Yup.object().shape({
 })
 
 export function EditBallroom({ category = 'Ballroom' }: EditRoomProps) {
-  const [param, setParam] = useState<IRoomDetailParams>({
-    roomId: '',
-  })
-  const defaultParams = {
-    search: '',
-    page: 1,
-    size: 50,
-  }
-  const [params] = useState<IDefaultParams>(defaultParams)
-  const router = useRouter()
-  const pathname = usePathname()
-  const slug = pathname.split('/').pop()
-
+  // State management
+  const [param, setParam] = useState<IRoomDetailParams>({ roomId: '' })
+  const [params] = useState<IDefaultParams>({ search: '', page: 1, size: 50 })
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
   const [selectedFacility, setSelectedFacility] = useState<string[]>([])
   const [isChecked, setIsChecked] = useState(false)
   const [initialDataLoaded, setInitialDataLoaded] = useState(false)
-  const convertList = selectedFacility.join(',')
-
   const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
   const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
   const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
 
+  // Router and pathname
+  const router = useRouter()
+  const pathname = usePathname()
+  const slug = pathname.split('/').pop()
+
+  // Data fetching
   const { data: ballroom } = useGetRoomDetail(param)
   const { data: floorData } = useGetRoomFloor(params)
   const { data: capacityData } = useGetRoomCapacity(params)
@@ -155,6 +161,7 @@ export function EditBallroom({ category = 'Ballroom' }: EditRoomProps) {
       formData.append('kapasitas', payload.capacity.value.toString())
       formData.append('deskripsi', descriptionData)
       formData.append('termsCondition', termsData)
+      const convertList = selectedFacility.join(',')
       formData.append('fasilitas', convertList)
       formData.append('kategoriMenu', category)
       formData.append('roomId', slug) // Include the roomId in the FormData
@@ -195,14 +202,14 @@ export function EditBallroom({ category = 'Ballroom' }: EditRoomProps) {
   }
 
   useEffect(() => {
-    setValue('isActive', isChecked)
-  }, [isChecked, watch('isActive')])
-
-  useEffect(() => {
     if (slug) {
       setParam({ roomId: slug })
     }
   }, [])
+
+  useEffect(() => {
+    setValue('isActive', isChecked)
+  }, [isChecked, watch('isActive')])
 
   useEffect(() => {
     if (ballroom?.data && !initialDataLoaded) {

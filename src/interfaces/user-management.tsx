@@ -1,9 +1,13 @@
 export interface IUserData {
   idUser: string
   nameUser: string
-  npk: string | null // Mengizinkan npk null
   email: string
-  roleName: string | null // Mengizinkan roleName null
+  noHp: string
+  birthOfDate: string // Assuming YYYY-MM-DD format
+  role: {
+    noId: number
+    roleName: string
+  } | null
   flagActive: boolean
 }
 
@@ -38,5 +42,55 @@ export interface IVerificationUserData {
   noHp: string
   roleName: string | null // Mengizinkan roleName null
   flagVerify: boolean | null // Mengizinkan flagVerify null
+  verifyStatus: string
+}
+
+export interface IVerificationUserResponse {
+  idUser: string
+  nameUser: string
+  email: string
+  noHp: string
+  birthOfDate: string // Assuming YYYY-MM-DD format
+  role: {
+    noId: number
+    roleName: string
+  } | null // Allowing role to be null
+  verifyStatus: string
+}
+
+export interface IResponseUserDetail {
+  idUser: string
+  nameUser: string
+  email: string
+  noHp: string
+  birthOfDate: string
+  role: {
+    noId: number
+    roleName: string
+  }
+  flagActive: boolean
+}
+
+export interface IUpdateUserPayload {
+  idUser: string
+  roleId: string
+  flagActive: boolean
+}
+
+export interface IApprovalPayload {
+  idUser: string
+  flagVerify: string
+}
+
+export interface IApprovalResponse {
+  idUser: string
+  nameUser: string
+  email: string
+  noHp: string
+  birthOfDate: string
+  role: {
+    noId: number
+    roleName: string
+  } | null
   verifyStatus: string
 }
