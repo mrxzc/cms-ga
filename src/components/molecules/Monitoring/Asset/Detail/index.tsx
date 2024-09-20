@@ -1,9 +1,9 @@
 'use client'
 
 import IconChevronRight from '@assets/icons/IconChevronRight'
-import { useRouter } from 'next/navigation'
-import { data } from './data'
-import IconChevronBottom from '@assets/icons/IconChevronBottom'
+import IconSpinner from '@assets/icons/IconSpinner'
+import { useGetDetailAsset } from '@services/monitoring/asset/query'
+import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 export function Detail() {
@@ -26,21 +26,17 @@ export function Detail() {
     }
   }, [isDropdownOpen])
 
-  // const dataUser: IOTPLoginResponse = GetCookie('data_user')
+  const paramsPage = useParams<{ asset: string }>()
 
-  // const paramsPage = useParams<{ noIdSecurity: string }>()
-
-  // const [isPhotoModalOpen, setIsPhotoModalOpen] = useState<boolean>(false)
-
-  // const {
-  //   data,
-  //   isFetching,
-  //   isRefetching,
-  //   isSuccess: isFetchSuccess,
-  //   isError: isFetchError,
-  //   isRefetchError,
-  //   refetch,
-  // } = useGetDetailBastIn({ noIdSecurity: paramsPage?.noIdSecurity }, dataUser?.idUser)
+  const {
+    data,
+    isFetching,
+    isRefetching,
+    isSuccess: isFetchSuccess,
+    isError: isFetchError,
+    isRefetchError,
+    refetch,
+  } = useGetDetailAsset({ noIdBooking: paramsPage?.asset })
 
   return (
     <div className="mb-[600px]">
@@ -49,7 +45,7 @@ export function Detail() {
           <button
             type="button"
             onClick={() => {
-              router.push('/monitoring/Asset')
+              router.push('/monitoring/asset')
             }}
           >
             <div className="text-extra-small regular-12 text-[#235696]">Monitoring Pesanan - Asset</div>
@@ -61,13 +57,13 @@ export function Detail() {
         <div className="bg-white rounded-lg mb-4 p-6 relative">
           <p className="text-heading s semibold-18 mb-10">Request Asset</p>
 
-          {/* {(isFetching || isRefetching) && (
+          {(isFetching || isRefetching) && (
             <div className="flex items-center justify-center my-20">
               <IconSpinner width={100} height={100} className="animate-spin"></IconSpinner>
             </div>
-          )} */}
+          )}
 
-          {/* {(isFetchError || isRefetchError) && (
+          {(isFetchError || isRefetchError) && (
             <div className="w-full flex flex-col justify-center items-center my-20">
               <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
               <div className="text-extra-small regular-12 mb-4">Saat ini belum ada yang tersedia</div>
@@ -81,16 +77,15 @@ export function Detail() {
                 Reload
               </button>
             </div>
-          )} */}
+          )}
 
-          {/* {isFetchSuccess && data && ( */}
-          <>
+          {isFetchSuccess && data?.data && (
             <div>
               <div className="grid grid-cols-4 gap-4 mb-6 items-center">
                 <p className="text-heading xs regular-16">Tanggal Pengajuan</p>
                 <div className="col-span-3">
                   <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                    {data?.dtUpload}
+                    {data?.data?.tanggalPengajuan}
                   </div>
                 </div>
               </div>
@@ -99,7 +94,7 @@ export function Detail() {
                 <p className="text-heading xs regular-16">Nama</p>
                 <div className="col-span-3">
                   <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                    {data?.name}
+                    {data?.data?.name}
                   </div>
                 </div>
               </div>
@@ -108,7 +103,7 @@ export function Detail() {
                 <p className="text-heading xs regular-16">Lokasi</p>
                 <div className="col-span-3">
                   <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                    {data?.location}
+                    {data?.data?.lokasi}
                   </div>
                 </div>
               </div>
@@ -117,7 +112,7 @@ export function Detail() {
                 <p className="text-heading xs regular-16">Tanggal Booking</p>
                 <div className="col-span-3">
                   <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                    {data?.bookingDate}
+                    {data?.data?.tanggalBooking}
                   </div>
                 </div>
               </div>
@@ -126,7 +121,7 @@ export function Detail() {
                 <p className="text-heading xs regular-16">Waktu Booking</p>
                 <div className="col-span-3">
                   <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                    {data?.bookingTime}
+                    {data?.data?.jamBooking}
                   </div>
                 </div>
               </div>
@@ -135,7 +130,7 @@ export function Detail() {
                 <p className="text-heading xs regular-16">Keperluan</p>
                 <div className="col-span-3">
                   <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                    {data?.reason}
+                    {data?.data?.keperluan}
                   </div>
                 </div>
               </div>
@@ -143,28 +138,29 @@ export function Detail() {
               <div className="grid grid-cols-4 gap-4 mb-6 items-center">
                 <p className="text-heading xs regular-16">Status</p>
                 <div className="col-span-3">
-                  <div>
+                  <span className="text-error"> No Data</span>
+                  {/* <div>
                     <div className="max-w-40 text-center rounded bg-[#D3FED7] text-[#4EC558] border border-[#4EC558] text-paragraph semibold-14 px-1 py-2">
-                      {data?.status}
+                      {data?.data?.status}
+                      Dummy
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
-          </>
-          {/* )} */}
+          )}
         </div>
 
         <div className="bg-white rounded-lg mb-4 p-6 relative">
           <p className="text-heading s semibold-18 mb-10">Detail Asset yang dipesan</p>
 
-          {/* {(isFetching || isRefetching) && (
+          {(isFetching || isRefetching) && (
             <div className="flex items-center justify-center my-20">
               <IconSpinner width={100} height={100} className="animate-spin"></IconSpinner>
             </div>
-          )} */}
+          )}
 
-          {/* {(isFetchError || isRefetchError) && (
+          {(isFetchError || isRefetchError) && (
             <div className="w-full flex flex-col justify-center items-center my-20">
               <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
               <div className="text-extra-small regular-12 mb-4">Saat ini belum ada yang tersedia</div>
@@ -178,17 +174,19 @@ export function Detail() {
                 Reload
               </button>
             </div>
-          )} */}
+          )}
 
-          {/* {isFetchSuccess && data && ( */}
-          <>
+          {isFetchSuccess && data?.data && (
             <div>
               <div className="grid grid-cols-4 gap-4 mb-6">
                 <p className="text-heading xs regular-16">
-                  Produk total: <span className="font-semibold">21 Items</span>
+                  Produk total:{' '}
+                  {data?.data?.produkTotal && <span className="font-semibold">{data?.data?.produkTotal}</span>}
                 </p>
                 <div className="col-span-2">
-                  <div
+                  <span className="text-error"> No Data</span>
+
+                  {/* <div
                     ref={dropdownRef}
                     onKeyDown={() => {}}
                     role="button"
@@ -260,126 +258,12 @@ export function Detail() {
                         <div className="flex-1 ">3 Items</div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
-          </>
-          {/* )} */}
+          )}
         </div>
-
-        {/* <div className="bg-white rounded-lg mb-4 p-6 relative">
-          <p className="text-heading s semibold-18 mb-10">Detail Vehicle yang dipesan</p>
-
-          {(isFetching || isRefetching) && (
-            <div className="flex items-center justify-center my-20">
-              <IconSpinner width={100} height={100} className="animate-spin"></IconSpinner>
-            </div>
-          )}
-
-          {(isFetchError || isRefetchError) && (
-            <div className="w-full flex flex-col justify-center items-center my-20">
-              <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
-              <div className="text-extra-small regular-12 mb-4">Saat ini belum ada yang tersedia</div>
-              <button
-                onClick={() => {
-                  refetch()
-                }}
-                type="button"
-                className="next-button h-8 px-4 rounded-lg w-auto text-extra-small semibold-12 text-[#FFFFFF] flex items-center justify-center"
-              >
-                Reload
-              </button>
-            </div>
-          )}
-
-          {isFetchSuccess && data && (
-            <>
-              <div>
-                <div className="grid grid-cols-4 gap-4 mb-6">
-                  <p className="text-heading xs regular-16">Dengan Driver</p>
-                  <div className="col-span-3">
-                    <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                      {data?.withDriver}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-4 gap-4 mb-6">
-                  <p className="text-heading xs regular-16">Tanggal Booking</p>
-                  <div className="col-span-3">
-                    <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                      {data?.bookingDate}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-4 gap-4 mb-6">
-                  <p className="text-heading xs regular-16">Waktu Booking</p>
-                  <div className="col-span-3">
-                    <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                      {data?.bookingTime}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-4 gap-4 mb-6">
-                  <p className="text-heading xs regular-16">Lokasi Vehicle</p>
-                  <div className="col-span-3">
-                    <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                      {data?.location}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-4 gap-4 mb-6">
-                  <p className="text-heading xs regular-16">Detail Unit</p>
-                  <div className="col-span-3">
-                    <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                      {data?.detailUnit}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-4 gap-4 mb-6">
-                  <p className="text-heading xs regular-16">Kapasitas Mobil</p>
-                  <div className="col-span-3">
-                    <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                      {data?.capacity}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-4 gap-4 mb-6">
-                  <p className="text-heading xs regular-16">Transmisi</p>
-                  <div className="col-span-3">
-                    <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                      {data?.transmision}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-4 gap-4 mb-6">
-                  <p className="text-heading xs regular-16">Plat Nomor</p>
-                  <div className="col-span-3">
-                    <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                      {data?.plateNumber}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-4 gap-4 mb-6">
-                  <p className="text-heading xs regular-16">Bensin</p>
-                  <div className="col-span-3">
-                    <div className="text-paragraph regular-14 text-[#717171] border border-[#E6E5E6] bg-[#EFF2F5] min-h-[44px] p-3 rounded-md ">
-                      {data?.fuel}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-        </div> */}
       </div>
     </div>
   )
