@@ -159,14 +159,12 @@ export function Detail() {
           </div>
 
           <div className="col-span-2 bg-white rounded-lg mb-4 p-6 relative">
-            <p className="text-heading s semibold-18 mb-10">Tracking Detail</p>
-
+            <p className="text-heading s semibold-18 mb-10">Tracking Detail </p>
             {/* {(isFetching || isRefetching) && (
             <div className="flex items-center justify-center my-20">
               <IconSpinner width={100} height={100} className="animate-spin"></IconSpinner>
             </div>
           )} */}
-
             {/* {(isFetchError || isRefetchError) && (
             <div className="w-full flex flex-col justify-center items-center my-20">
               <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
@@ -182,7 +180,6 @@ export function Detail() {
               </button>
             </div>
           )} */}
-
             {/* {isFetchSuccess && data && ( */}
             <>
               <div className="relative">

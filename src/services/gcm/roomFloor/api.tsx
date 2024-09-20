@@ -21,16 +21,10 @@ import httpRequest from '@utils/helper'
 
 const api = httpRequest(API_MASTER)
 
-export function apiGetRoomFloor(
-  params: IGcmRoomFloorListParams,
-  idUser: string
-): Promise<APIBaseResponse<IGcmRoomFloor[]>> {
+export function apiGetRoomFloor(params: IGcmRoomFloorListParams): Promise<APIBaseResponse<IGcmRoomFloor[]>> {
   // return dummyGetRoomFloor()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmRoomFloor[], APIBaseResponse<IGcmRoomFloor[]>>('/cms/master/roomFloor/list', { params, headers })
+  return api.get<IGcmRoomFloor[], APIBaseResponse<IGcmRoomFloor[]>>('/cms/master/roomFloor/list', { params })
 }
 
 export function apiGetRoomFloorDetail(

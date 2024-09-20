@@ -17,9 +17,13 @@ import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
 import { yupResolver } from '@hookform/resolvers/yup'
-// import { ICreateRoomPayload } from '@interfaces/room'
 import { apiSubmitCreateRoom } from '@services/cms/room/api'
-import { optionsCapacity, optionsFloor } from './data'
+import { optionsFacility } from './data'
+import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
+import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
+import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
+import { OptionItem } from '@interfaces/utils'
+import { useGetLocation } from '@services/gcm/location/query'
 
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
@@ -34,24 +38,85 @@ const schema = Yup.object().shape({
 export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
   const router = useRouter()
 
+  const defaultParams = {
+    search: '',
+    page: 1,
+    size: 50,
+  }
+
+  const [params] = useState<IGcmRoomFloorListParams>(defaultParams)
   const [isChecked, setIsChecked] = useState(false)
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
+  const [selectedFacility, setSelectedFacility] = useState([])
+
+  const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
+  const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
+  const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
+
+  const convertList = selectedFacility.join(',')
+
+  const { data: floorData } = useGetRoomFloor(params)
+  const { data: capacityData } = useGetRoomCapacity(params)
+  const { data: locations } = useGetLocation(params)
+
+  useEffect(() => {
+    if (floorData && floorData.data) {
+      const transformedOptions: OptionItem[] = floorData.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsFloor(transformedOptions)
+    }
+  }, [floorData])
+
+  useEffect(() => {
+    if (capacityData && capacityData.data) {
+      const transformedOptions: OptionItem[] = capacityData.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsCapacity(transformedOptions)
+    }
+  }, [capacityData])
+
+  useEffect(() => {
+    if (locations && locations.data) {
+      const transformedOptions: OptionItem[] = locations.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsLocation(transformedOptions)
+    }
+  }, [locations])
 
   const handleImageChange = (newImages: File[]) => {
     setImages(newImages)
+  }
+
+  const handleDescriptionChange = (data: string) => {
+    setDescriptionData(data)
+  }
+
+  const handleTermsChange = (data: string) => {
+    setTermsData(data)
+  }
+
+  const handleFacilitySelectionChange = (newSelectedValues: any) => {
+    setSelectedFacility(newSelectedValues)
   }
 
   const { handleSubmit, control, setValue, getValues } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
-
-  const optionsLocation = [
-    { label: 'Head Office', value: 'ACC' },
-    { label: 'Berijalan', value: 'BERIJALAN' },
-  ]
 
   const breadcrumbs = [
     <Link href="/management/room" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
@@ -62,38 +127,12 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
     </Typography>,
   ]
 
-  const handleDescriptionChange = (data: string) => {
-    setDescriptionData(data)
-  }
-
-  const handleTermsChange = (data: string) => {
-    setTermsData(data)
-  }
-
-  useEffect(() => {
-    setValue('isActive', isChecked)
-  }, [isChecked])
-
-  const [selectedFacility, setSelectedFacility] = useState([])
-
-  const convertList = selectedFacility.join(',')
-
-  const optionsFacility = [
-    { value: 'kursi', name: 'Kursi' },
-    { value: 'meja', name: 'Meja' },
-    { value: 'proyektor', name: 'Proyektor' },
-    { value: 'speaker', name: 'Speaker' },
-  ]
-
-  const handleFacilitySelectionChange = (newSelectedValues: any) => {
-    setSelectedFacility(newSelectedValues)
-  }
-
   const handleCreateRoom = async (payload: any) => {
     try {
       // 1. Siapkan FormData
       const formData: any = new FormData()
       formData.append('titleRoom', payload.roomTitle)
+
       if (images && images.length > 0) {
         for (const image of images) {
           formData.append('fileImages', image)
@@ -142,6 +181,10 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
     }
   }
 
+  useEffect(() => {
+    setValue('isActive', isChecked)
+  }, [isChecked])
+
   const onSubmit = async () => {
     const data = getValues()
     handleCreateRoom(data)
@@ -169,7 +212,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
                 checked={isChecked}
                 onChange={() => setIsChecked(!isChecked)}
                 value={''}
-              />{' '}
+              />
             </label>
           </div>
 

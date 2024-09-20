@@ -21,16 +21,10 @@ import httpRequest from '@utils/helper'
 
 const api = httpRequest(API_MASTER)
 
-export function apiGetLocation(
-  params: IGcmLocationListParams,
-  idUser: string
-): Promise<APIBaseResponse<IGcmLocation[]>> {
+export function apiGetLocation(params: IGcmLocationListParams): Promise<APIBaseResponse<IGcmLocation[]>> {
   // return dummyGetLocation()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmLocation[], APIBaseResponse<IGcmLocation[]>>('/cms/master/location/list', { params, headers })
+  return api.get<IGcmLocation[], APIBaseResponse<IGcmLocation[]>>('/cms/master/location/list', { params })
 }
 
 export function apiGetLocationDetail(

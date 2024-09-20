@@ -1,43 +1,70 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { createColumnHelper } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import React, { useEffect, useState } from 'react'
+import { createColumnHelper } from '@tanstack/react-table'
+import { useRouter } from 'next/navigation'
 
-import { data } from './data'
 import IconPlus from '@assets/icons/IconPlus'
 import Table from '@components/atoms/Table'
 import IconEditing from '@assets/icons/IconEditing'
 import images from '@assets/images'
 import IconDownload from '@assets/icons/IconDownload'
 import IconSearch from '@assets/icons/IconSearch'
+import { IDefaultParams } from '@interfaces/api'
+import { useGetRoleList } from '@services/account/query'
 
 export function Role() {
   const router = useRouter()
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const [roles, setRoles] = useState(data.roles)
+  const defaultParams: IDefaultParams = {
+    search: searchQuery,
+    page: 1,
+    size: 10,
+  }
 
-  const handleStatusChange = (index: number) => {
-    setRoles(prevRoles => {
-      const updatedRoles = [...prevRoles]
-      updatedRoles[index].status = updatedRoles[index].status === 'Y' ? 'N' : 'Y'
-      return updatedRoles
-    })
+  const [params, setParams] = useState<IDefaultParams>(defaultParams)
+
+  const { data: roleList, isLoading, isFetching } = useGetRoleList(params)
+
+  const transformedData = roleList?.data?.map((role, index) => ({
+    ...role,
+    originalIndex: index,
+    ACTION: '',
+  }))
+
+  const handleStatus = (status: boolean) => {
+    if (status) {
+      return (
+        <label className="switch">
+          <input name={`status-${status}`} defaultChecked={status} type="checkbox" />
+          <span className="slider green round" />
+        </label>
+      )
+    } else {
+      return (
+        <label className="switch">
+          <input name={`status-${status}`} type="checkbox" />
+          <span className="slider green round" />
+        </label>
+      )
+    }
   }
 
   const columnHelper = createColumnHelper<any>()
 
   const columns = [
-    columnHelper.accessor('no', {
-      cell: info => info.getValue(),
+    columnHelper.accessor('originalIndex', {
+      cell: info => {
+        const offset = ((roleList?.pagination?.currentPage ?? 1) - 1) * 10
+        return offset + info.row.index + 1
+      },
       header: 'No',
     }),
     columnHelper.accessor('roleName', {
@@ -45,26 +72,15 @@ export function Role() {
       header: 'Nama Role',
     }),
     columnHelper.accessor('description', {
-      cell: info => info.getValue(),
+      cell: info => info.getValue() ?? '-',
       header: 'Description',
     }),
-    columnHelper.accessor('createdDate', {
+    columnHelper.accessor('createdAt', {
       cell: info => info.getValue(),
       header: 'Tanggal Terbuat',
     }),
-    columnHelper.accessor('status', {
-      cell: info => {
-        const rowIndex = info.row.index
-        return (
-          <div onKeyDown={() => {}} onClick={() => handleStatusChange(rowIndex)}>
-            <StatusCheckbox
-              key={rowIndex}
-              status={roles[rowIndex].status}
-              onChange={() => handleStatusChange(rowIndex)}
-            />
-          </div>
-        )
-      },
+    columnHelper.accessor('flagActive', {
+      cell: info => handleStatus(info.getValue()),
       header: 'Status',
     }),
     columnHelper.accessor('ACTION', {
@@ -77,16 +93,23 @@ export function Role() {
       header: 'Action',
     }),
   ]
-
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault()
+  }
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value)
+  }
+
+  const handlePageChange = (newPage: number) => {
+    setParams(prevParam => ({ ...prevParam, page: newPage }))
   }
 
   const breadcrumbs = [
     <Link
       underline="none"
       color="black"
-      href="/management/asset"
+      href="/account-management/role"
       onClick={handleClick}
       key="1"
       className="text-extra-small regular-12"
@@ -95,13 +118,13 @@ export function Role() {
     </Link>,
   ]
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage)
-  }
-
   useEffect(() => {
-    setTotalPages(data.pagination.total_pages)
-  }, [roles])
+    setParams(prevParam => ({
+      ...prevParam,
+      search: searchQuery,
+      page: searchQuery ? 1 : prevParam.page,
+    }))
+  }, [searchQuery])
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
@@ -138,8 +161,8 @@ export function Role() {
               type="text"
               placeholder="Search..."
               className="flex-1 text-paragraph regular-14 mt-1"
-              value={''}
-              onChange={() => {}}
+              value={searchQuery}
+              onChange={handleSearchChange}
               style={{
                 outline: 'none',
               }}
@@ -149,31 +172,16 @@ export function Role() {
 
         <Table
           columns={columns}
-          data={roles}
-          loading={false}
+          data={transformedData}
+          loading={isLoading || isFetching}
           pagination={{
-            TOTAL_DATA: data.pagination.total_roles,
-            PAGE: currentPage,
-            LAST_PAGE: totalPages,
+            TOTAL_DATA: roleList?.pagination?.totalRecords ?? 0,
+            PAGE: roleList?.pagination?.currentPage ?? 1,
+            LAST_PAGE: roleList?.pagination?.totalPage ?? 1,
           }}
           callback={handlePageChange}
         />
       </div>
     </div>
-  )
-}
-
-function StatusCheckbox({ status, onChange }: { status: string; onChange: () => void }) {
-  const backgroundColor = status === 'Y' ? '#0089cf' : '#f6f6f6'
-  const borderColor = status === 'Y' ? '#c8e9fa' : '#b1b1b1'
-
-  return (
-    <input
-      type="checkbox"
-      className="toggle"
-      defaultChecked={status === 'Y'}
-      style={{ backgroundColor, border: `1px solid ${borderColor}`, pointerEvents: 'auto' }}
-      onChange={onChange}
-    />
   )
 }
