@@ -8,27 +8,31 @@ import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 import dynamic from 'next/dynamic'
 
+// MUI Components
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
 
+// Custom Components
 import SelectForm from '@components/atoms/Form/SelectForm'
 import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
+
+// API Services
 import { apiSubmitCreateRoom } from '@services/cms/room/api'
-import { optionsFacility } from './data'
 import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
 import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
 import { useGetLocation } from '@services/gcm/location/query'
-import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
+
+// Interfaces
 import { OptionItem } from '@interfaces/utils'
+import { IDefaultParams } from '@interfaces/api'
+import { optionsFacility } from './data'
 
-const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
-
-// Validation schema
+// Validation Schema
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
   location: Yup.object().required('Lokasi wajib dipilih'),
@@ -37,35 +41,36 @@ const schema = Yup.object().shape({
   capacity: Yup.object().required('Kapasitas Ruangan wajib dipilih'),
 })
 
+// Dynamic Component Import
+const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
+
 export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
   const router = useRouter()
 
-  // State variables
+  // State Variables
   const defaultParams = { search: '', page: 1, size: 50 }
-  const [params] = useState<IGcmRoomFloorListParams>(defaultParams)
+  const [params] = useState<IDefaultParams>(defaultParams)
   const [isChecked, setIsChecked] = useState(false)
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
   const [selectedFacility, setSelectedFacility] = useState<string[]>([])
-
-  // Options state
   const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
   const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
   const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
 
-  // Form handling
+  // Form Handling
   const { handleSubmit, control, setValue, getValues } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
 
-  // Fetch data hooks
+  // Fetch Data Hooks
   const { data: floorData } = useGetRoomFloor(params)
   const { data: capacityData } = useGetRoomCapacity(params)
   const { data: locations } = useGetLocation(params)
 
-  // Update options based on fetched data
+  // Update Options based on fetched data
   useEffect(() => {
     if (floorData?.data) {
       const transformedOptions = floorData.data
@@ -93,7 +98,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
     }
   }, [locations])
 
-  // Event handlers
+  // Event Handlers
   const handleImageChange = (newImages: File[]) => setImages(newImages)
   const handleDescriptionChange = (data: string) => setDescriptionData(data)
   const handleTermsChange = (data: string) => setTermsData(data)
@@ -103,15 +108,18 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
     setValue('isActive', isChecked)
   }, [isChecked, setValue])
 
+  // Room Creation Function
   const handleCreateRoom = async (payload: any) => {
     try {
       const formData: any = new FormData()
       formData.append('titleRoom', payload.roomTitle)
 
+      // Append images if any
       if (images.length > 0) {
         images.forEach(image => formData.append('fileImages', image))
       }
 
+      // Append other fields
       formData.append('lantaiRuangan', payload.floor.value.toString())
       formData.append('flagActive', payload.isActive ? 'Y' : 'N')
       formData.append('location', payload.location.value)
@@ -121,8 +129,8 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
       formData.append('fasilitas', selectedFacility.join(','))
       formData.append('kategoriMenu', category)
 
+      // Submit to API
       const response = await apiSubmitCreateRoom(formData)
-
       if (response.status === 'T') {
         toast.success('Ruangan berhasil dibuat!')
         router.push('/management/room')
@@ -164,6 +172,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
       <div className="bg-white px-4 py-4 rounded-xl">
         <p className="text-heading s semibold-18 mb-4">Add Room Data</p>
         <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Active Toggle */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Aktif</p>
             <label>
@@ -176,6 +185,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             </label>
           </div>
 
+          {/* Location Selector */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
               Lokasi<span className="text-red-500">*</span>
@@ -190,6 +200,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             />
           </div>
 
+          {/* Room Title Input */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
               Title Room<span className="text-red-500">*</span>
@@ -203,6 +214,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             />
           </div>
 
+          {/* Floor Selector */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
               Lantai Ruangan<span className="text-red-500">*</span>
@@ -217,6 +229,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             />
           </div>
 
+          {/* Capacity Selector */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
               Kapasitas Ruangan<span className="text-red-500">*</span>
@@ -231,6 +244,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             />
           </div>
 
+          {/* Description Input */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Description</p>
             <div className="mt-1">
@@ -242,6 +256,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             </div>
           </div>
 
+          {/* Terms and Conditions Input */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Terms & Condition</p>
             <div className="max-w-[650px] mt-1">
@@ -253,6 +268,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             </div>
           </div>
 
+          {/* Facility Selector */}
           <div className="flex items-center mt-1">
             <p className="text-heading xs regular-16 w-[160px]">Fasilitas Ruangan</p>
             <div className="w-[650px]">
@@ -266,6 +282,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             </div>
           </div>
 
+          {/* Image Upload */}
           <div className="flex items-center mt-1">
             <div className="text-heading xs regular-16 w-[160px]">
               Image<span className="text-red-500">*</span>
@@ -281,6 +298,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
 
           <div className="divider" />
 
+          {/* Submit and Cancel Buttons */}
           <div className="flex justify-end gap-2 items-end">
             <button
               className="bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
