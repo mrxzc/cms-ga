@@ -1,27 +1,46 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 
 import TextForm from '@components/atoms/Form/TextForm'
 import SelectForm from '@components/atoms/Form/SelectForm'
-import { optionsRole } from './data'
+import { OptionItem } from '@interfaces/utils'
+import { IDefaultParams } from '@interfaces/api'
+import { useGetRoleList } from '@services/account/query'
+import { useGetVerificationUserDetail } from '@services/user/query'
+import { useApproveUserMutation } from '@services/user/mutation'
+import { toast } from 'react-toastify'
+import { IApprovalPayload } from '@interfaces/user-management'
 
 const schema = Yup.object().shape({
-  isActive: Yup.string().required('Aktif wajib dipilih'),
-  manpowerAsset: Yup.string().required('Manpower asset wajib dipilih'),
+  code: Yup.string().required('Kode User wajib diisi'),
+  name: Yup.string().required('Nama wajib diisi'),
+  email: Yup.string().required('Email wajib diisi'),
+  noHp: Yup.string().required('No. HP wajib diisi'),
+  noHandphone: Yup.string().required('No. Handphone wajib diisi'),
+  tanggalLahir: Yup.string().required('Tanggal Lahir wajib diisi'),
 })
 
 export function DetailVerification() {
   const router = useRouter()
+  const pathname = usePathname()
+  const slug = pathname.split('/').pop()
+
+  const [params] = useState<IDefaultParams>({ search: '', page: 1, size: 10 })
+  const [optionsRole, setOptionsRole] = useState<OptionItem[]>([])
+
+  const { data: roleList } = useGetRoleList(params)
+  const { data: userDetail } = useGetVerificationUserDetail(slug as string)
+  const approveUserMutation = useApproveUserMutation()
 
   const { handleSubmit, control, setValue } = useForm<any>({
     resolver: yupResolver(schema),
@@ -29,7 +48,11 @@ export function DetailVerification() {
   })
 
   const breadcrumbs = [
-    <Link href="/user-management" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
+    <Link
+      href="/user-management/verification"
+      key="1"
+      className="text-extra-small regular-12 text-[#235696] hover:underline"
+    >
       User Management - List User
     </Link>,
     <Typography key="2" color="text.primary" className="text-extra-small regular-12">
@@ -37,13 +60,52 @@ export function DetailVerification() {
     </Typography>,
   ]
 
-  const onSubmit = () => {
-    /* ... Your submission logic ... */
+  useEffect(() => {
+    if (userDetail?.data) {
+      setValue('code', userDetail.data.idUser)
+      setValue('name', userDetail.data.nameUser)
+      setValue('email', userDetail.data.email)
+      setValue('noHandphone', userDetail.data.noHp)
+      setValue('tanggalLahir', userDetail.data.birthOfDate)
+      const role = optionsRole.find(option => option.label === userDetail?.data?.role?.roleName)
+      setValue('role', role)
+    }
+  }, [userDetail, setValue, optionsRole])
+
+  useEffect(() => {
+    if (roleList && roleList.data) {
+      const transformedOptions: OptionItem[] = roleList.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.roleName,
+          value: item.noId.toString(),
+        }))
+      setOptionsRole(transformedOptions)
+    }
+  }, [roleList])
+
+  const handleApproval = async (isApprove: boolean) => {
+    const params: IApprovalPayload = {
+      idUser: userDetail?.data?.idUser ?? '',
+      flagVerify: isApprove ? 'Y' : 'N',
+    }
+
+    try {
+      const response = await approveUserMutation.mutateAsync(params)
+      if (response.status === 'T') {
+        toast.success('Pengguna berhasil disetujui/ditolak!')
+        router.push('/user-management/verification')
+      } else {
+        toast.error(response.message || 'Gagal menyetujui/menolak pengguna.')
+      }
+    } catch (error) {
+      toast.error('Terjadi kesalahan saat menyetujui/menolak pengguna.')
+    }
   }
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
-      <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center ">
+      <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center">
         <Stack spacing={2}>
           <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
             {breadcrumbs}
@@ -53,7 +115,7 @@ export function DetailVerification() {
 
       <div className="bg-white px-4 py-4 rounded-xl">
         <p className="text-heading s semibold-18 mb-4">Detail User</p>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit(() => {})} className="flex flex-col gap-4">
           <div className="flex items-center">
             <p className="text-paragraph regular-14 w-[160px] mr-10">Kode User</p>
             <TextForm
@@ -72,7 +134,6 @@ export function DetailVerification() {
               className="w-[660px]"
             />
           </div>
-
           <div className="flex items-center">
             <p className="text-paragraph regular-14 w-[160px] mr-10">Email</p>
             <TextForm
@@ -82,7 +143,6 @@ export function DetailVerification() {
               className="w-[660px]"
             />
           </div>
-
           <div className="flex items-center">
             <p className="text-paragraph regular-14 w-[160px] mr-10">No Handphone</p>
             <TextForm
@@ -92,7 +152,6 @@ export function DetailVerification() {
               className="w-[660px]"
             />
           </div>
-
           <div className="flex items-center">
             <p className="text-paragraph regular-14 w-[160px] mr-10">Tanggal Lahir</p>
             <TextForm
@@ -102,7 +161,6 @@ export function DetailVerification() {
               className="w-[660px]"
             />
           </div>
-
           <div className="flex items-center">
             <p className="text-paragraph regular-14 w-[160px] mr-10">Role</p>
             <SelectForm
@@ -121,15 +179,16 @@ export function DetailVerification() {
             <button
               className="bg-[#d92b41] text-[white] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
               type="button"
-              onClick={() => router.push('/account-management/role')}
+              onClick={() => handleApproval(false)}
             >
               Reject
             </button>
             <button
-              className="bg-[#235696] text-[#e5f2fc] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
-              type="submit"
+              className="bg-[#235696] text-[#e5f2fc] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md text-center flex justify-center items-center"
+              type="button"
+              onClick={() => handleApproval(true)}
             >
-              Submit
+              Approve
             </button>
           </div>
         </form>

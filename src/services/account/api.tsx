@@ -13,3 +13,7 @@ export function apiGetUserManagementList(params?: IDefaultParams): Promise<APIBa
     params,
   })
 }
+
+export async function apiDeleteUser(idUser: string): Promise<APIBaseResponse<null>> {
+  return api.post<null, APIBaseResponse<null>>('/cms/master/user/delete', { idUser })
+}

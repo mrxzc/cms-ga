@@ -1,32 +1,34 @@
 'use client'
 
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useForm, Control } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as Yup from 'yup'
+import { toast } from 'react-toastify'
+import dynamic from 'next/dynamic'
+
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import React, { useEffect, useState } from 'react'
-import { Control, useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
-import { toast } from 'react-toastify'
-import * as Yup from 'yup'
 
 import SelectForm from '@components/atoms/Form/SelectForm'
 import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { apiSubmitCreateRoom } from '@services/cms/room/api'
 import { optionsFacility } from './data'
-import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
 import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
 import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
-import { OptionItem } from '@interfaces/utils'
 import { useGetLocation } from '@services/gcm/location/query'
+import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
+import { OptionItem } from '@interfaces/utils'
 
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
+// Validation schema
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
   location: Yup.object().required('Lokasi wajib dipilih'),
@@ -38,86 +40,108 @@ const schema = Yup.object().shape({
 export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
   const router = useRouter()
 
-  const defaultParams = {
-    search: '',
-    page: 1,
-    size: 50,
-  }
-
+  // State variables
+  const defaultParams = { search: '', page: 1, size: 50 }
   const [params] = useState<IGcmRoomFloorListParams>(defaultParams)
   const [isChecked, setIsChecked] = useState(false)
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
-  const [selectedFacility, setSelectedFacility] = useState([])
+  const [selectedFacility, setSelectedFacility] = useState<string[]>([])
 
+  // Options state
   const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
   const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
   const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
 
-  const convertList = selectedFacility.join(',')
-
-  const { data: floorData } = useGetRoomFloor(params)
-  const { data: capacityData } = useGetRoomCapacity(params)
-  const { data: locations } = useGetLocation(params)
-
-  useEffect(() => {
-    if (floorData && floorData.data) {
-      const transformedOptions: OptionItem[] = floorData.data
-        .filter(item => item.flagActive)
-        .map(item => ({
-          label: item.descGcm,
-          value: item.noSr,
-        }))
-      setOptionsFloor(transformedOptions)
-    }
-  }, [floorData])
-
-  useEffect(() => {
-    if (capacityData && capacityData.data) {
-      const transformedOptions: OptionItem[] = capacityData.data
-        .filter(item => item.flagActive)
-        .map(item => ({
-          label: item.descGcm,
-          value: item.noSr,
-        }))
-      setOptionsCapacity(transformedOptions)
-    }
-  }, [capacityData])
-
-  useEffect(() => {
-    if (locations && locations.data) {
-      const transformedOptions: OptionItem[] = locations.data
-        .filter(item => item.flagActive)
-        .map(item => ({
-          label: item.descGcm,
-          value: item.noSr,
-        }))
-      setOptionsLocation(transformedOptions)
-    }
-  }, [locations])
-
-  const handleImageChange = (newImages: File[]) => {
-    setImages(newImages)
-  }
-
-  const handleDescriptionChange = (data: string) => {
-    setDescriptionData(data)
-  }
-
-  const handleTermsChange = (data: string) => {
-    setTermsData(data)
-  }
-
-  const handleFacilitySelectionChange = (newSelectedValues: any) => {
-    setSelectedFacility(newSelectedValues)
-  }
-
+  // Form handling
   const { handleSubmit, control, setValue, getValues } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
 
+  // Fetch data hooks
+  const { data: floorData } = useGetRoomFloor(params)
+  const { data: capacityData } = useGetRoomCapacity(params)
+  const { data: locations } = useGetLocation(params)
+
+  // Update options based on fetched data
+  useEffect(() => {
+    if (floorData?.data) {
+      const transformedOptions = floorData.data
+        .filter(item => item.flagActive)
+        .map(item => ({ label: item.descGcm, value: item.noSr }))
+      setOptionsFloor(transformedOptions)
+    }
+  }, [floorData])
+
+  useEffect(() => {
+    if (capacityData?.data) {
+      const transformedOptions = capacityData.data
+        .filter(item => item.flagActive)
+        .map(item => ({ label: item.descGcm, value: item.noSr }))
+      setOptionsCapacity(transformedOptions)
+    }
+  }, [capacityData])
+
+  useEffect(() => {
+    if (locations?.data) {
+      const transformedOptions = locations.data
+        .filter(item => item.flagActive)
+        .map(item => ({ label: item.descGcm, value: item.noSr }))
+      setOptionsLocation(transformedOptions)
+    }
+  }, [locations])
+
+  // Event handlers
+  const handleImageChange = (newImages: File[]) => setImages(newImages)
+  const handleDescriptionChange = (data: string) => setDescriptionData(data)
+  const handleTermsChange = (data: string) => setTermsData(data)
+  const handleFacilitySelectionChange = (newSelectedValues: string[]) => setSelectedFacility(newSelectedValues)
+
+  useEffect(() => {
+    setValue('isActive', isChecked)
+  }, [isChecked, setValue])
+
+  const handleCreateRoom = async (payload: any) => {
+    try {
+      const formData: any = new FormData()
+      formData.append('titleRoom', payload.roomTitle)
+
+      if (images.length > 0) {
+        images.forEach(image => formData.append('fileImages', image))
+      }
+
+      formData.append('lantaiRuangan', payload.floor.value.toString())
+      formData.append('flagActive', payload.isActive ? 'Y' : 'N')
+      formData.append('location', payload.location.value)
+      formData.append('kapasitas', payload.capacity.value.toString())
+      formData.append('deskripsi', descriptionData)
+      formData.append('termsCondition', termsData)
+      formData.append('fasilitas', selectedFacility.join(','))
+      formData.append('kategoriMenu', category)
+
+      const response = await apiSubmitCreateRoom(formData)
+
+      if (response.status === 'T') {
+        toast.success('Ruangan berhasil dibuat!')
+        router.push('/management/room')
+      } else {
+        const errorMessage = response.message || response.error || 'Gagal membuat ruangan.'
+        toast.error(errorMessage)
+      }
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Terjadi kesalahan saat membuat ruangan.'
+      toast.error(message)
+    }
+  }
+
+  const onSubmit = async () => {
+    const data = getValues()
+    handleCreateRoom(data)
+  }
+
+  // Breadcrumbs
   const breadcrumbs = [
     <Link href="/management/room" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
       Booking Asset Data - Room
@@ -127,72 +151,9 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
     </Typography>,
   ]
 
-  const handleCreateRoom = async (payload: any) => {
-    try {
-      // 1. Siapkan FormData
-      const formData: any = new FormData()
-      formData.append('titleRoom', payload.roomTitle)
-
-      if (images && images.length > 0) {
-        for (const image of images) {
-          formData.append('fileImages', image)
-        }
-      }
-
-      formData.append('lantaiRuangan', payload.floor.value.toString())
-      formData.append('flagActive', payload.isActive ? 'Y' : 'N')
-      formData.append('location', payload.location.value)
-      formData.append('kapasitas', payload.capacity.value.toString())
-      formData.append('deskripsi', descriptionData)
-      formData.append('termsCondition', termsData)
-      formData.append('fasilitas', convertList)
-      formData.append('kategoriMenu', category)
-
-      // 2. Panggil fungsi API (pastikan apiSubmitCreateRoom bisa menangani FormData)
-      const response = await apiSubmitCreateRoom(formData)
-
-      // 3. Tangani respons
-      if (response.status === 'T') {
-        toast.success('Ruangan berhasil dibuat!')
-        router.push('/management/room')
-      } else {
-        // Tampilkan pesan error yang lebih spesifik jika ada
-        let errorMessage = 'Gagal membuat ruangan.'
-        if (response.message) {
-          errorMessage += ` ${response.message}`
-        } else if (response.error && response.error.length > 0) {
-          errorMessage += ` ${response.error}`
-        }
-        toast.error(errorMessage)
-      }
-    } catch (error: any) {
-      // Tangani error yang lebih spesifik
-      if (error.response) {
-        // Error dari server (misalnya 400, 500)
-        const { status, data } = error.response
-        toast.error(`Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`)
-      } else if (error.request) {
-        // Permintaan dikirim tapi tidak ada respons
-        toast.error('Tidak ada respons dari server. Periksa koneksi internet Anda.')
-      } else {
-        // Error lain saat menyiapkan permintaan
-        toast.error('Terjadi kesalahan saat membuat ruangan.')
-      }
-    }
-  }
-
-  useEffect(() => {
-    setValue('isActive', isChecked)
-  }, [isChecked])
-
-  const onSubmit = async () => {
-    const data = getValues()
-    handleCreateRoom(data)
-  }
-
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
-      <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center ">
+      <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center">
         <Stack spacing={2}>
           <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
             {breadcrumbs}
@@ -211,7 +172,6 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
                 className="toggle toggle-accent"
                 checked={isChecked}
                 onChange={() => setIsChecked(!isChecked)}
-                value={''}
               />
             </label>
           </div>
@@ -275,9 +235,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             <p className="text-heading xs regular-16 w-[160px]">Description</p>
             <div className="mt-1">
               <ReusableCKEditor
-                config={{
-                  placeholder: 'Type your text here...',
-                }}
+                config={{ placeholder: 'Type your text here...' }}
                 initialData={descriptionData}
                 onChange={handleDescriptionChange}
               />
@@ -288,9 +246,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             <p className="text-heading xs regular-16 w-[160px]">Terms & Condition</p>
             <div className="max-w-[650px] mt-1">
               <ReusableCKEditor
-                config={{
-                  placeholder: 'Type your text here...',
-                }}
+                config={{ placeholder: 'Type your text here...' }}
                 initialData={termsData}
                 onChange={handleTermsChange}
               />
@@ -303,7 +259,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
               <RHFMultiSelect
                 data={optionsFacility}
                 name="fruits"
-                label="Pilih Buah"
+                label="Pilih Fasilitas"
                 control={control as Control<any>}
                 onValuesChange={handleFacilitySelectionChange}
               />
@@ -314,7 +270,7 @@ export function AddRoom({ category = 'Meeting Room' }: { category?: string }) {
             <div className="text-heading xs regular-16 w-[160px]">
               Image<span className="text-red-500">*</span>
               <p className="text-paragraph regular-14 mt-2">{images?.length}/10</p>
-              <p className="text-paragraph regular-14 text-gray-500 ">
+              <p className="text-paragraph regular-14 text-gray-500">
                 Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
               </p>
             </div>

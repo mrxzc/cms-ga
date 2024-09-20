@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
 import IconChevronRight from '@assets/icons/IconChevronRight'
-import { data } from './data'
 import IconDownload from '@assets/icons/IconDownload'
+import { data } from './data'
 
 export function DetailApproval() {
   const [requestData, setRequestData] = useState<any>()
