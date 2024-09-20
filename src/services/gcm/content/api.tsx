@@ -10,7 +10,7 @@ export function apiGetListContent(
   params: IListContentParams,
   idUser: string
 ): Promise<APIBaseResponse<IListContent[]>> {
-  // return dummyGetListContent()
+  //  // return dummyGetListContent()
 
   const headers = {
     idUser,
@@ -23,7 +23,7 @@ export function apiGetListContent(
 }
 
 export function apiCreateContent(formData: FormData, idUser: string): Promise<APIBaseResponse<any>> {
-  // return dummyCreateContent()
+  //  // return dummyCreateContent()
 
   const headers = {
     idUser,
@@ -33,7 +33,7 @@ export function apiCreateContent(formData: FormData, idUser: string): Promise<AP
 }
 
 export function apiDeleteContent(params: IDeleteContentParams, idUser: string): Promise<APIBaseResponse<any>> {
-  // return dummyDeleteContent()
+  //  // return dummyDeleteContent()
 
   const headers = {
     idUser,

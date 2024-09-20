@@ -12,7 +12,7 @@ import httpRequest from '@utils/helper'
 const api = httpRequest(API_MASTER)
 
 export function apiGetListAsset(params: IGetListAssetParams): Promise<APIBaseResponse<IMonitoringAssetList[]>> {
-  // return dummyGetListAsset()
+  //  // return dummyGetListAsset()
 
   return api.get<IMonitoringAssetList[], APIBaseResponse<IMonitoringAssetList[]>>('/cms/master/monitoring/asset/list', {
     params,
@@ -20,7 +20,7 @@ export function apiGetListAsset(params: IGetListAssetParams): Promise<APIBaseRes
 }
 
 export function apiGetDetailAsset(params: IGetDetailAssetParams): Promise<APIBaseResponse<IMonitoringAssetDetail>> {
-  // return dummyGetDetailAsset()
+  //  // return dummyGetDetailAsset()
 
   return api.get<IMonitoringAssetDetail, APIBaseResponse<IMonitoringAssetDetail>>(
     '/cms/master/monitoring/asset/detail',

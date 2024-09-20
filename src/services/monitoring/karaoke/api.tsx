@@ -7,12 +7,12 @@ import {
 } from '@interfaces/monitoringKaraoke'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
-import { dummyGetDetailKaraoke, dummyGetListKaraoke } from './dummy'
+// import { dummyGetDetailKaraoke, dummyGetListKaraoke } from './dummy'
 
 const api = httpRequest(API_MASTER)
 
 export function apiGetListKaraoke(params: IGetListKaraokeParams): Promise<APIBaseResponse<IMonitoringKaraokeList[]>> {
-  return dummyGetListKaraoke()
+  // return dummyGetListKaraoke()
 
   return api.get<IMonitoringKaraokeList[], APIBaseResponse<IMonitoringKaraokeList[]>>(
     '/cms/master/monitoring/karaoke/list',
@@ -25,7 +25,7 @@ export function apiGetListKaraoke(params: IGetListKaraokeParams): Promise<APIBas
 export function apiGetDetailKaraoke(
   params: IGetDetailKaraokeParams
 ): Promise<APIBaseResponse<IMonitoringKaraokeDetail>> {
-  return dummyGetDetailKaraoke()
+  // return dummyGetDetailKaraoke()
 
   return api.get<IMonitoringKaraokeDetail, APIBaseResponse<IMonitoringKaraokeDetail>>(
     '/cms/master/monitoring/karaoke/detail',

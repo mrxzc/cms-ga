@@ -4,13 +4,22 @@ import { apiGetDetailMeetingRoom, apiGetListMeetingRoom } from './api'
 import { IGetListMeetingRoomParams, IGetDetailMeetingRoomParams } from '@interfaces/monitoringMeetingRoom'
 
 // Get List Meeting Room
-export const useGetListMeetingRoom = (params: IGetListMeetingRoomParams) => {
+export const useGetListMeetingRoom = (params: IGetListMeetingRoomParams, reduceParams: boolean = true) => {
   return useQuery({
     queryKey: ['/cms/master/monitoring/meetingRoom/list', params],
-    queryFn: async () =>
-      apiGetListMeetingRoom(params).catch((error: Error) => {
+    queryFn: async () => {
+      if (reduceParams) {
+        Object.keys(params).forEach(key => {
+          if (!params[key as keyof IGetListMeetingRoomParams]) {
+            delete params[key as keyof IGetListMeetingRoomParams]
+          }
+        })
+      }
+
+      return apiGetListMeetingRoom(params).catch((error: Error) => {
         toast.error(error?.message)
-      }),
+      })
+    },
   })
 }
 

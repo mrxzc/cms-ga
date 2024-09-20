@@ -319,7 +319,7 @@ export function List() {
                       </tr>
                     ))}
 
-                  {!isFetching &&
+                  {!isFetching && data?.data?.length ? (
                     data?.data?.map((val: IMonitoringAssetList, index, arr) => (
                       <tr
                         key={`val-${val?.idBooking}`}
@@ -352,16 +352,44 @@ export function List() {
                           </div>
                         </td>
                       </tr>
-                    ))}
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={8} className="relative w-full h-48 min-w-[1430px] justify-center"></td>
+                    </tr>
+                  )}
                 </tbody>
+                {!isFetching && !data?.data?.length ? (
+                  <div className="absolute left-0 right-0 top-20 w-full h-10 my-2">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
+                      <div className="text-extra-small regular-12 mb-4">Silahkan ubah atau reset filter</div>
+                      <button
+                        onClick={() => {
+                          if (params != defaultParams) {
+                            refetch()
+                            return
+                          }
+                          setKeywords('')
+                          setParams({ ...params, page: 1, size: 10, search: '' })
+                        }}
+                        type="button"
+                        className="next-button h-8 px-4 rounded-lg w-auto text-extra-small semibold-12 text-[#FFFFFF] flex items-center justify-center"
+                      >
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
               </table>
             </div>
           </div>
 
-          {!isFetching && !data?.data?.length ? (
+          {!isFetching && !data?.data?.length && !data?.pagination ? (
             <div className="w-full flex flex-col justify-center items-center my-20">
               <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
               <div className="text-extra-small regular-12 mb-4">Saat ini belum ada yang tersedia</div>
+
               <button
                 onClick={() => {
                   if (params != defaultParams) {
