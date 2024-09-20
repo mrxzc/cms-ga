@@ -30,9 +30,7 @@ export function Role() {
   }
 
   const [params, setParams] = useState<IDefaultParams>(defaultParams)
-
   const { data: roleList, isLoading, isFetching } = useGetRoleList(params)
-
   const transformedData = roleList?.data?.map((role, index) => ({
     ...role,
     originalIndex: index,

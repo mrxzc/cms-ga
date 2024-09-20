@@ -40,26 +40,11 @@ const schema = Yup.object().shape({
 })
 
 export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
-  const [param, setParam] = useState<IRoomDetailParams>({
-    roomId: '',
-  })
-
-  const defaultParams = {
-    search: '',
-    page: 1,
-    size: 50,
-  }
-  const [params] = useState<IGcmRoomFloorListParams>(defaultParams)
-
   const router = useRouter()
   const pathname = usePathname()
   const slug = pathname.split('/').pop()
 
-  const { data: rooms } = useGetRoomDetail(param)
-  const { data: floorData } = useGetRoomFloor(params)
-  const { data: capacityData } = useGetRoomCapacity(params)
-  const { data: locations } = useGetLocation(params)
-
+  const [param, setParam] = useState<IRoomDetailParams>({ roomId: '' })
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
@@ -67,53 +52,23 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
   const [isChecked, setIsChecked] = useState(false)
   const [initialDataLoaded, setInitialDataLoaded] = useState(false)
 
+  const defaultParams = { search: '', page: 1, size: 50 }
+  const [params] = useState<IGcmRoomFloorListParams>(defaultParams)
+
+  const { data: rooms } = useGetRoomDetail(param)
+  const { data: floorData } = useGetRoomFloor(params)
+  const { data: capacityData } = useGetRoomCapacity(params)
+  const { data: locations } = useGetLocation(params)
+
   const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
   const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
   const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
 
   const convertList = selectedFacility.join(',')
 
-  useEffect(() => {
-    if (floorData && floorData.data) {
-      const transformedOptions: OptionItem[] = floorData.data
-        .filter(item => item.flagActive)
-        .map(item => ({
-          label: item.descGcm,
-          value: item.noSr,
-        }))
-      setOptionsFloor(transformedOptions)
-    }
-  }, [floorData])
-
-  useEffect(() => {
-    if (capacityData && capacityData.data) {
-      const transformedOptions: OptionItem[] = capacityData.data
-        .filter(item => item.flagActive)
-        .map(item => ({
-          label: item.descGcm,
-          value: item.noSr,
-        }))
-      setOptionsCapacity(transformedOptions)
-    }
-  }, [capacityData])
-
-  useEffect(() => {
-    if (locations && locations.data) {
-      const transformedOptions: OptionItem[] = locations.data
-        .filter(item => item.flagActive)
-        .map(item => ({
-          label: item.descGcm,
-          value: item.noSr,
-        }))
-      setOptionsLocation(transformedOptions)
-    }
-  }, [locations])
-
   const { handleSubmit, control, setValue, getValues, watch } = useForm<any>({
     resolver: yupResolver(schema),
-    defaultValues: {
-      selectedFacilities: selectedFacility,
-    },
+    defaultValues: { selectedFacilities: selectedFacility },
     mode: 'all',
   })
 
@@ -126,81 +81,45 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     </Typography>,
   ]
 
-  const handleImageChange = (newImages: File[]) => {
-    setImages(newImages)
-  }
-
-  const handleDescriptionChange = (data: string) => {
-    setDescriptionData(data)
-  }
-
-  const handleTermsChange = (data: string) => {
-    setTermsData(data)
-  }
-
-  const handleFacilitySelectionChange = (newSelectedValues: any) => {
-    setSelectedFacility(newSelectedValues)
-  }
-
-  const handleUpdateRoom = async (payload: any) => {
-    try {
-      // 1. Prepare FormData
-      const formData: any = new FormData()
-      formData.append('titleRoom', payload.roomTitle)
-      if (images && images.length > 0) {
-        for (const image of images) {
-          formData.append('fileImages', image)
-        }
-      }
-      formData.append('lantaiRuangan', payload.floor.value.toString())
-      formData.append('flagActive', payload.isActive ? 'Y' : 'N')
-      formData.append('location', payload.location.value)
-      formData.append('kapasitas', payload.capacity.value.toString())
-      formData.append('deskripsi', descriptionData)
-      formData.append('termsCondition', termsData)
-      formData.append('fasilitas', convertList)
-      formData.append('kategoriMenu', category)
-      formData.append('roomId', slug) // Include the roomId in the FormData
-
-      // 2. Call the API function to update the room
-      const response = await apiSubmitUpdateRoom(formData)
-
-      // 3. Handle the response
-      if (response.status === 'T') {
-        toast.success('Data ruangan berhasil diubah!')
-        router.push('/management/room')
-      } else {
-        // Display a more specific error message if available
-        let errorMessage = 'Gagal mengubah data ruangan.'
-        if (response.message) {
-          errorMessage += ` ${response.message}`
-        } else if (response.error && response.error.length > 0) {
-          errorMessage += ` ${response.error}`
-        }
-        toast.error(errorMessage)
-      }
-    } catch (error: any) {
-      // Handle specific errors
-      if (error.response) {
-        const { status, data } = error.response
-        toast.error(`Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`)
-      } else if (error.request) {
-        toast.error('Tidak ada respons dari server. Periksa koneksi internet Anda.')
-      } else {
-        toast.error('Terjadi kesalahan saat mengubah ruangan.')
-      }
-    }
-  }
-
   useEffect(() => {
-    setValue('isActive', isChecked)
-  }, [isChecked, watch('isActive')])
-
-  useEffect(() => {
-    if (slug) {
-      setParam({ roomId: slug })
-    }
+    if (slug) setParam({ roomId: slug })
   }, [])
+
+  useEffect(() => {
+    if (floorData?.data) {
+      const transformedOptions = floorData.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsFloor(transformedOptions)
+    }
+  }, [floorData])
+
+  useEffect(() => {
+    if (capacityData?.data) {
+      const transformedOptions = capacityData.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsCapacity(transformedOptions)
+    }
+  }, [capacityData])
+
+  useEffect(() => {
+    if (locations?.data) {
+      const transformedOptions = locations.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsLocation(transformedOptions)
+    }
+  }, [locations])
 
   useEffect(() => {
     if (rooms?.data && !initialDataLoaded) {
@@ -212,31 +131,28 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
   useEffect(() => {
     if (rooms?.data) {
       setIsChecked(rooms.data.flagActive === 'Y')
-    }
-  }, [rooms])
-
-  useEffect(() => {
-    if (rooms?.data) {
-      setValue('isActive', rooms.data.flagActive === 'Y')
-      const locationOption = optionsLocation.find(option => option.value === rooms?.data?.location)
-      setValue('location', locationOption)
+      setValue(
+        'location',
+        optionsLocation.find(option => option.value === rooms?.data?.location)
+      )
       setValue('roomTitle', rooms.data.titleRoom)
-      const floorOption = optionsFloor.find(option => option.value === rooms?.data?.lantaiRuangan)
-      setValue('floor', floorOption)
-      const capacityOption = optionsCapacity.find(option => option.value === rooms?.data?.kapasitas.toString())
-      setValue('capacity', capacityOption)
-
-      // Handle potential undefined values
+      setValue(
+        'floor',
+        optionsFloor.find(option => option.value === rooms?.data?.lantaiRuangan)
+      )
+      setValue(
+        'capacity',
+        optionsCapacity.find(option => option.value === rooms?.data?.kapasitas.toString())
+      )
       setDescriptionData(rooms.data.deskripsi ?? '')
       setTermsData(rooms.data.termsCondition ?? '')
       setSelectedFacility(rooms.data.fasilitas ?? [])
     }
-  }, [rooms, setValue])
+  }, [rooms, optionsLocation, optionsFloor, optionsCapacity, setValue])
 
   useEffect(() => {
     const fetchImages = async () => {
       if (!rooms?.data?.fileImages?.length) return
-
       const newImages: File[] = []
 
       for (const imageUrl of rooms.data.fileImages) {
@@ -247,7 +163,6 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
           const file = new File([blob], filename, { type: blob.type })
           newImages.push(file)
         } catch (error) {
-          // Handle error, e.g., show a toast notification
           toast.error('Failed to fetch image')
         }
       }
@@ -255,6 +170,46 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     }
     fetchImages()
   }, [rooms])
+
+  const handleUpdateRoom = async (payload: any) => {
+    try {
+      const formData: any = new FormData()
+      formData.append('titleRoom', payload.roomTitle)
+      images.forEach(image => formData.append('fileImages', image))
+      formData.append('lantaiRuangan', payload.floor.value.toString())
+      formData.append('flagActive', payload.isActive ? 'Y' : 'N')
+      formData.append('location', payload.location.value)
+      formData.append('kapasitas', payload.capacity.value.toString())
+      formData.append('deskripsi', descriptionData)
+      formData.append('termsCondition', termsData)
+      formData.append('fasilitas', convertList)
+      formData.append('kategoriMenu', category)
+      formData.append('roomId', slug)
+
+      const response = await apiSubmitUpdateRoom(formData)
+      if (response.status === 'T') {
+        toast.success('Data ruangan berhasil diubah!')
+        router.push('/management/room')
+      } else {
+        toast.error(`Gagal mengubah data ruangan. ${response.message || response.error || ''}`)
+      }
+    } catch (error: any) {
+      const { response } = error
+      const message = response
+        ? `Error ${response.status}: ${response.data.message || 'Terjadi kesalahan server.'}`
+        : 'Terjadi kesalahan saat mengubah ruangan.'
+      toast.error(message)
+    }
+  }
+
+  useEffect(() => {
+    setValue('isActive', isChecked)
+  }, [isChecked, watch('isActive')])
+
+  const handleImageChange = (newImages: File[]) => setImages(newImages)
+  const handleDescriptionChange = (data: string) => setDescriptionData(data)
+  const handleTermsChange = (data: string) => setTermsData(data)
+  const handleFacilitySelectionChange = (newSelectedValues: any) => setSelectedFacility(newSelectedValues)
 
   const onSubmit = async () => {
     const data = getValues()
@@ -282,7 +237,6 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
                 className="toggle toggle-accent"
                 checked={isChecked}
                 onChange={() => setIsChecked(!isChecked)}
-                value={''}
               />
             </label>
           </div>
@@ -294,7 +248,6 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             <SelectForm
               control={control}
               name="location"
-              placeholder="Pilih kategori pengajuan"
               options={optionsLocation}
               setValue={setValue}
               className="w-[350px]"
@@ -306,9 +259,9 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
               Title Room<span className="text-red-500">*</span>
             </p>
             <TextForm
-              fieldInput={{ type: 'text', placeholder: 'Isi dengan title ruangan' }}
               control={control}
               name="roomTitle"
+              fieldInput={{ type: 'text', placeholder: 'Isi dengan title ruangan' }}
               maxChar={32}
               className="w-[350px]"
             />
@@ -321,7 +274,6 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             <SelectForm
               control={control}
               name="floor"
-              placeholder="Pilih lantai ruangan"
               options={optionsFloor}
               setValue={setValue}
               className="w-[350px]"
@@ -335,7 +287,6 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             <SelectForm
               control={control}
               name="capacity"
-              placeholder="Pilih kapasitas ruangan"
               options={optionsCapacity}
               setValue={setValue}
               className="w-[350px]"
@@ -346,11 +297,9 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             <p className="text-heading xs regular-16 w-[160px]">Description</p>
             <div className="mt-1">
               <ReusableCKEditor
-                config={{
-                  placeholder: 'Type your text here...',
-                }}
                 initialData={descriptionData}
                 onChange={handleDescriptionChange}
+                config={{ placeholder: 'Type your text here...' }}
               />
             </div>
           </div>
@@ -359,11 +308,9 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             <p className="text-heading xs regular-16 w-[160px]">Terms & Condition</p>
             <div className="max-w-[650px] mt-1">
               <ReusableCKEditor
-                config={{
-                  placeholder: 'Type your text here...',
-                }}
                 initialData={termsData}
                 onChange={handleTermsChange}
+                config={{ placeholder: 'Type your text here...' }}
               />
             </div>
           </div>
@@ -385,8 +332,8 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
           <div className="flex items-center mt-1">
             <div className="text-heading xs regular-16 w-[160px]">
               Image<span className="text-red-500">*</span>
-              <p className="text-paragraph regular-14 mt-2">{images?.length}/10</p>
-              <p className="text-paragraph regular-14 text-gray-500 ">
+              <p className="text-paragraph regular-14 mt-2">{images.length}/10</p>
+              <p className="text-paragraph regular-14 text-gray-500">
                 Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
               </p>
             </div>

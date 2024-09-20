@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
 
+// Import custom components and assets
 import IconPlus from '@assets/icons/IconPlus'
 import Table from '@components/atoms/Table'
 import IconEditing from '@assets/icons/IconEditing'
@@ -26,10 +27,10 @@ import { API_FILE_BARN } from '@utils/environment'
 export function Management() {
   const router = useRouter()
 
+  // State management
   const [searchQuery, setSearchQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [roomIdToDelete, setRoomIdToDelete] = useState<string | null>(null)
-
   const [param, setParam] = useState<IRoomListParams>({
     search: searchQuery,
     page: 1,
@@ -39,42 +40,35 @@ export function Management() {
     kategoriMenu: 'Meeting Room',
   })
 
+  // Fetch room list
   const { data: rooms, isLoading, isFetching, refetch } = useGetRoomList(param)
 
+  // Transform room data for table display
   const transformedData = rooms?.data?.map((room, index) => ({
     ...room,
     originalIndex: index,
     ACTION: '',
   }))
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-  }
-
-  const handleBackdropClick = () => {
-    handleCloseModal()
-  }
-
+  // Handle room status display
   const handleStatus = (status: string) => {
-    if (status === 'Active') {
-      return <div className="bg-[#eaf5e9] text-[#457b3b] border border-[#afd5ab] rounded">Active</div>
-    } else {
-      return <div className="bg-[#fcebee] text-[#b63831] border border-[#e39e9c] rounded">Non-Active</div>
-    }
+    const statusStyle =
+      status === 'Active'
+        ? 'bg-[#eaf5e9] text-[#457b3b] border border-[#afd5ab]'
+        : 'bg-[#fcebee] text-[#b63831] border border-[#e39e9c]'
+    return <div className={`${statusStyle} rounded`}>{status}</div>
   }
 
-  const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    event.preventDefault()
-  }
+  // Modal management
+  const handleCloseModal = () => setIsModalOpen(false)
+  const handleBackdropClick = () => handleCloseModal()
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value)
-  }
+  // Event handlers
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => event.preventDefault()
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(event.target.value)
+  const handlePageChange = (newPage: number) => setParam(prevParam => ({ ...prevParam, page: newPage }))
 
-  const handlePageChange = (newPage: number) => {
-    setParam(prevParam => ({ ...prevParam, page: newPage }))
-  }
-
+  // Room deletion logic
   const handleDeleteData = async (id: string | null) => {
     if (id) {
       try {
@@ -86,13 +80,13 @@ export function Management() {
           toast.error('Gagal menghapus ruangan.')
         }
       } catch (error) {
-        // ...
+        toast.error('Gagal menghapus ruangan.')
       }
     }
-
     handleCloseModal()
   }
 
+  // Breadcrumbs for navigation
   const breadcrumbs = [
     <Link
       underline="none"
@@ -106,8 +100,8 @@ export function Management() {
     </Link>,
   ]
 
+  // Table column definitions
   const columnHelper = createColumnHelper<any>()
-
   const columns = [
     columnHelper.accessor('originalIndex', {
       cell: info => {
@@ -130,45 +124,26 @@ export function Management() {
       ),
       header: 'Image',
     }),
-    columnHelper.accessor('titleRoom', {
-      cell: info => info.getValue(),
-      header: 'Title Room',
-    }),
-    columnHelper.accessor('lokasi', {
-      cell: info => info.getValue(),
-      header: 'Lokasi',
-    }),
-    columnHelper.accessor('lantaiRuangan', {
-      cell: info => `${info.getValue()}`,
-      header: 'Lantai Ruangan',
-    }),
-    columnHelper.accessor('kapasitas', {
-      cell: info => `${info.getValue()}`,
-      header: 'Kapasitas Ruangan',
-    }),
-    columnHelper.accessor('status', {
-      cell: info => handleStatus(info.getValue()),
-      header: 'Status',
-    }),
+    columnHelper.accessor('titleRoom', { cell: info => info.getValue(), header: 'Title Room' }),
+    columnHelper.accessor('lokasi', { cell: info => info.getValue(), header: 'Lokasi' }),
+    columnHelper.accessor('lantaiRuangan', { cell: info => `${info.getValue()}`, header: 'Lantai Ruangan' }),
+    columnHelper.accessor('kapasitas', { cell: info => `${info.getValue()}`, header: 'Kapasitas Ruangan' }),
+    columnHelper.accessor('status', { cell: info => handleStatus(info.getValue()), header: 'Status' }),
     columnHelper.accessor('ACTION', {
       cell: info => {
         const rowData = info.row.original
-
-        const handleEditClick = () => {
-          router.push(`/management/room/edit-room/${rowData.idRoom}`)
-        }
-
-        const handleDeleteClick = () => {
-          setRoomIdToDelete(rowData.idRoom)
-          setIsModalOpen(true)
-        }
-
         return (
           <div className="flex gap-3 items-center justify-center">
-            <button type="button" onClick={handleEditClick}>
+            <button type="button" onClick={() => router.push(`/management/room/edit-room/${rowData.idRoom}`)}>
               <IconEditing width={20} height={20} className="hover:cursor-pointer" />
             </button>
-            <button type="button" onClick={handleDeleteClick}>
+            <button
+              type="button"
+              onClick={() => {
+                setRoomIdToDelete(rowData.idRoom)
+                setIsModalOpen(true)
+              }}
+            >
               <IconDeleting width={20} height={20} className="hover:cursor-pointer" />
             </button>
           </div>
@@ -178,6 +153,7 @@ export function Management() {
     }),
   ]
 
+  // Update parameters when search query changes
   useEffect(() => {
     setParam(prevParam => ({
       ...prevParam,
@@ -217,16 +193,13 @@ export function Management() {
           <div className="flex justify-between mb-4">
             <div className="search-input h-[38px] px-3 flex items-center justify-center space-x-3 border rounded-lg min-w-[400px]">
               <IconSearch color="#909090" />
-
               <input
                 type="text"
                 placeholder="Search..."
                 className="flex-1 text-paragraph regular-14 mt-1"
                 value={searchQuery}
                 onChange={handleSearchChange}
-                style={{
-                  outline: 'none',
-                }}
+                style={{ outline: 'none' }}
               />
             </div>
           </div>
