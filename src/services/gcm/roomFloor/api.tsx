@@ -31,7 +31,7 @@ export function apiGetRoomFloorDetail(
   params: IGcmRoomFloorDetailParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFloor>> {
-  // return dummyGetRoomFloorDetail()
+  //  // return dummyGetRoomFloorDetail()
 
   const headers = {
     idUser,
@@ -43,7 +43,7 @@ export function apiCreateRoomFloor(
   payload: IGcmRoomFloorCreatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFloor>> {
-  // return dummyCreateRoomFloor()
+  //  // return dummyCreateRoomFloor()
 
   const headers = {
     idUser,
@@ -55,7 +55,7 @@ export function apiUpdateRoomFloor(
   payload: IGcmRoomFloorUpdatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFloor>> {
-  // return dummyUpdateRoomFloor()
+  //  // return dummyUpdateRoomFloor()
 
   const headers = {
     idUser,
@@ -67,7 +67,7 @@ export function apiToggleStatusRoomFloor(
   payload: IGcmRoomFloorToggleStatusPayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomFloor>> {
-  // return dummyToggleStatusRoomFloor()
+  //  // return dummyToggleStatusRoomFloor()
 
   const headers = {
     idUser,
@@ -78,7 +78,7 @@ export function apiToggleStatusRoomFloor(
 }
 
 export function apiDeleteRoomFloor(payload: IGcmRoomFloorDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
-  // return dummyDeleteRoomFloor()
+  //  // return dummyDeleteRoomFloor()
 
   const headers = {
     idUser,

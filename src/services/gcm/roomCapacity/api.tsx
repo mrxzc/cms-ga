@@ -33,7 +33,7 @@ export function apiGetRoomCapacityDetail(
   params: IGcmRoomCapacityDetailParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomCapacity>> {
-  // return dummyGetRoomCapacityDetail()
+  //  // return dummyGetRoomCapacityDetail()
 
   const headers = {
     idUser,
@@ -48,7 +48,7 @@ export function apiCreateRoomCapacity(
   payload: IGcmRoomCapacityCreatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomCapacity>> {
-  // return dummyCreateRoomCapacity()
+  //  // return dummyCreateRoomCapacity()
 
   const headers = {
     idUser,
@@ -62,7 +62,7 @@ export function apiUpdateRoomCapacity(
   payload: IGcmRoomCapacityUpdatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomCapacity>> {
-  // return dummyUpdateRoomCapacity()
+  //  // return dummyUpdateRoomCapacity()
 
   const headers = {
     idUser,
@@ -76,7 +76,7 @@ export function apiToggleStatusRoomCapacity(
   payload: IGcmRoomCapacityToggleStatusPayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmRoomCapacity>> {
-  // return dummyToggleStatusRoomCapacity()
+  //  // return dummyToggleStatusRoomCapacity()
 
   const headers = {
     idUser,
@@ -94,7 +94,7 @@ export function apiDeleteRoomCapacity(
   payload: IGcmRoomCapacityDeletePayload,
   idUser: string
 ): Promise<APIBaseResponse<any>> {
-  // return dummyDeleteRoomCapacity()
+  //  // return dummyDeleteRoomCapacity()
 
   const headers = {
     idUser,

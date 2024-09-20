@@ -25,7 +25,7 @@ export function apiGetCalendarEvent(
   params: ICalendarEventListParams,
   idUser: string
 ): Promise<APIBaseResponse<ICalendarEventList[]>> {
-  // return dummyGetCalendarEvent()
+  //  // return dummyGetCalendarEvent()
 
   const headers = {
     idUser,
@@ -40,7 +40,7 @@ export function apiGetCalendarEventDetail(
   params: ICalendarEventDetailParams,
   idUser: string
 ): Promise<APIBaseResponse<ICalendarEventDetail>> {
-  // return dummyGetCalendarEventDetail()
+  //  // return dummyGetCalendarEventDetail()
 
   const headers = {
     idUser,
@@ -55,7 +55,7 @@ export function apiCreateCalendarEvent(
   payload: ICalendarEventCreatePayload,
   idUser: string
 ): Promise<APIBaseResponse<ICalendarEventDetail>> {
-  // return dummyCreateCalendarEvent()
+  //  // return dummyCreateCalendarEvent()
 
   const headers = {
     idUser,
@@ -71,7 +71,7 @@ export function apiUpdateCalendarEvent(
   payload: ICalendarEventUpdatePayload,
   idUser: string
 ): Promise<APIBaseResponse<ICalendarEventDetail>> {
-  // return dummyUpdateCalendarEvent()
+  //  // return dummyUpdateCalendarEvent()
 
   const headers = {
     idUser,
@@ -84,7 +84,7 @@ export function apiUpdateCalendarEvent(
 }
 
 export function apiUploadImageCalendarEvent(payload: FormData, idUser: string): Promise<APIBaseResponse<string>> {
-  // return dummyUploadImageCalendarEvent()
+  //  // return dummyUploadImageCalendarEvent()
 
   const headers = {
     idUser,
@@ -98,7 +98,7 @@ export function apiDeleteCalendarEvent(
   payload: ICalendarEventDeletePayload,
   idUser: string
 ): Promise<APIBaseResponse<ICalendarEventDetail>> {
-  // return dummyDeleteCalendarEvent()
+  //  // return dummyDeleteCalendarEvent()
 
   const headers = {
     idUser,

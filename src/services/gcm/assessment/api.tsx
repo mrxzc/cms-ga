@@ -21,7 +21,7 @@ import httpRequest from '@utils/helper'
 const api = httpRequest(API_MASTER)
 
 export function apiGetAssessmentList(idUser: string): Promise<APIBaseResponse<IAssessmentList[]>> {
-  // return dummyGetAssessmentList()
+  //  // return dummyGetAssessmentList()
 
   const headers = {
     idUser,
@@ -36,7 +36,7 @@ export function apiGetAssessmentData(
   params: IAssessmentDataParams,
   idUser: string
 ): Promise<APIBaseResponse<IAssessmentData>> {
-  // return dummyGetAssessmentData()
+  //  // return dummyGetAssessmentData()
 
   const headers = {
     idUser,
@@ -51,7 +51,7 @@ export function apiInsertAssessmentCriteria(
   payload: IInsertAssessmentCriteriaPayload,
   idUser: string
 ): Promise<APIBaseResponse<IAssessmentCriteriaResponse>> {
-  // return dummyInsertAssessmentCriteria()
+  //  // return dummyInsertAssessmentCriteria()
 
   const headers = {
     idUser,
@@ -67,7 +67,7 @@ export function apiUpdateAssessmentCriteria(
   payload: IUpdateAssessmentCriteriaPayload,
   idUser: string
 ): Promise<APIBaseResponse<IAssessmentCriteriaResponse>> {
-  // return dummyUpdateAssessmentCriteria()
+  //  // return dummyUpdateAssessmentCriteria()
 
   const headers = {
     idUser,
@@ -83,7 +83,7 @@ export function apiDeleteAssessmentCriteria(
   payload: IDeleteAssessmentCriteriaPayload,
   idUser: string
 ): Promise<APIBaseResponse<any>> {
-  // return dummyDeleteAssessmentCriteria()
+  //  // return dummyDeleteAssessmentCriteria()
 
   const headers = {
     idUser,
