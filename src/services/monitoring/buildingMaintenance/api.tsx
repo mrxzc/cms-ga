@@ -7,14 +7,14 @@ import {
 } from '@interfaces/monitoringBuildingMaintenance'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
-import { dummyGetDetailBuildingMaintenance, dummyGetListBuildingMaintenance } from './dummy'
+// import { dummyGetDetailBuildingMaintenance, dummyGetListBuildingMaintenance } from './dummy'
 
 const api = httpRequest(API_MASTER)
 
 export function apiGetListBuildingMaintenance(
   params: IGetListBuildingMaintenanceParams
 ): Promise<APIBaseResponse<IMonitoringBuildingMaintenanceList[]>> {
-  return dummyGetListBuildingMaintenance()
+  // return dummyGetListBuildingMaintenance()
 
   return api.get<IMonitoringBuildingMaintenanceList[], APIBaseResponse<IMonitoringBuildingMaintenanceList[]>>(
     '/cms/master/monitoring/buildingMaintenance/list',
@@ -27,7 +27,7 @@ export function apiGetListBuildingMaintenance(
 export function apiGetDetailBuildingMaintenance(
   params: IGetDetailBuildingMaintenanceParams
 ): Promise<APIBaseResponse<IMonitoringBuildingMaintenanceDetail>> {
-  return dummyGetDetailBuildingMaintenance()
+  // return dummyGetDetailBuildingMaintenance()
 
   return api.get<IMonitoringBuildingMaintenanceDetail, APIBaseResponse<IMonitoringBuildingMaintenanceDetail>>(
     '/cms/master/monitoring/buildingMaintenance/detail',

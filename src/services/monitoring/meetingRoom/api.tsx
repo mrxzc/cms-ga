@@ -7,14 +7,14 @@ import {
 } from '@interfaces/monitoringMeetingRoom'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
-import { dummyGetDetailMeetingRoom, dummyGetListMeetingRoom } from './dummy'
+// import { dummyGetDetailMeetingRoom, dummyGetListMeetingRoom } from './dummy'
 
 const api = httpRequest(API_MASTER)
 
 export function apiGetListMeetingRoom(
   params: IGetListMeetingRoomParams
 ): Promise<APIBaseResponse<IMonitoringMeetingRoomList[]>> {
-  return dummyGetListMeetingRoom()
+  // return dummyGetListMeetingRoom()
 
   return api.get<IMonitoringMeetingRoomList[], APIBaseResponse<IMonitoringMeetingRoomList[]>>(
     '/cms/master/monitoring/meetingRoom/list',
@@ -27,7 +27,7 @@ export function apiGetListMeetingRoom(
 export function apiGetDetailMeetingRoom(
   params: IGetDetailMeetingRoomParams
 ): Promise<APIBaseResponse<IMonitoringMeetingRoomDetail>> {
-  return dummyGetDetailMeetingRoom()
+  // return dummyGetDetailMeetingRoom()
 
   return api.get<IMonitoringMeetingRoomDetail, APIBaseResponse<IMonitoringMeetingRoomDetail>>(
     '/cms/master/monitoring/meetingRoom/detail',

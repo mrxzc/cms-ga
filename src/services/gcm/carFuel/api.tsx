@@ -22,7 +22,7 @@ import httpRequest from '@utils/helper'
 const api = httpRequest(API_MASTER)
 
 export function apiGetCarFuel(params: IGcmCarFuelListParams, idUser: string): Promise<APIBaseResponse<IGcmCarFuel[]>> {
-  // return dummyGetCarFuel()
+  //  // return dummyGetCarFuel()
 
   const headers = {
     idUser,
@@ -34,7 +34,7 @@ export function apiGetCarFuelDetail(
   params: IGcmCarFuelDetailParams,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarFuel>> {
-  // return dummyGetCarFuelDetail()
+  //  // return dummyGetCarFuelDetail()
 
   const headers = {
     idUser,
@@ -46,7 +46,7 @@ export function apiCreateCarFuel(
   payload: IGcmCarFuelCreatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarFuel>> {
-  // return dummyCreateCarFuel()
+  //  // return dummyCreateCarFuel()
 
   const headers = {
     idUser,
@@ -58,7 +58,7 @@ export function apiUpdateCarFuel(
   payload: IGcmCarFuelUpdatePayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarFuel>> {
-  // return dummyUpdateCarFuel()
+  //  // return dummyUpdateCarFuel()
 
   const headers = {
     idUser,
@@ -70,7 +70,7 @@ export function apiToggleStatusCarFuel(
   payload: IGcmCarFuelToggleStatusPayload,
   idUser: string
 ): Promise<APIBaseResponse<IGcmCarFuel>> {
-  // return dummyToggleStatusCarFuel()
+  //  // return dummyToggleStatusCarFuel()
 
   const headers = {
     idUser,
@@ -81,7 +81,7 @@ export function apiToggleStatusCarFuel(
 }
 
 export function apiDeleteCarFuel(payload: IGcmCarFuelDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
-  // return dummyDeleteCarFuel()
+  //  // return dummyDeleteCarFuel()
 
   const headers = {
     idUser,

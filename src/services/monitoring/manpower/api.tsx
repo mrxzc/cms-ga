@@ -7,14 +7,14 @@ import {
 } from '@interfaces/monitoringManpower'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
-import { dummyGetDetailManpower, dummyGetListManpower } from './dummy'
+// import { dummyGetDetailManpower, dummyGetListManpower } from './dummy'
 
 const api = httpRequest(API_MASTER)
 
 export function apiGetListManpower(
   params: IGetListManpowerParams
 ): Promise<APIBaseResponse<IMonitoringManpowerList[]>> {
-  return dummyGetListManpower()
+  // return dummyGetListManpower()
 
   return api.get<IMonitoringManpowerList[], APIBaseResponse<IMonitoringManpowerList[]>>(
     '/cms/master/monitoring/manpower/list',
@@ -27,7 +27,7 @@ export function apiGetListManpower(
 export function apiGetDetailManpower(
   params: IGetDetailManpowerParams
 ): Promise<APIBaseResponse<IMonitoringManpowerDetail>> {
-  return dummyGetDetailManpower()
+  // return dummyGetDetailManpower()
 
   return api.get<IMonitoringManpowerDetail, APIBaseResponse<IMonitoringManpowerDetail>>(
     '/cms/master/monitoring/manpower/detail',
