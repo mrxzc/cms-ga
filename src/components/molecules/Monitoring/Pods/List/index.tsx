@@ -15,7 +15,7 @@ import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
 import { IMonitoringPodsList } from '@interfaces/monitoringPods'
 import { useGetLocation } from '@services/gcm/location/query'
 import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
-import { MeetingRoomMonitoringStatusClassEnum } from '@services/monitoring/meetingRoom/enums'
+import { PodsMonitoringStatusClassEnum } from '@services/monitoring/pods/enums'
 import { useGetListPods, useGetListPodsMonitoringStatus } from '@services/monitoring/pods/query'
 import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
@@ -35,7 +35,7 @@ export function List() {
 
   const dataUser: IOTPLoginResponse = GetCookie('data_user')
 
-  const statusEnums = new MeetingRoomMonitoringStatusClassEnum()
+  const statusEnums = new PodsMonitoringStatusClassEnum()
 
   const inputStartDateRef = useRef<any>(null)
   const inputEndDateRef = useRef<any>(null)
@@ -72,7 +72,8 @@ export function List() {
   }
 
   const [keywords, setKeywords] = useState<string>(handleMappingInitial()?.search)
-  // Fetch List Meeting Room
+
+  // Fetch List Pods
   const [params, setParams] = useState<any>(handleMappingInitial())
   const handleMappingParams = () => {
     const resParams = params
@@ -87,7 +88,7 @@ export function List() {
     })
   }
   const { data, isFetching } = useGetListPods(handleMappingParams())
-  // Fetch List Meeting Room
+  // Fetch List Pods
 
   // Fetch List Status
   const [statusParams, setStatusParams] = useState<ISearchParams>({ search: '' })
@@ -487,7 +488,7 @@ export function List() {
                         isLoading={isRoomFloorsFetching}
                         isOpen={isRoomFloorFilterOpen}
                         filterable={true}
-                        placeholder="Cari Lokasi"
+                        placeholder="Cari Lantai Ruangan"
                         data={roomFloors?.data}
                         value={roomFloorsSelected}
                         labelField="descGcm"
@@ -673,8 +674,8 @@ export function List() {
 
           {/* Pagination */}
           <Pagination
-            isLoading={false}
-            pagination={{ currentPage: 1, totalPage: 10, totalRecords: 100, nextPage: null, prevPage: null }}
+            isLoading={isFetching}
+            pagination={data?.pagination}
             clicked={(page: number) => {
               setParams({ ...params, page })
             }}

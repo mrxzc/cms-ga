@@ -2,17 +2,16 @@ import { APIBaseResponse } from '@interfaces/api'
 import { IMonitoringManpowerDetail, IMonitoringManpowerList } from '@interfaces/monitoringManpower'
 
 export function dummyGetListManpower(): Promise<APIBaseResponse<IMonitoringManpowerList[]>> {
-  const dataFunc = (idBooking: number, idRoom: number) => {
+  const dataFunc = (idBooking: number) => {
     const data: IMonitoringManpowerList = {
       idBooking,
-      idRoom,
-      nama: 'Dummy Person',
+      nama: 'ZUUU',
       lokasi: 'ACC',
-      lantaiRuangan: 'Lantai 10',
-      tanggalPengajuan: '23 Aug 2024 - 17:02',
-      tanggalBooking: '24 Aug 2024 - 24 Aug 2024',
-      waktuBooking: '12:30 - 13:00',
-      status: 'REQUEST',
+      kategori: 'Cleaning Service',
+      requestManpower: '6 Orang',
+      tanggalPengajuan: '05 Aug 2024 - 11:19',
+      tanggalBooking: '10 Jul 2024 - 10 Jul 2024',
+      waktuBooking: '13:00 - 14:00',
     }
 
     return data
@@ -23,16 +22,16 @@ export function dummyGetListManpower(): Promise<APIBaseResponse<IMonitoringManpo
     message: 'Berhasil',
     error: null,
     data: [
-      dataFunc(3081, 352),
-      dataFunc(3082, 352),
-      dataFunc(3083, 352),
-      dataFunc(3084, 352),
-      dataFunc(3085, 352),
-      dataFunc(3086, 352),
-      dataFunc(3087, 352),
-      dataFunc(3088, 352),
-      dataFunc(3089, 352),
-      dataFunc(3090, 352),
+      dataFunc(3081),
+      dataFunc(3082),
+      dataFunc(3083),
+      dataFunc(3084),
+      dataFunc(3085),
+      dataFunc(3086),
+      dataFunc(3087),
+      dataFunc(3088),
+      dataFunc(3089),
+      dataFunc(3090),
     ],
     pagination: {
       totalRecords: 100,

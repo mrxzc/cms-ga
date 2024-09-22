@@ -489,7 +489,7 @@ export function List() {
                         isLoading={isRoomFloorsFetching}
                         isOpen={isRoomFloorFilterOpen}
                         filterable={true}
-                        placeholder="Cari Lokasi"
+                        placeholder="Cari Lantai Ruangan"
                         data={roomFloors?.data}
                         value={roomFloorsSelected}
                         labelField="descGcm"
