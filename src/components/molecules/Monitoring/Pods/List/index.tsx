@@ -1,68 +1,188 @@
 'use client'
 
 import IconChevronBottom from '@assets/icons/IconChevronBottom'
+import IconClose from '@assets/icons/IconClose'
 import IconDownload from '@assets/icons/IconDownload'
 import IconEye from '@assets/icons/IconEye'
 import IconFilter from '@assets/icons/IconFilter'
 import IconSearch from '@assets/icons/IconSearch'
 import Pagination from '@components/atoms/Pagination'
+import TableFilterDropdown from '@components/atoms/TableFilterDropdown'
+import { ISearchParams } from '@interfaces/api'
+import { IOTPLoginResponse } from '@interfaces/auth'
+import { IGcmLocationListParams } from '@interfaces/gcmLocation'
+import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
+import { IMonitoringPodsList } from '@interfaces/monitoringPods'
+import { useGetLocation } from '@services/gcm/location/query'
+import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
+import { MeetingRoomMonitoringStatusClassEnum } from '@services/monitoring/meetingRoom/enums'
+import { useGetListPods, useGetListPodsMonitoringStatus } from '@services/monitoring/pods/query'
+import { GetCookie } from '@store/storage'
+import { dummiesArray } from '@utils/common'
+import { reduceParamsFunc } from '@utils/helper/ParamsReducer'
 import { debounce } from 'lodash'
 import moment from 'moment'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { data } from './data'
 
 export function List() {
+  const pathname = usePathname()
   const router = useRouter()
 
-  // const dataUser: IOTPLoginResponse = GetCookie('data_user')
+  const searchParams = useSearchParams()
+
+  const filters = searchParams.get('filters')
+
+  const dataUser: IOTPLoginResponse = GetCookie('data_user')
+
+  const statusEnums = new MeetingRoomMonitoringStatusClassEnum()
 
   const inputStartDateRef = useRef<any>(null)
   const inputEndDateRef = useRef<any>(null)
   const inputStartDateContainerRef = useRef<HTMLDivElement>(null)
   const inputEndDateContainerRef = useRef<HTMLDivElement>(null)
 
+  const statusFilterContainerRef = useRef<HTMLTableCellElement>(null)
+  const locationFilterContainerRef = useRef<HTMLTableCellElement>(null)
+  const roomFloorFilterContainerRef = useRef<HTMLTableCellElement>(null)
+
   const [isStartDateOpen, setIsStartDateOpen] = useState<boolean>(false)
   const [isEndDateOpen, setIsEndDateOpen] = useState<boolean>(false)
 
-  const [keywords, setKeywords] = useState<string>()
+  const [isStatusFilterOpen, setIsStatusFilterOpen] = useState<boolean>(false)
+  const [isLocationFilterOpen, setIsLocationFilterOpen] = useState<boolean>(false)
+  const [isRoomFloorFilterOpen, setIsRoomFloorFilterOpen] = useState<boolean>(false)
 
-  const defaultParams: any = {
-    startDate: '',
-    endDate: '',
-    search: '',
-    page: 1,
-    size: 10,
+  const handleMappingInitial = () => {
+    try {
+      const tempQuery = JSON.parse(filters ?? '')
+      return tempQuery
+    } catch (error) {
+      return {
+        titleRoom: '',
+        location: '',
+        lantaiRuangan: '',
+        status: '',
+        startDate: '',
+        endDate: '',
+        search: '',
+        page: 1,
+      }
+    }
   }
-  const [params, setParams] = useState<any>(defaultParams)
 
-  // const { data, isFetching, refetch } = useGetListBast(params, dataUser?.idUser)
+  const [keywords, setKeywords] = useState<string>(handleMappingInitial()?.search)
+  // Fetch List Meeting Room
+  const [params, setParams] = useState<any>(handleMappingInitial())
+  const handleMappingParams = () => {
+    const resParams = params
+    return reduceParamsFunc({
+      ...resParams,
+      status: resParams?.status?.length ? resParams?.status?.map((val: any) => val.id)?.join(',') : '',
+      lantaiRuangan: resParams?.lantaiRuangan?.length
+        ? resParams?.lantaiRuangan?.map((val: any) => val?.descGcm)?.join(',')
+        : '',
+      location: resParams?.location?.length ? resParams?.location?.map((val: any) => val?.descGcm)?.join(',') : '',
+      size: 10,
+    })
+  }
+  const { data, isFetching } = useGetListPods(handleMappingParams())
+  // Fetch List Meeting Room
 
+  // Fetch List Status
+  const [statusParams, setStatusParams] = useState<ISearchParams>({ search: '' })
+  const [statusSelected, setStatusSelected] = useState<any[]>(handleMappingInitial()?.status ?? [])
+  const { data: status, isFetching: isStatusFetching } = useGetListPodsMonitoringStatus(statusParams)
+  // Fetch List Status
+
+  // Fetch List Location
+  const [locationsParams, setLocationsParams] = useState<IGcmLocationListParams>({ search: '', page: 1, size: 5 })
+  const [locationsSelected, setLocationsSelected] = useState<any[]>(handleMappingInitial()?.location ?? [])
+  const { data: locations, isFetching: isLocationsFetching } = useGetLocation(locationsParams, dataUser?.idUser)
+  // Fetch List Location
+
+  // Fetch List Room Floor
+  const [roomFloorsParams, setRoomFloorsParams] = useState<IGcmRoomFloorListParams>({ search: '', page: 1, size: 5 })
+  const [roomFloorsSelected, setRoomFloorsSelected] = useState<any[]>(handleMappingInitial()?.lantaiRuangan ?? [])
+  const { data: roomFloors, isFetching: isRoomFloorsFetching } = useGetRoomFloor(roomFloorsParams, dataUser?.idUser)
+  // Fetch List Room Floor
+
+  // Provide a debounce to prevent triggering functions based on duration
   const handleSearch = useCallback(
     debounce(input => {
-      setParams({ ...params, page: 1, size: 10, search: input })
+      setParams((prev: any) => {
+        return { ...prev, page: 1, search: input }
+      })
     }, 500),
     []
   )
 
+  const handleSearchStatus = useCallback(
+    debounce(input => {
+      setStatusParams({ search: input })
+    }, 500),
+    []
+  )
+
+  const handleSearchLocations = useCallback(
+    debounce(input => {
+      setLocationsParams({ search: input, page: 1, size: 5 })
+    }, 500),
+    []
+  )
+
+  const handleSearchRoomFloors = useCallback(
+    debounce(input => {
+      setRoomFloorsParams({ search: input, page: 1, size: 5 })
+    }, 500),
+    []
+  )
+  // Provide a debounce to prevent triggering functions based on duration
+
+  // Effect for status filter table when filter has changed
+  useEffect(() => {
+    setParams({
+      ...params,
+      status: statusSelected?.length ? statusSelected : '',
+    })
+  }, [statusSelected])
+
+  useEffect(() => {
+    setParams({
+      ...params,
+      location: locationsSelected?.length ? locationsSelected : '',
+    })
+  }, [locationsSelected])
+
+  useEffect(() => {
+    setParams({
+      ...params,
+      lantaiRuangan: roomFloorsSelected?.length ? roomFloorsSelected : '',
+    })
+  }, [roomFloorsSelected])
+  // Effect for status filter table when filter has changed
+
+  // Effect for container when click outside
   useEffect(() => {
     const handleClick = (event: any) => {
       if (!inputStartDateContainerRef?.current?.contains(event?.target)) {
         setIsStartDateOpen(false)
       }
-    }
 
-    window.addEventListener('click', handleClick)
-
-    return () => {
-      window.removeEventListener('click', handleClick)
-    }
-  }, [isStartDateOpen])
-
-  useEffect(() => {
-    const handleClick = (event: any) => {
       if (!inputEndDateContainerRef?.current?.contains(event?.target)) {
         setIsEndDateOpen(false)
+      }
+
+      if (!statusFilterContainerRef?.current?.contains(event?.target)) {
+        setIsStatusFilterOpen(false)
+      }
+
+      if (!locationFilterContainerRef?.current?.contains(event?.target)) {
+        setIsLocationFilterOpen(false)
+      }
+
+      if (!roomFloorFilterContainerRef?.current?.contains(event?.target)) {
+        setIsRoomFloorFilterOpen(false)
       }
     }
 
@@ -71,8 +191,33 @@ export function List() {
     return () => {
       window.removeEventListener('click', handleClick)
     }
-  }, [isEndDateOpen])
+  }, [isStartDateOpen, isEndDateOpen, isStatusFilterOpen, isLocationFilterOpen, isRoomFloorFilterOpen])
+  // Effect for container when click outside
 
+  // Effect for replace url when params has changed
+  useEffect(() => {
+    const reduce = reduceParamsFunc(params)
+    const stringfy = JSON.stringify(reduce)
+    router.replace(pathname + '?filters=' + stringfy)
+  }, [params])
+  // Effect for replace url when params has changed\
+
+  // Effect for set new params base on query params url
+  useEffect(() => {
+    if (filters) {
+      try {
+        const tempQuery = JSON.parse(filters ?? '')
+        setParams({ ...tempQuery })
+        setKeywords(tempQuery?.search)
+        setStatusSelected(tempQuery?.status?.length ? tempQuery?.status : [])
+        setLocationsSelected(tempQuery?.location?.length > 0 ? tempQuery?.location : [])
+        setRoomFloorsSelected(tempQuery?.lantaiRuangan?.length ? tempQuery?.lantaiRuangan : [])
+      } catch (error) {
+        throw new Error('Cannot get query params')
+      }
+    }
+  }, [])
+  // Effect for set new params base on query params url
   return (
     <div className="mb-[600px]">
       <div className="px-4 py-8">
@@ -198,57 +343,228 @@ export function List() {
           </div>
           {/* Table controller */}
 
+          {/* Tag filter */}
+          {params?.status?.length > 0 || params?.location?.length > 0 || params?.lantaiRuangan?.length > 0 ? (
+            <div className="mb-6 relative">
+              <div className="mb-1">Filtered value : </div>
+              <div className="inline-block overflow-auto w-full">
+                {params?.status?.length > 0 &&
+                  params?.status?.map((val: any) => (
+                    <button
+                      key={val?.id}
+                      type="button"
+                      onClick={() => {
+                        setStatusSelected(prev => {
+                          if (prev?.find(finded => finded['id'] == val['id'])) {
+                            return prev?.filter(filtered => filtered['id'] !== val['id'])
+                          }
+
+                          return prev
+                        })
+                      }}
+                      className="border border-[#235696] text-[#235696] w-auto mr-2 mb-2 rounded-lg px-3 py-0.5"
+                    >
+                      <div className="flex items-center justify-center space-x-2">
+                        <span>{val?.text}</span>
+                        <IconClose color="#235696"></IconClose>
+                      </div>
+                    </button>
+                  ))}
+                {params?.location?.length > 0 &&
+                  params?.location?.map((val: any) => (
+                    <button
+                      key={val?.noSr}
+                      type="button"
+                      onClick={() => {
+                        setLocationsSelected(prev => {
+                          if (prev?.find(finded => finded['noSr'] == val['noSr'])) {
+                            return prev?.filter(filtered => filtered['noSr'] !== val['noSr'])
+                          }
+
+                          return prev
+                        })
+                      }}
+                      className="border border-[#235696] text-[#235696] w-auto mr-2 mb-2 rounded-lg px-3 py-0.5"
+                    >
+                      <div className="flex items-center justify-center space-x-2">
+                        <span>{val?.descGcm}</span>
+                        <IconClose color="#235696"></IconClose>
+                      </div>
+                    </button>
+                  ))}
+                {params?.lantaiRuangan?.length > 0 &&
+                  params?.lantaiRuangan?.map((val: any) => (
+                    <button
+                      key={val?.noSr}
+                      type="button"
+                      onClick={() => {
+                        setRoomFloorsSelected(prev => {
+                          if (prev?.find((finded: any) => finded['noSr'] == val['noSr'])) {
+                            return prev?.filter((filtered: any) => filtered['noSr'] !== val['noSr'])
+                          }
+
+                          return prev
+                        })
+                      }}
+                      className="border border-[#235696] text-[#235696] w-auto mr-2 mb-2 rounded-lg px-3 py-0.5"
+                    >
+                      <div className="flex items-center justify-center space-x-2">
+                        <span>{val?.descGcm}</span>
+                        <IconClose color="#235696"></IconClose>
+                      </div>
+                    </button>
+                  ))}
+              </div>
+            </div>
+          ) : null}
+          {/* Tag filter */}
+
           {/* Table */}
-          {/* {!isFetching && (
-            <div className="relative mb-6">
-              <div className="rounded-lg border border-[#E6E5E6] overflow-auto">
-                <table className="table-fixed custom-table">
-                  <thead className="table-head text-heading xs semibold-16">
-                    <tr>
-                      <th>No</th>
-                      <th>Nama</th>
-                      <th>
-                        <div className="text-center flex items-center justify-center space-x-2">
-                          <span>Lokasi</span>
-                          <button type="button">
-                            <IconFilter></IconFilter>
-                          </button>
-                        </div>
-                      </th>
-                      <th>
-                        <div className="text-center flex items-center justify-center space-x-2">
-                          <span>Title Room</span>
-                          <button type="button">
-                            <IconFilter></IconFilter>
-                          </button>
-                        </div>
-                      </th>
-                      <th>
-                        <div className="text-center flex items-center justify-center space-x-2">
-                          <span>Lantai Ruangan</span>
-                          <button type="button">
-                            <IconFilter></IconFilter>
-                          </button>
-                        </div>
-                      </th>
-                      <th className="text-center">Kapasitas Ruangan</th>
-                      <th className="text-center">Tanggal Pengajuan</th>
-                      <th className="text-center">Tanggal Booking</th>
-                      <th className="text-center">Waktu Booking</th>
-                      <th>
-                        <div className="text-center flex items-center justify-center space-x-2">
-                          <span>Status</span>
-                          <button type="button">
-                            <IconFilter></IconFilter>
-                          </button>
-                        </div>
-                      </th>
-                      <th className="text-center">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="table-body text-paragraph regular-14">
-                    {dummiesArray().map(val => (
-                      <tr key={`monitoring-${val}`} className="animate-pulse">
+          <div className="relative mb-6">
+            <div className="rounded-lg border border-[#E6E5E6] min-h-60 overflow-auto">
+              <table className="table-fixed custom-table">
+                <thead className="table-head text-heading xs semibold-16">
+                  <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th ref={locationFilterContainerRef} className="relative z-1">
+                      <div className="text-center flex items-center justify-center space-x-2">
+                        <span>Lokasi</span>
+                        <button
+                          onClick={() => setIsLocationFilterOpen(!isLocationFilterOpen)}
+                          type="button"
+                          disabled={isFetching || isLocationsFetching}
+                        >
+                          <IconFilter color={locationsSelected?.length ? '#2196f3' : '#A9A9A9'}></IconFilter>
+                        </button>
+                      </div>
+                      <TableFilterDropdown
+                        filterKey={'location-filter'}
+                        classContainer={`z-[999] absolute top-10 right-0 bg-white rounded-lg shadow-md max-h-44 min-w-64 border border-[#E6E5E6] overflow-y-auto`}
+                        isLoading={isLocationsFetching}
+                        isOpen={isLocationFilterOpen}
+                        filterable={true}
+                        placeholder="Cari Lokasi"
+                        data={locations?.data}
+                        value={locationsSelected}
+                        labelField="descGcm"
+                        valueField="noSr"
+                        onValueSelected={selected => {
+                          setLocationsSelected(prev => {
+                            if (prev?.find(finded => finded['noSr'] == selected['noSr'])) {
+                              return prev?.filter(filtered => filtered['noSr'] !== selected['noSr'])
+                            }
+                            return prev?.length
+                              ? [...prev, { noSr: selected['noSr'], descGcm: selected['descGcm'] }]
+                              : [{ noSr: selected['noSr'], descGcm: selected['descGcm'] }]
+                          })
+                        }}
+                        onFilterChanged={search => {
+                          handleSearchLocations(search)
+                        }}
+                        onClosed={() => {
+                          if (!isLocationsFetching) {
+                            setLocationsParams({ ...locationsParams, search: '' })
+                          }
+                        }}
+                      />
+                    </th>
+                    <th className="text-center">Title Room</th>
+                    <th ref={roomFloorFilterContainerRef} className="relative z-1">
+                      <div className="text-center flex items-center justify-center space-x-2">
+                        <span>Lantai Ruangan</span>
+                        <button
+                          onClick={() => setIsRoomFloorFilterOpen(!isRoomFloorFilterOpen)}
+                          type="button"
+                          disabled={isFetching || isRoomFloorsFetching}
+                        >
+                          <IconFilter color={roomFloorsSelected?.length ? '#2196f3' : '#A9A9A9'}></IconFilter>
+                        </button>
+                      </div>
+                      <TableFilterDropdown
+                        filterKey={'room-floor-filter'}
+                        classContainer={`z-[999] absolute top-10 right-0 bg-white rounded-lg shadow-md max-h-44 min-w-64 border border-[#E6E5E6] overflow-y-auto`}
+                        isLoading={isRoomFloorsFetching}
+                        isOpen={isRoomFloorFilterOpen}
+                        filterable={true}
+                        placeholder="Cari Lokasi"
+                        data={roomFloors?.data}
+                        value={roomFloorsSelected}
+                        labelField="descGcm"
+                        valueField="noSr"
+                        onValueSelected={selected => {
+                          setRoomFloorsSelected(prev => {
+                            if (prev?.find(finded => finded['noSr'] == selected['noSr'])) {
+                              return prev?.filter(filtered => filtered['noSr'] !== selected['noSr'])
+                            }
+                            return prev?.length
+                              ? [...prev, { noSr: selected['noSr'], descGcm: selected['descGcm'] }]
+                              : [{ noSr: selected['noSr'], descGcm: selected['descGcm'] }]
+                          })
+                        }}
+                        onFilterChanged={search => {
+                          handleSearchRoomFloors(search)
+                        }}
+                        onClosed={() => {
+                          if (!isRoomFloorsFetching) {
+                            setRoomFloorsParams({ ...roomFloorsParams, search: '' })
+                          }
+                        }}
+                      />
+                    </th>
+                    <th className="text-center">Kapasitas Ruangan</th>
+                    <th className="text-center">Tanggal Pengajuan</th>
+                    <th className="text-center">Tanggal Booking</th>
+                    <th className="text-center">Waktu Booking</th>
+                    <th ref={statusFilterContainerRef} className="relative z-1">
+                      <div className="text-center flex items-center justify-center space-x-2">
+                        <span>Status</span>
+                        <button
+                          onClick={() => setIsStatusFilterOpen(!isStatusFilterOpen)}
+                          type="button"
+                          disabled={isFetching}
+                        >
+                          <IconFilter color={statusSelected?.length ? '#2196f3' : '#A9A9A9'}></IconFilter>
+                        </button>
+                      </div>
+                      <TableFilterDropdown
+                        filterKey={'status-filter'}
+                        classContainer={`z-[999] absolute top-10 right-0 bg-white rounded-lg shadow-md max-h-44 min-w-64 border border-[#E6E5E6] overflow-y-auto`}
+                        isLoading={isStatusFetching}
+                        isOpen={isStatusFilterOpen}
+                        filterable={true}
+                        placeholder="Cari Status"
+                        data={status}
+                        value={statusSelected}
+                        labelField="text"
+                        valueField="id"
+                        onValueSelected={selected => {
+                          setStatusSelected(prev => {
+                            if (prev?.find(finded => finded['id'] == selected['id'])) {
+                              return prev?.filter(filtered => filtered['id'] !== selected['id'])
+                            }
+                            return prev?.length
+                              ? [...prev, { id: selected['id'], text: selected['text'] }]
+                              : [{ id: selected['id'], text: selected['text'] }]
+                          })
+                        }}
+                        onFilterChanged={search => {
+                          handleSearchStatus(search)
+                        }}
+                        onClosed={() => {
+                          if (!isStatusFetching) {
+                            setStatusParams({ search: '' })
+                          }
+                        }}
+                      />
+                    </th>
+                    <th className="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="table-body text-paragraph regular-14">
+                  {isFetching &&
+                    dummiesArray().map(val => (
+                      <tr key={`monitoring-${val}`} className="animate-pulse border-b border-[#E6E5E6]">
                         <td className="min-w-[80px]">
                           <div className="w-full h-6 bg-gray-200"></div>
                         </td>
@@ -284,122 +600,75 @@ export function List() {
                         </td>
                       </tr>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )} */}
 
-          {/* {!isFetching && data?.data?.length ? ( */}
-          <div className="relative mb-6">
-            <div className="rounded-lg border border-[#E6E5E6] overflow-auto">
-              <table className="table-fixed custom-table">
-                <thead className="table-head text-heading xs semibold-16">
-                  <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>
-                      <div className="text-center flex items-center justify-center space-x-2">
-                        <span>Lokasi</span>
-                        <button type="button">
-                          <IconFilter></IconFilter>
-                        </button>
-                      </div>
-                    </th>
-                    <th>
-                      <div className="text-center flex items-center justify-center space-x-2">
-                        <span>Title Room</span>
-                        <button type="button">
-                          <IconFilter></IconFilter>
-                        </button>
-                      </div>
-                    </th>
-                    <th>
-                      <div className="text-center flex items-center justify-center space-x-2">
-                        <span>Lantai Ruangan</span>
-                        <button type="button">
-                          <IconFilter></IconFilter>
-                        </button>
-                      </div>
-                    </th>
-                    <th className="text-center">Kapasitas Ruangan</th>
-                    <th className="text-center">Tanggal Pengajuan</th>
-                    <th className="text-center">Tanggal Booking</th>
-                    <th className="text-center">Waktu Booking</th>
-                    <th>
-                      <div className="text-center flex items-center justify-center space-x-2">
-                        <span>Status</span>
-                        <button type="button">
-                          <IconFilter></IconFilter>
-                        </button>
-                      </div>
-                    </th>
-                    <th className="text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="table-body text-paragraph regular-14"></tbody>
-                <tbody className="table-body text-paragraph regular-14">
-                  {data?.map((val: any, index, arr) => (
-                    <tr
-                      key={`val-${val?.no}`}
-                      className={`${index != arr.length - 1 ? 'border-b border-[#E6E5E6]' : ''}`}
-                    >
-                      <td className="min-w-[80px]">{val?.no}</td>
-                      <td className="min-w-[200px]">{val?.name}</td>
-                      <td className="text-center min-w-[150px]">{val?.location}</td>
-                      <td className="text-center min-w-[150px]">{val?.roomTitle}</td>
-                      <td className="text-center min-w-[200px]">{val?.roomFloor}</td>
-                      <td className="text-center min-w-[200px]">{val?.roomCapacity}</td>
-                      <td className="text-center min-w-[250px]">{val?.dtUpload}</td>
-                      <td className="text-center min-w-[250px]">{val?.bookingDate}</td>
-                      <td className="text-center min-w-[250px]">{val?.bookingTime}</td>
-                      <td className="text-center min-w-[150px]">
-                        <div className="rounded bg-[#D3FED7] text-[#4EC558] text-paragraph semibold-14 px-2 py-1">
-                          {val?.status}
-                        </div>
-                      </td>
+                  {!isFetching && data?.data?.length ? (
+                    data?.data?.map((val: IMonitoringPodsList) => (
+                      <tr key={`val-${val?.idBooking}`} className={`border-b border-[#E6E5E6]`}>
+                        <td className="min-w-[80px]">{val?.idBooking}</td>
+                        <td className="min-w-[200px]">{val?.nama}</td>
+                        <td className="text-center min-w-[150px]">{val?.lokasi}</td>
+                        <td className="text-center min-w-[150px]">{val?.titleRoom}</td>
+                        <td className="text-center min-w-[200px]">{val?.lantaiRuangan}</td>
+                        <td className="text-center min-w-[200px]">{val?.kapasitasRuangan}</td>
+                        <td className="text-center min-w-[250px]">{val?.tanggalPengajuan}</td>
+                        <td className="text-center min-w-[250px]">{val?.tanggalBooking}</td>
+                        <td className="text-center min-w-[250px]">{val?.waktuBooking}</td>
+                        <td className="text-center min-w-[150px]">
+                          {val?.status && (
+                            <div
+                              className={`rounded ${
+                                statusEnums.find(val?.status)?.badgeColor
+                              } text-paragraph semibold-14 px-2 py-1`}
+                            >
+                              {statusEnums.find(val?.status)?.text}
+                            </div>
+                          )}
+                          {!val?.status && <div className={`text-error`}>No Data</div>}
+                        </td>
 
-                      <td className="text-center min-w-[100px] w-full">
-                        <div className="flex justify-center">
-                          <button
-                            type="button"
-                            className="mr-3"
-                            onClick={() => {
-                              router.push(`/monitoring/pods/${val?.no}`)
-                            }}
-                          >
-                            <IconEye width={20} height={20} className="hover:cursor-pointer mx-auto" />
-                          </button>
-                        </div>
-                      </td>
+                        <td className="text-center min-w-[100px] w-full">
+                          <div className="flex justify-end mr-3">
+                            <button
+                              type="button"
+                              className="mr-3"
+                              onClick={() => {
+                                router.push(`/monitoring/pods/${val?.idBooking}`)
+                              }}
+                            >
+                              <IconEye width={20} height={20} className="hover:cursor-pointer mx-auto" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={11} className="relative w-full h-48 min-w-[1980px] justify-center"></td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
+              {!isFetching && !data?.data?.length ? (
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-4">
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
+                    <div className="text-extra-small regular-12 mb-1">Saat ini belum ada yang tersedia.</div>
+                    <div className="text-extra-small regular-12 mb-4">Silahkan ubah atau reset filter.</div>
+                    <button
+                      onClick={() => {
+                        setKeywords('')
+                        setParams({ ...params, page: 1, search: '' })
+                      }}
+                      type="button"
+                      className="next-button h-8 px-4 rounded-lg w-auto text-extra-small semibold-12 text-[#FFFFFF] flex items-center justify-center"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
-          {/* ) : null} */}
-
-          {/* {!isFetching && !data?.data?.length ? (
-            <div className="w-full flex flex-col justify-center items-center my-20">
-              <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
-              <div className="text-extra-small regular-12 mb-4">Saat ini belum ada yang tersedia</div>
-              <button
-                onClick={() => {
-                  if (params != defaultParams) {
-                    refetch()
-                    return
-                  }
-                  setKeywords('')
-                  setParams({ ...params, page: 1, size: 10, search: '' })
-                }}
-                type="button"
-                className="next-button h-8 px-4 rounded-lg w-auto text-extra-small semibold-12 text-[#FFFFFF] flex items-center justify-center"
-              >
-                Reload
-              </button>
-            </div>
-          ) : null}  */}
           {/* Table */}
 
           {/* Pagination */}

@@ -618,7 +618,9 @@ export function List() {
                         <td className="text-center min-w-[150px]">
                           {val?.status && (
                             <div
-                              className={`rounded ${statusEnums.find(val?.status)?.badgeColor} text-paragraph semibold-14 px-2 py-1`}
+                              className={`rounded ${
+                                statusEnums.find(val?.status)?.badgeColor
+                              } text-paragraph semibold-14 px-2 py-1`}
                             >
                               {statusEnums.find(val?.status)?.text}
                             </div>
@@ -627,7 +629,7 @@ export function List() {
                         </td>
 
                         <td className="text-center min-w-[100px] w-full">
-                          <div className="flex justify-end">
+                          <div className="flex justify-end mr-3">
                             <button
                               type="button"
                               className="mr-3"
@@ -643,7 +645,7 @@ export function List() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={8} className="relative w-full h-48 min-w-[1430px] justify-center"></td>
+                      <td colSpan={11} className="relative w-full h-48 min-w-[1980px] justify-center"></td>
                     </tr>
                   )}
                 </tbody>

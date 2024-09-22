@@ -412,7 +412,7 @@ export function List() {
                         </td>
 
                         <td className="text-right min-w-[100px] w-full">
-                          <div className="flex justify-end">
+                          <div className="flex justify-end mr-3">
                             <button
                               type="button"
                               className="mr-3"
