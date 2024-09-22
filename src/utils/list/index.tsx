@@ -190,7 +190,7 @@ const MENU_HEADER = [
           {
             id: '4-1-1',
             name: 'Room',
-            href: '/monitoring/room',
+            href: '/monitoring/meeting-room',
             submenu: [],
           },
           {

@@ -1,6 +1,6 @@
-import { EnumClass } from './enums'
+import { EnumClass } from '@interfaces/enums'
 
-export enum MonitoringStatus {
+export enum MeetingRoomMonitoringStatus {
   REQUEST = 'REQUEST',
   PENDING = 'PENDING',
   RESCHEDULE = 'RESCHEDULE',
@@ -9,51 +9,51 @@ export enum MonitoringStatus {
   CANCELED = 'CANCELED',
 }
 
-export class MonitoringStatusClassEnum {
-  public enums: EnumClass<MonitoringStatus>[] = [
+export class MeetingRoomMonitoringStatusClassEnum {
+  public enums: EnumClass<MeetingRoomMonitoringStatus>[] = [
     {
-      id: MonitoringStatus.REQUEST,
+      id: MeetingRoomMonitoringStatus.REQUEST,
       text: 'Menunggu Approval',
       desc: 'lorem ipsum',
       badgeColor: 'bg-[#FDF4E2] text-[#F19D38]',
     },
     {
-      id: MonitoringStatus.PENDING,
+      id: MeetingRoomMonitoringStatus.PENDING,
       text: 'Sedang diproses',
       desc: 'lorem ipsum',
       badgeColor: 'bg-[#FDF4E2] text-[#F19D38]',
     },
     {
-      id: MonitoringStatus.RESCHEDULE,
+      id: MeetingRoomMonitoringStatus.RESCHEDULE,
       text: 'Reschedule',
       desc: 'lorem ipsum',
       badgeColor: 'bg-[#FDF4E2] text-[#F19D38]',
     },
     {
-      id: MonitoringStatus.APPROVE,
+      id: MeetingRoomMonitoringStatus.APPROVE,
       text: 'Berhasil',
       desc: 'lorem ipsum',
       badgeColor: 'bg-[#D3FED7] text-[#4EC558]',
     },
     {
-      id: MonitoringStatus.REJECT,
+      id: MeetingRoomMonitoringStatus.REJECT,
       text: 'Ditolak',
       desc: 'lorem ipsum',
       badgeColor: 'bg-[#FCEBEE] text-[#FF4040]',
     },
     {
-      id: MonitoringStatus.CANCELED,
+      id: MeetingRoomMonitoringStatus.CANCELED,
       text: 'Tidak Berhasil',
       desc: 'lorem ipsum',
       badgeColor: 'bg-[#FCEBEE] text-[#FF4040]',
     },
   ]
 
-  public find(key: MonitoringStatus): EnumClass<MonitoringStatus> | undefined {
+  public find(key: MeetingRoomMonitoringStatus | string): EnumClass<MeetingRoomMonitoringStatus> | undefined {
     return this.enums.find(val => val.id === key) || undefined
   }
 
-  public search(searchVal: string = ''): EnumClass<MonitoringStatus>[] | undefined {
+  public search(searchVal: string = ''): EnumClass<MeetingRoomMonitoringStatus>[] | undefined {
     return (
       this.enums.filter(
         val =>

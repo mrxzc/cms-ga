@@ -1,5 +1,5 @@
-import { MonitoringRoomListPage } from './Room/List'
-import { MonitoringRoomDetailPage } from './Room/Detail'
+import { MonitoringMeetingRoomListPage } from './MeetingRoom/List'
+import { MonitoringMeetingRoomDetailPage } from './MeetingRoom/Detail'
 
 import { MonitoringBallroomListPage } from './Ballroom/List'
 import { MonitoringBallroomDetailPage } from './Ballroom/Detail'
@@ -40,8 +40,8 @@ import { MonitoringBranchConditionReportListPage } from './BranchConditionReport
 import { MonitoringBranchConditionReportDetailPage } from './BranchConditionReport/Detail'
 
 export {
-  MonitoringRoomListPage,
-  MonitoringRoomDetailPage,
+  MonitoringMeetingRoomListPage,
+  MonitoringMeetingRoomDetailPage,
   MonitoringBallroomListPage,
   MonitoringBallroomDetailPage,
   MonitoringKaraokeListPage,

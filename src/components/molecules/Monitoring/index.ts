@@ -16,8 +16,8 @@ import { Detail as MonitoringSecurityGuardDetail } from './Management/SecurityGu
 import { MonitoringCleaningService } from './Management/CleaningService'
 import { Detail as MonitoringCleaningServiceDetail } from './Management/CleaningService/Detail'
 
-import { List as MonitoringRoomList } from './Room/List'
-import { Detail as MonitoringRoomDetail } from './Room/Detail'
+import { List as MonitoringMeetingRoomList } from './MeetingRoom/List'
+import { Detail as MonitoringMeetingRoomDetail } from './MeetingRoom/Detail'
 
 import { List as MonitoringBallroomList } from './Ballroom/List'
 import { Detail as MonitoringBallroomDetail } from './Ballroom/Detail'
@@ -44,8 +44,8 @@ import { List as MonitoringBranchConditionReportList } from './BranchConditionRe
 import { Detail as MonitoringBranchConditionReportDetail } from './BranchConditionReport/Detail'
 
 export {
-  MonitoringRoomList,
-  MonitoringRoomDetail,
+  MonitoringMeetingRoomList,
+  MonitoringMeetingRoomDetail,
   MonitoringBallroomList,
   MonitoringBallroomDetail,
   MonitoringKaraokeList,
