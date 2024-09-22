@@ -1,6 +1,7 @@
 'use client'
 
 import IconChevronBottom from '@assets/icons/IconChevronBottom'
+import IconClose from '@assets/icons/IconClose'
 import IconDownload from '@assets/icons/IconDownload'
 import IconEye from '@assets/icons/IconEye'
 import IconFilter from '@assets/icons/IconFilter'
@@ -10,17 +11,23 @@ import TableFilterDropdown from '@components/atoms/TableFilterDropdown'
 import { ISearchParams } from '@interfaces/api'
 import { AssetStatus } from '@interfaces/assetEnum'
 import { EnumClass } from '@interfaces/enums'
-import { IGetListAssetParams, IMonitoringAssetList } from '@interfaces/monitoringAsset'
+import { IMonitoringAssetList } from '@interfaces/monitoringAsset'
 import { useGetListAsset } from '@services/monitoring/asset/query'
 import { useGetListMonitoringStatus } from '@services/monitoring/common/query'
 import { dummiesArray } from '@utils/common'
+import { reduceParamsFunc } from '@utils/helper/ParamsReducer'
 import { debounce } from 'lodash'
 import moment from 'moment'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 export function List() {
+  const pathname = usePathname()
   const router = useRouter()
+
+  const searchParams = useSearchParams()
+
+  const filters = searchParams.get('filters')
 
   const inputStartDateRef = useRef<any>(null)
   const inputEndDateRef = useRef<any>(null)
@@ -33,41 +40,61 @@ export function List() {
 
   const [isStatusFilterOpen, setIsStatusFilterOpen] = useState<boolean>(false)
 
-  const [keywords, setKeywords] = useState<string>()
-
-  // Fetch List Asset
-  const defaultParams: IGetListAssetParams = {
-    startDate: '',
-    endDate: '',
-    search: '',
-    status: '',
-    page: 1,
-    size: 10,
+  const handleMappingInitial = () => {
+    try {
+      const tempQuery = JSON.parse(filters ?? '')
+      return tempQuery
+    } catch (error) {
+      return {
+        startDate: '',
+        endDate: '',
+        search: '',
+        status: '',
+        page: 1,
+      }
+    }
   }
-  const [params, setParams] = useState<any>(defaultParams)
-  const { data, isFetching, refetch } = useGetListAsset(params)
+
+  const [keywords, setKeywords] = useState<string>(handleMappingInitial()?.search)
+
+  // Fetch List Asset
+  const [params, setParams] = useState<any>(handleMappingInitial())
+  const handleMappingParams = () => {
+    const resParams = params
+    return reduceParamsFunc({
+      ...resParams,
+      status: resParams?.status?.length ? resParams?.status?.map((val: any) => val.id)?.join(',') : '',
+      size: 10,
+    })
+  }
+  const { data, isFetching } = useGetListAsset(handleMappingParams())
   // Fetch List Asset
 
-  // Filter For Status
+  // Fetch List Status
   const [statusParams, setStatusParams] = useState<ISearchParams>({ search: '' })
-  const [statusSelected, setStatusSelected] = useState<EnumClass<AssetStatus>[]>([])
+  const [statusSelected, setStatusSelected] = useState<EnumClass<AssetStatus>[]>(handleMappingInitial()?.status ?? [])
   const { data: status, isFetching: isStatusFetching } = useGetListMonitoringStatus(statusParams)
-  // Filter For Status
+  // Fetch List Status
 
+  // Provide a debounce to prevent triggering functions based on duration
   const handleSearch = useCallback(
     debounce(input => {
-      setParams({ ...params, page: 1, size: 10, search: input })
+      setParams((prev: any) => {
+        return { ...prev, page: 1, search: input }
+      })
     }, 500),
     []
   )
 
   const handleSearchStatus = useCallback(
     debounce(input => {
-      setStatusParams({ ...params, search: input })
+      setStatusParams({ search: input })
     }, 500),
     []
   )
+  // Provide a debounce to prevent triggering functions based on duration
 
+  // Effect for container when click outside
   useEffect(() => {
     const handleClick = (event: any) => {
       if (!inputStartDateContainerRef?.current?.contains(event?.target)) {
@@ -89,18 +116,39 @@ export function List() {
       window.removeEventListener('click', handleClick)
     }
   }, [isStartDateOpen, isEndDateOpen, isStatusFilterOpen])
+  // Effect for container when click outside
 
+  // Effect for status filter table when filter has changed
   useEffect(() => {
     setParams({
       ...params,
-      status: statusSelected?.length
-        ? statusSelected
-            .map(val => val?.id)
-            .join(',')
-            ?.toString()
-        : '',
+      status: statusSelected?.length ? statusSelected : '',
     })
   }, [statusSelected])
+  // Effect for status filter table when filter has changed
+
+  // Effect for replace url when params has changed
+  useEffect(() => {
+    const reduce = reduceParamsFunc(params)
+    const stringfy = JSON.stringify(reduce)
+    router.replace(pathname + '?filters=' + stringfy)
+  }, [params])
+  // Effect for replace url when params has changed\
+
+  // Effect for set new params base on query params url
+  useEffect(() => {
+    if (filters) {
+      try {
+        const tempQuery = JSON.parse(filters ?? '')
+        setParams({ ...tempQuery })
+        setKeywords(tempQuery?.search)
+        setStatusSelected(tempQuery?.status ?? [])
+      } catch (error) {
+        throw new Error('Cannot get query params')
+      }
+    }
+  }, [])
+  // Effect for set new params base on query params url
 
   return (
     <div className="mb-[600px]">
@@ -119,7 +167,7 @@ export function List() {
           <div className="text-heading s semibold-18 mb-6">Monitoring Pesanan - Asset</div>
 
           {/* Table controller */}
-          <div className="mb-4">
+          <div className="mb-2">
             <div className="search-input h-[38px]  max-w-[402px] mb-6 px-3 flex items-center justify-center space-x-3 border border-[#D5D5D5] rounded-lg">
               <IconSearch color="#909090" />
 
@@ -229,6 +277,39 @@ export function List() {
           </div>
           {/* Table controller */}
 
+          {/* Tag filter */}
+          {params?.status?.length ? (
+            <div className="mb-6 relative">
+              <div className="mb-1">Filtered value : </div>
+              <div className="inline-block whitespace-nowrap overflow-auto w-full">
+                {params?.status?.length &&
+                  params?.status?.map((val: any) => (
+                    <button
+                      key={val?.id}
+                      type="button"
+                      onClick={() => {
+                        setStatusSelected(prev => {
+                          if (prev?.find(finded => finded['id'] == val['id'])) {
+                            return prev?.filter(filtered => filtered['id'] !== val['id'])
+                          }
+
+                          return prev
+                        })
+                      }}
+                      className="border border-[#235696] text-[#235696] w-auto mr-2 rounded-lg px-3 py-0.5"
+                    >
+                      <div className="flex items-center justify-center space-x-2">
+                        <span>{val?.text}</span>
+                        <IconClose color="#235696"></IconClose>
+                      </div>
+                    </button>
+                  ))}
+              </div>
+            </div>
+          ) : null}
+
+          {/* Tag filter */}
+
           {/* Table */}
           <div className="relative mb-6">
             <div className="rounded-lg border border-[#E6E5E6] overflow-auto">
@@ -255,7 +336,7 @@ export function List() {
 
                       <TableFilterDropdown
                         filterKey={'status-filter'}
-                        classContainer="absolute top-10 right-0 bg-white rounded-lg shadow-md max-h-40 min-w-64 border border-[#E6E5E6] overflow-y-auto"
+                        classContainer="z-[10] absolute top-10 right-0 bg-white rounded-lg shadow-md max-h-44 min-w-64 border border-[#E6E5E6] overflow-y-auto"
                         isLoading={isStatusFetching}
                         isOpen={isStatusFilterOpen}
                         filterable={true}
@@ -266,10 +347,12 @@ export function List() {
                         valueField="id"
                         onValueSelected={selected => {
                           setStatusSelected(prev => {
-                            if (prev?.find(finded => finded == selected)) {
-                              return prev?.filter(filtered => filtered !== selected)
+                            if (prev?.find(finded => finded['id'] == selected['id'])) {
+                              return prev?.filter(filtered => filtered['id'] !== selected['id'])
                             }
-                            return prev?.length ? [...prev, selected] : [selected]
+                            return prev?.length
+                              ? [...prev, { id: selected['id'], text: selected['text'] }]
+                              : [{ id: selected['id'], text: selected['text'] }]
                           })
                         }}
                         onFilterChanged={search => {
@@ -359,54 +442,29 @@ export function List() {
                     </tr>
                   )}
                 </tbody>
-                {!isFetching && !data?.data?.length ? (
-                  <div className="absolute left-0 right-0 top-20 w-full h-10 my-2">
-                    <div className="flex flex-col items-center justify-center">
-                      <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
-                      <div className="text-extra-small regular-12 mb-4">Silahkan ubah atau reset filter</div>
-                      <button
-                        onClick={() => {
-                          if (params != defaultParams) {
-                            refetch()
-                            return
-                          }
-                          setKeywords('')
-                          setParams({ ...params, page: 1, size: 10, search: '' })
-                        }}
-                        type="button"
-                        className="next-button h-8 px-4 rounded-lg w-auto text-extra-small semibold-12 text-[#FFFFFF] flex items-center justify-center"
-                      >
-                        Reset
-                      </button>
-                    </div>
-                  </div>
-                ) : null}
               </table>
+
+              {!isFetching && !data?.data?.length ? (
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-4">
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
+                    <div className="text-extra-small regular-12 mb-1">Saat ini belum ada yang tersedia.</div>
+                    <div className="text-extra-small regular-12 mb-4">Silahkan ubah atau reset filter.</div>
+                    <button
+                      onClick={() => {
+                        setKeywords('')
+                        setParams({ ...params, page: 1, search: '' })
+                      }}
+                      type="button"
+                      className="next-button h-8 px-4 rounded-lg w-auto text-extra-small semibold-12 text-[#FFFFFF] flex items-center justify-center"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
-
-          {!isFetching && !data?.data?.length && !data?.pagination ? (
-            <div className="w-full flex flex-col justify-center items-center my-20">
-              <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
-              <div className="text-extra-small regular-12 mb-4">Saat ini belum ada yang tersedia</div>
-
-              <button
-                onClick={() => {
-                  if (params != defaultParams) {
-                    refetch()
-                    return
-                  }
-                  setKeywords('')
-                  setParams({ ...params, page: 1, size: 10, search: '' })
-                }}
-                type="button"
-                className="next-button h-8 px-4 rounded-lg w-auto text-extra-small semibold-12 text-[#FFFFFF] flex items-center justify-center"
-              >
-                Reload
-              </button>
-            </div>
-          ) : null}
-          {/* Table */}
 
           {/* Pagination */}
           <Pagination
