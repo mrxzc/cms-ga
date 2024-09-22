@@ -6,12 +6,16 @@ export function dummyGetListBallroom(): Promise<APIBaseResponse<IMonitoringBallr
     const data: IMonitoringBallroomList = {
       idBooking,
       idRoom,
-      nama: 'Dummy Person',
+      nama: 'ZCUR120',
       lokasi: 'ACC',
-      lantaiRuangan: 'Lantai 10',
-      tanggalPengajuan: '23 Aug 2024 - 17:02',
-      tanggalBooking: '24 Aug 2024 - 24 Aug 2024',
-      waktuBooking: '12:30 - 13:00',
+      titleRoom: 'Ballroom 2',
+      lantaiRuangan: 'Lantai 8',
+      jumlahOrang: '40 Orang',
+      totalAsset: 'null Items',
+      kapasitas: '10 Orang',
+      tanggalPengajuan: '29 Aug 2024 - 14:07',
+      tanggalBooking: '10 Sep 2024 - 10 Sep 2024',
+      waktuBooking: '07:00 - 12:00',
       status: 'REQUEST',
     }
 

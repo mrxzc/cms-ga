@@ -1,6 +1,20 @@
 import { IPaginationParams, ISearchParams } from './api'
 
-export interface IMonitoringBallroomList {}
+export interface IMonitoringBallroomList {
+  idBooking: number
+  idRoom: number
+  nama: string
+  lokasi: string
+  titleRoom: string
+  lantaiRuangan: string
+  jumlahOrang: string
+  totalAsset: string
+  kapasitas: string
+  tanggalPengajuan: string
+  tanggalBooking: string
+  waktuBooking: string
+  status: string
+}
 
 export interface IMonitoringBallroomDetail {
   tanggalPengajuan: string
