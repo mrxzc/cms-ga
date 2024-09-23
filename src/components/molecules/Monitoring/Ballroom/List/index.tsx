@@ -750,6 +750,25 @@ export function List() {
                   )}
                 </tbody>
               </table>
+              {!isFetching && !data?.data?.length ? (
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-4">
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="text-heading s semibold-18 mb-2">Tidak ada data</div>
+                    <div className="text-extra-small regular-12 mb-1">Saat ini belum ada yang tersedia.</div>
+                    <div className="text-extra-small regular-12 mb-4">Silahkan ubah atau reset filter.</div>
+                    <button
+                      onClick={() => {
+                        setKeywords('')
+                        setParams({ ...params, page: 1, search: '' })
+                      }}
+                      type="button"
+                      className="next-button h-8 px-4 rounded-lg w-auto text-extra-small semibold-12 text-[#FFFFFF] flex items-center justify-center"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
 
