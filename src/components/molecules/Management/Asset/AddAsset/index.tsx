@@ -1,42 +1,64 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import * as Yup from 'yup'
 
 import SelectForm from '@components/atoms/Form/SelectForm'
-import { yupResolver } from '@hookform/resolvers/yup'
 import TextForm from '@components/atoms/Form/TextForm'
-import AddWithTable from '@components/atoms/AddWithTable'
+import AddWithTable, { BrandData } from '@components/atoms/AddWithTable'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { toast } from 'react-toastify'
+import { apiSubmitCreateAsset } from '@services/cms/assets/api'
+import ImageGallery from '@components/atoms/ImageGallery'
+import { useGetLocation } from '@services/gcm/location/query'
+import { OptionItem } from '@interfaces/utils'
+import { IDefaultParams } from '@interfaces/api'
+import { convertToBase64 } from '@utils/common'
 
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
   asset: Yup.string().required('Nama asset wajib diisi'),
   location: Yup.object().required('Lokasi wajib dipilih'),
-  floor: Yup.object().required('Lokasi wajib dipilih'),
-  roomTitle: Yup.string().required('Title Room wajib diisi'),
+  brands: Yup.array().of(
+    Yup.object().shape({
+      name: Yup.string().required('Brand name is required'),
+      stock: Yup.number().min(0, 'Stock must be non-negative'),
+      isActive: Yup.boolean(),
+    })
+  ),
+  fileImages: Yup.mixed().test('fileSize', 'File too large', (file: any) => {
+    return file ? file.size <= 5 * 1024 * 1024 : true
+  }),
 })
 
 export function AddAsset() {
   const router = useRouter()
-
+  const defaultParams = { search: '', page: 1, size: 50 }
+  const [params] = useState<IDefaultParams>(defaultParams)
   const [isChecked, setIsChecked] = useState(false)
-
-  const { handleSubmit, control, setValue } = useForm<any>({
+  const [brands, setBrands] = useState<BrandData[]>([])
+  const [images, setImages] = useState<File[]>([])
+  const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
+  const { data: locations } = useGetLocation(params)
+  useEffect(() => {
+    if (locations?.data) {
+      const transformedOptions = locations.data
+        .filter(item => item.flagActive)
+        .map(item => ({ label: item.descGcm, value: item.noSr }))
+      setOptionsLocation(transformedOptions)
+    }
+  }, [locations])
+  const { handleSubmit, control, setValue, getValues } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
-
-  const options = [
-    { label: 'Head Office', value: 1 },
-    { label: 'Berijalan', value: 2 },
-  ]
 
   const breadcrumbs = [
     <Link href="/management/asset" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
@@ -51,36 +73,91 @@ export function AddAsset() {
     setValue('isActive', isChecked)
   }, [isChecked])
 
-  const onSubmit = () => {
-    /* ... Your submission logic ... */
-  }
+  useEffect(() => {
+    setValue('brands', brands)
+  }, [brands, setValue])
 
-  const [brands] = useState<any[]>([
-    { name: 'Brand A', stock: 5, isActive: true },
-    { name: 'Brand B', stock: 2, isActive: false },
-  ])
-
-  // Opsi-opsi untuk SelectInput
   const [selectOptions, setSelectOptions] = useState([
     { value: 'Brand X', label: 'Brand X' },
     { value: 'Brand Y', label: 'Brand Y' },
     { value: 'Brand Z', label: 'Brand Z' },
   ])
 
-  const handleAddBrand = () => {
-    // Di sini Anda bisa menambahkan logika untuk menyimpan data ke server atau state global.
+  const handleAddBrand = (newBrand: BrandData) => {
+    setBrands([...brands, newBrand])
   }
 
-  const handleUpdateBrand = () => {
-    // Di sini Anda bisa menambahkan logika untuk memperbarui data di server atau state global.
+  const handleUpdateBrand = (updatedBrand: BrandData, index: number) => {
+    const updatedBrands = [...brands]
+    updatedBrands[index] = updatedBrand
+    setBrands(updatedBrands)
   }
 
-  const handleDeleteBrand = () => {
-    // Di sini Anda bisa menambahkan logika untuk menghapus data dari server atau state global.
+  const handleDeleteBrand = (index: number) => {
+    setBrands(brands.filter((_, i) => i !== index))
   }
 
-  const handleUpdateSelectOptions = (newOptions: any) => {
+  const handleUpdateSelectOptions = (newOptions: { value: string; label: string }[]) => {
     setSelectOptions(newOptions)
+  }
+
+  // Function to convert files to base64
+
+  const handleCreateAsset = async (payload: any) => {
+    try {
+      // Convert the first image to base64 if available
+      const base64Image = images.length > 0 ? await convertToBase64(images[0]) : null
+
+      // Prepare the request payload
+      const requestPayload = {
+        flagActive: payload.isActive ? 'Y' : 'N',
+        assetName: payload.asset,
+        lokasi: payload.location.label,
+        brands: brands.map(brand => ({
+          name: brand.name,
+          stock: brand.stock,
+          flagActive: brand.isActive ? 'Y' : 'N',
+        })),
+        fileImage: base64Image, // Use the converted image
+      }
+
+      // Call the API
+      const response = await apiSubmitCreateAsset(requestPayload)
+
+      // Handle response
+      if (response.status === 'T') {
+        toast.success('Asset berhasil dibuat!')
+        router.push('/management/asset')
+      } else {
+        let errorMessage = 'Gagal membuat asset.'
+        if (response.message) {
+          errorMessage += ` ${response.message}`
+        } else if (response.error && response.error.length > 0) {
+          errorMessage += ` ${response.error}`
+        }
+        toast.error(errorMessage)
+      }
+    } catch (error: any) {
+      // Handle errors
+      if (error.response) {
+        const { status, data } = error.response
+        toast.error(`Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`)
+      } else if (error.request) {
+        toast.error('Tidak ada respons dari server. Periksa koneksi internet Anda.')
+      } else {
+        toast.error('Terjadi kesalahan saat membuat asset.')
+      }
+    }
+  }
+
+  const handleImageChange = (newImages: File[]) => {
+    setImages(newImages)
+  }
+
+  const onSubmit = () => {
+    // Handle form submission with updated brands data
+    const values = getValues()
+    handleCreateAsset(values)
   }
 
   return (
@@ -129,7 +206,7 @@ export function AddAsset() {
               control={control}
               name="location"
               placeholder="Pilih lokasi asset"
-              options={options}
+              options={optionsLocation}
               setValue={setValue}
               className="w-[350px]"
             />
@@ -148,6 +225,19 @@ export function AddAsset() {
                 selectOptions={selectOptions}
                 onUpdateSelectOptions={handleUpdateSelectOptions}
               />
+            </div>
+          </div>
+
+          <div className="flex items-center mt-1">
+            <div className="text-heading xs regular-16 w-[160px]">
+              Image<span className="text-red-500">*</span>
+              <p className="text-paragraph regular-14 mt-2">{images?.length}/1</p>
+              <p className="text-paragraph regular-14 text-gray-500 ">
+                Format (.png / .jpeg / .jpg) size max 5MB & ratio 2:1
+              </p>
+            </div>
+            <div className="max-w-[600px]">
+              <ImageGallery setImages={handleImageChange} images={images} maxImages={1} />
             </div>
           </div>
 

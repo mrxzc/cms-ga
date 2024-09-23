@@ -4,11 +4,11 @@ import { toast } from 'react-toastify'
 import { apiGetLocation, apiGetLocationDetail } from './api'
 
 // Get Location
-export const useGetLocation = (params: IGcmLocationListParams, idUser: string) => {
+export const useGetLocation = (params: IGcmLocationListParams) => {
   return useQuery({
     queryKey: ['/cms/master/location/list', params],
     queryFn: async () =>
-      apiGetLocation(params, idUser).catch((error: Error) => {
+      apiGetLocation(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })

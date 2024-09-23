@@ -43,7 +43,7 @@ export function List() {
   }
   const [params, setParams] = useState<IGcmRoomFloorListParams>(defaultParams)
 
-  const { data, isFetching, refetch } = useGetRoomFloor(params, dataUser?.idUser)
+  const { data, isFetching, refetch } = useGetRoomFloor(params)
 
   const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = useMutateToggleStatusRoomFloor()
   const {

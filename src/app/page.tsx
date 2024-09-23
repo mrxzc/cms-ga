@@ -1,10 +1,9 @@
-import Header from '@components/molecules/Header'
+import { Dashboard } from '@components/molecules/Dashboard'
 
 export default function Home() {
   return (
     <div className="h-full">
-      <Header />
-      <h1 className="text-4xl font-bold">Home</h1>
+      <Dashboard />
     </div>
   )
 }

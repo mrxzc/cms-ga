@@ -1,30 +1,47 @@
 'use client'
 
+// React and Next.js imports
+import React, { useEffect, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import Link from 'next/link'
+import dynamic from 'next/dynamic'
+
+// MUI imports
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
-import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import React, { useEffect, useState } from 'react'
+
+// Third-party library imports
 import { Control, useForm } from 'react-hook-form'
-import { usePathname, useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import * as Yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 
+// Custom component imports
 import SelectForm from '@components/atoms/Form/SelectForm'
 import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
-import { yupResolver } from '@hookform/resolvers/yup'
+
+// API and service imports
 import { apiSubmitUpdateRoom } from '@services/cms/room/api'
-import { optionsCapacity, optionsFacility, optionsFloor, optionsLocation } from './data'
 import { useGetRoomDetail } from '@services/cms/room/query'
+import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
+import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
+import { useGetLocation } from '@services/gcm/location/query'
+
+// Utility and constant imports
+import { optionsFacility } from './data'
 import { EditRoomProps, IRoomDetailParams } from '@interfaces/room'
 import { API_FILE_CMS } from '@utils/environment'
+import { IDefaultParams } from '@interfaces/api'
+import { OptionItem } from '@interfaces/utils'
 
+// Dynamically import CKEditor component
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
+// Validation schema
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
   location: Yup.object().required('Lokasi wajib dipilih'),
@@ -35,23 +52,65 @@ const schema = Yup.object().shape({
 })
 
 export function EditBallroom({ category = 'Ballroom' }: EditRoomProps) {
-  const [param, setParam] = useState<IRoomDetailParams>({
-    roomId: '',
-  })
-
-  const router = useRouter()
-  const pathname = usePathname()
-  const slug = pathname.split('/').pop()
-
-  const { data: ballroom } = useGetRoomDetail(param)
+  // State management
+  const [param, setParam] = useState<IRoomDetailParams>({ roomId: '' })
+  const [params] = useState<IDefaultParams>({ search: '', page: 1, size: 50 })
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
   const [selectedFacility, setSelectedFacility] = useState<string[]>([])
   const [isChecked, setIsChecked] = useState(false)
   const [initialDataLoaded, setInitialDataLoaded] = useState(false)
+  const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
+  const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
+  const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
 
-  const convertList = selectedFacility.join(',')
+  // Router and pathname
+  const router = useRouter()
+  const pathname = usePathname()
+  const slug = pathname.split('/').pop()
+
+  // Data fetching
+  const { data: ballroom } = useGetRoomDetail(param)
+  const { data: floorData } = useGetRoomFloor(params)
+  const { data: capacityData } = useGetRoomCapacity(params)
+  const { data: locations } = useGetLocation(params)
+
+  useEffect(() => {
+    if (floorData && floorData.data) {
+      const transformedOptions: OptionItem[] = floorData.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsFloor(transformedOptions)
+    }
+  }, [floorData])
+
+  useEffect(() => {
+    if (capacityData && capacityData.data) {
+      const transformedOptions: OptionItem[] = capacityData.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsCapacity(transformedOptions)
+    }
+  }, [capacityData])
+
+  useEffect(() => {
+    if (locations && locations.data) {
+      const transformedOptions: OptionItem[] = locations.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsLocation(transformedOptions)
+    }
+  }, [locations])
 
   const { handleSubmit, control, setValue, getValues, watch } = useForm<any>({
     resolver: yupResolver(schema),
@@ -102,6 +161,7 @@ export function EditBallroom({ category = 'Ballroom' }: EditRoomProps) {
       formData.append('kapasitas', payload.capacity.value.toString())
       formData.append('deskripsi', descriptionData)
       formData.append('termsCondition', termsData)
+      const convertList = selectedFacility.join(',')
       formData.append('fasilitas', convertList)
       formData.append('kategoriMenu', category)
       formData.append('roomId', slug) // Include the roomId in the FormData
@@ -142,14 +202,14 @@ export function EditBallroom({ category = 'Ballroom' }: EditRoomProps) {
   }
 
   useEffect(() => {
-    setValue('isActive', isChecked)
-  }, [isChecked, watch('isActive')])
-
-  useEffect(() => {
     if (slug) {
       setParam({ roomId: slug })
     }
   }, [])
+
+  useEffect(() => {
+    setValue('isActive', isChecked)
+  }, [isChecked, watch('isActive')])
 
   useEffect(() => {
     if (ballroom?.data && !initialDataLoaded) {
@@ -167,7 +227,8 @@ export function EditBallroom({ category = 'Ballroom' }: EditRoomProps) {
   useEffect(() => {
     if (ballroom?.data) {
       setValue('isActive', ballroom.data.flagActive === 'Y')
-      setValue('location', { label: ballroom.data.location, value: ballroom.data.location })
+      const locationOption = optionsLocation.find(option => option.value === ballroom?.data?.location)
+      setValue('location', locationOption)
       setValue('roomTitle', ballroom.data.titleRoom)
       const floorOption = optionsFloor.find(option => option.value === ballroom?.data?.lantaiRuangan)
       setValue('floor', floorOption)
@@ -320,6 +381,7 @@ export function EditBallroom({ category = 'Ballroom' }: EditRoomProps) {
                 label="Pilih Fasilitas"
                 control={control as Control<any>}
                 onValuesChange={handleFacilitySelectionChange}
+                choosedValue={selectedFacility}
               />
             </div>
           </div>

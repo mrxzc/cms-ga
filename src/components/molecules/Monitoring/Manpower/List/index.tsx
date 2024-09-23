@@ -9,13 +9,11 @@ import IconSearch from '@assets/icons/IconSearch'
 import Pagination from '@components/atoms/Pagination'
 import TableFilterDropdown from '@components/atoms/TableFilterDropdown'
 import { ISearchParams } from '@interfaces/api'
-import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmLocationListParams } from '@interfaces/gcmLocation'
 import { IMonitoringManpowerList } from '@interfaces/monitoringManpower'
 import { useGetLocation } from '@services/gcm/location/query'
 import { useGetListManpower, useGetListManpowerCategory } from '@services/monitoring/manpower/query'
 import { useGetListMeetingRoomMonitoringStatus } from '@services/monitoring/meetingRoom/query'
-import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
 import { reduceParamsFunc } from '@utils/helper/ParamsReducer'
 import { debounce } from 'lodash'
@@ -30,8 +28,6 @@ export function List() {
   const searchParams = useSearchParams()
 
   const filters = searchParams.get('filters')
-
-  const dataUser: IOTPLoginResponse = GetCookie('data_user')
 
   // const statusEnums = new MeetingRoomMonitoringStatusClassEnum()
 
@@ -94,7 +90,7 @@ export function List() {
   // Fetch List Location
   const [locationsParams, setLocationsParams] = useState<IGcmLocationListParams>({ search: '', page: 1, size: 5 })
   const [locationsSelected, setLocationsSelected] = useState<any[]>(handleMappingInitial()?.location ?? [])
-  const { data: locations, isFetching: isLocationsFetching } = useGetLocation(locationsParams, dataUser?.idUser)
+  const { data: locations, isFetching: isLocationsFetching } = useGetLocation(locationsParams)
   // Fetch List Location
 
   // Fetch List Category

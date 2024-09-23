@@ -43,7 +43,7 @@ export function List() {
   }
   const [params, setParams] = useState<IGcmLocationListParams>(defaultParams)
 
-  const { data, isFetching, refetch } = useGetLocation(params, dataUser?.idUser)
+  const { data, isFetching, refetch } = useGetLocation(params)
 
   const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = useMutateToggleStatusLocation()
   const {

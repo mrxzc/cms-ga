@@ -9,18 +9,13 @@ import IconSearch from '@assets/icons/IconSearch'
 import Pagination from '@components/atoms/Pagination'
 import TableFilterDropdown from '@components/atoms/TableFilterDropdown'
 import { ISearchParams } from '@interfaces/api'
-import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmLocationListParams } from '@interfaces/gcmLocation'
 import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
 import { IMonitoringBallroomList } from '@interfaces/monitoringBallroom'
-import { IMonitoringMeetingRoomList } from '@interfaces/monitoringMeetingRoom'
 import { useGetLocation } from '@services/gcm/location/query'
 import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
 import { BallroomMonitoringStatusClassEnum } from '@services/monitoring/ballroom/enums'
 import { useGetListBallroom, useGetListBallroomMonitoringStatus } from '@services/monitoring/ballroom/query'
-import { MeetingRoomMonitoringStatusClassEnum } from '@services/monitoring/meetingRoom/enums'
-import { useGetListMeetingRoom, useGetListMeetingRoomMonitoringStatus } from '@services/monitoring/meetingRoom/query'
-import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
 import { reduceParamsFunc } from '@utils/helper/ParamsReducer'
 import { debounce } from 'lodash'
@@ -35,8 +30,6 @@ export function List() {
   const searchParams = useSearchParams()
 
   const filters = searchParams.get('filters')
-
-  const dataUser: IOTPLoginResponse = GetCookie('data_user')
 
   const statusEnums = new BallroomMonitoringStatusClassEnum()
 
@@ -102,13 +95,13 @@ export function List() {
   // Fetch List Location
   const [locationsParams, setLocationsParams] = useState<IGcmLocationListParams>({ search: '', page: 1, size: 5 })
   const [locationsSelected, setLocationsSelected] = useState<any[]>(handleMappingInitial()?.location ?? [])
-  const { data: locations, isFetching: isLocationsFetching } = useGetLocation(locationsParams, dataUser?.idUser)
+  const { data: locations, isFetching: isLocationsFetching } = useGetLocation(locationsParams)
   // Fetch List Location
 
   // Fetch List Room Floor
   const [roomFloorsParams, setRoomFloorsParams] = useState<IGcmRoomFloorListParams>({ search: '', page: 1, size: 5 })
   const [roomFloorsSelected, setRoomFloorsSelected] = useState<any[]>(handleMappingInitial()?.lantaiRuangan ?? [])
-  const { data: roomFloors, isFetching: isRoomFloorsFetching } = useGetRoomFloor(roomFloorsParams, dataUser?.idUser)
+  const { data: roomFloors, isFetching: isRoomFloorsFetching } = useGetRoomFloor(roomFloorsParams)
   // Fetch List Room Floor
 
   // Provide a debounce to prevent triggering functions based on duration

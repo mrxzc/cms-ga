@@ -4,11 +4,11 @@ import { toast } from 'react-toastify'
 import { apiGetRoomFacility, apiGetRoomFacilityDetail } from './api'
 
 // Get RoomFacility
-export const useGetRoomFacility = (params: IGcmRoomFacilityListParams, idUser: string) => {
+export const useGetRoomFacility = (params: IGcmRoomFacilityListParams) => {
   return useQuery({
     queryKey: ['/cms/master/roomFacility/list', params],
     queryFn: async () =>
-      apiGetRoomFacility(params, idUser).catch((error: Error) => {
+      apiGetRoomFacility(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })

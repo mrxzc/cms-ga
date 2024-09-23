@@ -68,5 +68,5 @@ export interface EditRoomProps {
 }
 
 export interface IDeleteRoomParams {
-  roomId: number | string // Atau sesuaikan tipe data sesuai kebutuhan
+  roomId: number | string
 }

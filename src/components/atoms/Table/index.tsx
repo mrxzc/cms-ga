@@ -105,6 +105,26 @@ export default function Table({ data = [], columns, loading, pagination, callbac
         )}
       </table>
       {pagination && data?.length > 0 && (
+        <div className="mt-8 flex justify-between items-center">
+          <div className="text-paragraph regular-14 ">
+            Showing {(pagination.PAGE - 1) * 10 + 1}-{Math.min(pagination.PAGE * 10, pagination.TOTAL_DATA)} of{' '}
+            {pagination.TOTAL_DATA}
+          </div>
+          <div className="pagination">
+            <MuiPagination
+              variant="outlined"
+              shape="rounded"
+              color="primary"
+              count={pagination.LAST_PAGE}
+              defaultPage={pagination.PAGE}
+              onChange={(_, value) => callback(value)}
+              size="large"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* {pagination && data?.length > 0 && (
         <div className="mt-8 flex justify-end pagination">
           <MuiPagination
             variant="outlined"
@@ -116,7 +136,8 @@ export default function Table({ data = [], columns, loading, pagination, callbac
             size="large"
           />
         </div>
-      )}
+      )} */}
+
       {(!data || data.length === 0) && !loading && (
         <div className="text-center px-8 py-40">
           <h6 className="font-semibold text-gray-500">Data tidak ditemukan</h6>

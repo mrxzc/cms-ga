@@ -5,6 +5,7 @@ import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createColumnHelper } from '@tanstack/react-table'
 
 import Table from '@components/atoms/Table'
@@ -15,6 +16,7 @@ import DateRangeInput from '@components/atoms/DateRangeInput'
 import { data } from './data'
 
 export function MonitoringCleaningService() {
+  const router = useRouter()
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [startDate, setStartDate] = useState<Date | null>(null)
@@ -67,11 +69,21 @@ export function MonitoringCleaningService() {
       header: 'Status',
     }),
     columnHelper.accessor('ACTION', {
-      cell: () => (
-        <div className="flex gap-3 items-center justify-center">
-          <IconEye width={20} height={20} className="hover:cursor-pointer" />
-        </div>
-      ),
+      cell: info => {
+        const rowData = info.row.original
+
+        const handleViewDetailClick = () => {
+          router.push(`/monitoring/management/cleaning-service/${rowData.no}`)
+        }
+
+        return (
+          <div className="flex gap-3 items-center justify-center">
+            <button type="button" onClick={handleViewDetailClick}>
+              <IconEye width={20} height={20} className="hover:cursor-pointer" />
+            </button>
+          </div>
+        )
+      },
       header: 'Action',
     }),
   ]

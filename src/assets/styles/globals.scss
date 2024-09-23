@@ -67,9 +67,9 @@
   @apply max-w-full sm:max-w-[375px];
 }
 
-.max-container {
-  @apply max-w-full sm:max-w-[640px];
-}
+// .max-container {
+//   @apply max-w-full sm:max-w-[640px];
+// }
 
 .booking-button {
   background: linear-gradient(0deg, #2c598d, #2c598d),
@@ -151,3 +151,45 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+:root {
+  --primary: #f1f1f1; /* Background color of the scrollbar */
+  --secondary: rgba(190, 190, 190, 0.6); /* Color of the scrollbar thumb */
+  --tertiary: rgba(146, 146, 146, 0.8); /* Hover color for the scrollbar thumb */
+  --border-radius: 10px; /* Consistent border radius */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin; /* Use thin scrollbars */
+  scrollbar-color: var(--secondary) var(--primary); /* Thumb and track colors */
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px; /* Increase width for better visibility */
+  background-color: var(--primary); /* Track background color */
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--primary); /* Track background color */
+  border-radius: var(--border-radius); /* Rounded corners */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--secondary); /* Thumb color */
+  border-radius: var(--border-radius); /* Rounded corners */
+  border: 2px solid var(--primary); /* Border for the thumb */
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--tertiary); /* Hover color for the thumb */
+  cursor: pointer; /* Change cursor on hover */
+}
+
+/* Optional: Add scrollbar styles for focus state */
+*::-webkit-scrollbar-thumb:focus {
+  background-color: var(--tertiary); /* Focus color for better accessibility */
+}
+

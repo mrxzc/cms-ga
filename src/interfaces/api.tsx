@@ -23,3 +23,5 @@ export interface APIBaseResponse<T = undefined> {
   data?: T extends undefined ? never : T
   pagination?: IPaginations | undefined
 }
+
+export interface IDefaultParams extends IPaginationParams, ISearchParams {}

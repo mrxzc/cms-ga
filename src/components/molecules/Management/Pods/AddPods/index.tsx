@@ -1,13 +1,15 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { Control, useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import { toast } from 'react-toastify'
+import React, { useEffect, useState } from 'react'
+import { Control, useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import * as Yup from 'yup'
 
 import SelectForm from '@components/atoms/Form/SelectForm'
@@ -15,11 +17,13 @@ import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { optionsCapacity, optionsFloor } from './data'
-
-import dynamic from 'next/dynamic'
-import { toast } from 'react-toastify'
+import { optionsFacility } from './data'
 import { apiSubmitCreateRoom } from '@services/cms/room/api'
+import { IDefaultParams } from '@interfaces/api'
+import { OptionItem } from '@interfaces/utils'
+import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
+import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
+import { useGetLocation } from '@services/gcm/location/query'
 
 const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
 
@@ -34,10 +38,61 @@ const schema = Yup.object().shape({
 export function AddPods({ category = 'Pods' }: { category?: string }) {
   const router = useRouter()
 
+  const defaultParams = {
+    search: '',
+    page: 1,
+    size: 50,
+  }
+  const [params] = useState<IDefaultParams>(defaultParams)
+
   const [isChecked, setIsChecked] = useState(false)
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
   const [images, setImages] = useState<File[]>([])
+
+  const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
+  const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
+  const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
+
+  const { data: floorData } = useGetRoomFloor(params)
+  const { data: capacityData } = useGetRoomCapacity(params)
+  const { data: locations } = useGetLocation(params)
+
+  useEffect(() => {
+    if (floorData && floorData.data) {
+      const transformedOptions: OptionItem[] = floorData.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsFloor(transformedOptions)
+    }
+  }, [floorData])
+
+  useEffect(() => {
+    if (capacityData && capacityData.data) {
+      const transformedOptions: OptionItem[] = capacityData.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsCapacity(transformedOptions)
+    }
+  }, [capacityData])
+
+  useEffect(() => {
+    if (locations && locations.data) {
+      const transformedOptions: OptionItem[] = locations.data
+        .filter(item => item.flagActive)
+        .map(item => ({
+          label: item.descGcm,
+          value: item.noSr,
+        }))
+      setOptionsLocation(transformedOptions)
+    }
+  }, [locations])
 
   const handleImageChange = (newImages: File[]) => {
     setImages(newImages)
@@ -47,11 +102,6 @@ export function AddPods({ category = 'Pods' }: { category?: string }) {
     resolver: yupResolver(schema),
     mode: 'all',
   })
-
-  const optionsLocation = [
-    { label: 'Head Office', value: 'ACC' },
-    { label: 'Berijalan', value: 'BERIJALAN' },
-  ]
 
   const breadcrumbs = [
     <Link href="/management/pods" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
@@ -77,13 +127,6 @@ export function AddPods({ category = 'Pods' }: { category?: string }) {
   const [selectedFacility, setSelectedFacility] = useState([])
 
   const convertList = selectedFacility.join(',')
-
-  const optionsFacility = [
-    { value: 'kursi', name: 'Kursi' },
-    { value: 'meja', name: 'Meja' },
-    { value: 'proyektor', name: 'Proyektor' },
-    { value: 'speaker', name: 'Speaker' },
-  ]
 
   const handleFacilitySelectionChange = (newSelectedValues: any) => {
     setSelectedFacility(newSelectedValues)
@@ -258,10 +301,11 @@ export function AddPods({ category = 'Pods' }: { category?: string }) {
             <p className="text-heading xs regular-16 w-[160px]">Fasilitas Ruangan</p>
             <RHFMultiSelect
               data={optionsFacility}
-              name="fruits"
-              label="Pilih Buah"
+              name="selectedFacilities"
+              label="Pilih Fasilitas"
               control={control as Control<any>}
               onValuesChange={handleFacilitySelectionChange}
+              choosedValue={selectedFacility}
             />
           </div>
 
