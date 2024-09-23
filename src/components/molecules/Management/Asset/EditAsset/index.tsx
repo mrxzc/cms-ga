@@ -1,26 +1,37 @@
 'use client'
 
+import React, { useEffect, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import * as Yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { toast } from 'react-toastify'
+
+// Material UI components
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { usePathname, useRouter } from 'next/navigation'
-import * as Yup from 'yup'
 
+// Custom components
 import SelectForm from '@components/atoms/Form/SelectForm'
 import TextForm from '@components/atoms/Form/TextForm'
 import AddWithTable, { BrandData } from '@components/atoms/AddWithTable'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { toast } from 'react-toastify'
+import ImageGallery from '@components/atoms/ImageGallery'
+
+// API services and hooks
 import { apiSubmitUpdateAsset, apiUploadImageAsset } from '@services/cms/assets/api'
 import { useGetAssetDetail } from '@services/cms/assets/query'
+import { useGetLocation } from '@services/gcm/location/query'
+
+// Interfaces
 import { IAssetDetailParams, Ibrand } from '@interfaces/assets'
-import ImageGallery from '@components/atoms/ImageGallery'
+import { OptionItem } from '@interfaces/utils'
+import { IDefaultParams } from '@interfaces/api'
 import { API_FILE_CMS } from '@utils/environment'
 
+// Validation schema
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
   asset: Yup.string().required('Nama asset wajib diisi'),
@@ -37,60 +48,31 @@ const schema = Yup.object().shape({
 export function EditAsset() {
   const router = useRouter()
 
+  // State variables
   const [isChecked, setIsChecked] = useState(false)
   const [brands, setBrands] = useState<BrandData[]>([])
   const [images, setImages] = useState<File[]>([])
-
   const [initialDataLoaded, setInitialDataLoaded] = useState(false)
-  const [param, setParam] = useState<IAssetDetailParams>({
-    noIdAsset: '',
-  })
+  const [param, setParam] = useState<IAssetDetailParams>({ noIdAsset: '' })
+  const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
 
+  // Fetch asset details
   const pathname = usePathname()
   const slug = pathname.split('/').pop()
-
   const { data: assets } = useGetAssetDetail(param)
 
+  // Form setup
   const { handleSubmit, control, setValue, getValues, watch } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
 
-  useEffect(() => {
-    if (slug) {
-      setParam({ noIdAsset: slug })
-    }
-  }, [])
+  // Fetch locations
+  const defaultParams = { search: '', page: 1, size: 50 }
+  const [params] = useState<IDefaultParams>(defaultParams)
+  const { data: locations } = useGetLocation(params)
 
-  useEffect(() => {
-    if (assets?.data && !initialDataLoaded) {
-      setValue('isActive', assets.data.flagActive === 'Y')
-      setInitialDataLoaded(true)
-    }
-    setIsChecked(assets?.data?.flagActive === 'Y')
-  }, [assets])
-
-  useEffect(() => {
-    if (assets?.data) {
-      setValue('isActive', assets.data.flagActive === 'Y')
-      setValue('location', { label: assets.data.lokasi, value: assets.data.lokasi })
-      setValue('asset', assets.data.assetName)
-
-      // Handle potential undefined values
-      setBrands(
-        assets.data.brands?.map((brand: Ibrand) => ({
-          ...brand,
-          isActive: true,
-        })) ?? []
-      )
-    }
-  }, [assets, setValue])
-
-  const options = [
-    { label: 'Head Office', value: 'ACC' },
-    { label: 'Berijalan', value: 'BERIJALAN' },
-  ]
-
+  // Breadcrumbs for navigation
   const breadcrumbs = [
     <Link href="/management/asset" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
       Booking Asset Data - Asset Data
@@ -100,43 +82,65 @@ export function EditAsset() {
     </Typography>,
   ]
 
+  // Effect to set parameters based on slug
+  useEffect(() => {
+    if (slug) {
+      setParam({ noIdAsset: slug })
+    }
+  }, [])
+
+  // Effect to load initial asset data
+  useEffect(() => {
+    if (assets?.data && !initialDataLoaded) {
+      setValue('isActive', assets.data.flagActive === 'Y')
+      setInitialDataLoaded(true)
+    }
+    setIsChecked(assets?.data?.flagActive === 'Y')
+  }, [assets])
+
+  // Effect to set form values when asset data is loaded
+  useEffect(() => {
+    if (assets?.data) {
+      setValue('isActive', assets.data.flagActive === 'Y')
+      setValue('location', { label: assets.data.lokasi, value: assets.data.lokasi })
+      setValue('asset', assets.data.assetName)
+      setBrands(assets.data.brands?.map((brand: Ibrand) => ({ ...brand, isActive: true })) ?? [])
+    }
+  }, [assets, setValue])
+
+  // Effect to load location options
+  useEffect(() => {
+    if (locations?.data) {
+      const transformedOptions = locations.data
+        .filter(item => item.flagActive)
+        .map(item => ({ label: item.descGcm, value: item.noSr }))
+      setOptionsLocation(transformedOptions)
+    }
+  }, [locations])
+
   useEffect(() => {
     setValue('isActive', isChecked)
   }, [isChecked, watch('isActive')])
 
-  useEffect(() => {
-    setValue('brands', brands)
-  }, [brands, setValue])
-
+  // Effect to fetch images
   useEffect(() => {
     const fetchImages = async () => {
       if (!assets?.data?.pathImage) return
-
-      const newImages: File[] = []
 
       try {
         const response = await fetch(`${API_FILE_CMS}${assets?.data?.pathImage}`)
         const blob = await response.blob()
         const filename = assets?.data?.pathImage.split('/').pop() ?? 'image.png'
         const file = new File([blob], filename, { type: blob.type })
-        newImages.push(file)
+        setImages([file])
       } catch (error) {
-        // Handle error, e.g., show a toast notification
         toast.error('Failed to fetch image')
       }
-      // for (const imageUrl of assets.data.pathImage) {
-      // }
-      setImages(newImages)
     }
     fetchImages()
   }, [assets])
 
-  const [selectOptions, setSelectOptions] = useState([
-    { value: 'Brand X', label: 'Brand X' },
-    { value: 'Brand Y', label: 'Brand Y' },
-    { value: 'Brand Z', label: 'Brand Z' },
-  ])
-
+  // Handle brand operations
   const handleAddBrand = (newBrand: BrandData) => {
     setBrands([...brands, newBrand])
   }
@@ -151,6 +155,7 @@ export function EditAsset() {
     setBrands(brands.filter((_, i) => i !== index))
   }
 
+  // Handle image changes
   const handleImageChange = (newImages: File[]) => {
     setImages(newImages)
   }
@@ -159,52 +164,42 @@ export function EditAsset() {
     setSelectOptions(newOptions)
   }
 
+  const [selectOptions, setSelectOptions] = useState([
+    { value: 'Brand X', label: 'Brand X' },
+    { value: 'Brand Y', label: 'Brand Y' },
+    { value: 'Brand Z', label: 'Brand Z' },
+  ])
+
+  // Upload images to the server
   const handleUploadImageAsset = async (): Promise<boolean> => {
     try {
       const formData: FormData = new FormData()
       if (slug) {
         formData.append('noIdAsset', slug)
       }
-      if (images && images.length > 0) {
-        for (const image of images) {
-          formData.append('fileImage', image)
-        }
-      }
+      images.forEach(image => formData.append('fileImage', image))
 
       const response = await apiUploadImageAsset(formData)
       if (response.status === 'T') {
         toast.success('Gambar asset berhasil diubah!')
         return true
       } else {
-        let errorMessage = 'Gagal mengubah gambar asset.'
-        if (response.message) {
-          errorMessage += ` ${response.message}`
-        } else if (response.error && response.error.length > 0) {
-          errorMessage += ` ${response.error}`
-        }
-        toast.error(errorMessage)
-        return false
+        throw new Error(response.message || 'Gagal mengubah gambar asset.')
       }
     } catch (error: any) {
-      let errorMessage = 'Terjadi kesalahan saat mengunggah gambar.'
-      if (error.response) {
-        const { status, data } = error.response
-        errorMessage = `Error ${status}: ${data.message || 'Terjadi kesalahan server saat mengunggah gambar.'}`
-      } else if (error.request) {
-        errorMessage = 'Tidak ada respons dari server saat mengunggah gambar. Periksa koneksi internet Anda.'
-      }
-      toast.error(errorMessage)
+      toast.error(error.message || 'Terjadi kesalahan saat mengunggah gambar.')
       return false
     }
   }
 
+  // Create or update asset
   const handleCreateAsset = async (payload: any) => {
     try {
       const requestPayload: any = {
         noIdAsset: slug,
         flagActive: payload.isActive ? 'Y' : 'N',
         assetName: payload.asset,
-        lokasi: payload.location.value,
+        lokasi: payload.location.label,
         brands: brands.map(brand => ({
           name: brand.name,
           stock: brand.stock,
@@ -216,39 +211,22 @@ export function EditAsset() {
 
       if (response.status === 'T') {
         toast.success('Asset berhasil diperbaharui!')
-
-        // Upload gambar
         const imageUploadSuccess = await handleUploadImageAsset()
-
         if (imageUploadSuccess) {
-          // Redirect ke halaman utama hanya jika update asset dan upload gambar berhasil
           router.push('/management/asset')
         } else {
           toast.warning('Asset berhasil diperbaharui, tetapi terjadi masalah saat mengunggah gambar.')
         }
       } else {
-        let errorMessage = 'Gagal memperbaharui asset.'
-        if (response.message) {
-          errorMessage += ` ${response.message}`
-        } else if (response.error && response.error.length > 0) {
-          errorMessage += ` ${response.error}`
-        }
-        toast.error(errorMessage)
+        throw new Error(response.message || 'Gagal memperbaharui asset.')
       }
     } catch (error: any) {
-      let errorMessage = 'Terjadi kesalahan saat memperbaharui asset.'
-      if (error.response) {
-        const { status, data } = error.response
-        errorMessage = `Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`
-      } else if (error.request) {
-        errorMessage = 'Tidak ada respons dari server. Periksa koneksi internet Anda.'
-      }
-      toast.error(errorMessage)
+      toast.error(error.message || 'Terjadi kesalahan saat memperbaharui asset.')
     }
   }
 
+  // Handle form submission
   const onSubmit = () => {
-    // Handle form submission with updated brands data
     const values = getValues()
     handleCreateAsset(values)
   }
@@ -299,7 +277,7 @@ export function EditAsset() {
               control={control}
               name="location"
               placeholder="Pilih lokasi asset"
-              options={options}
+              options={optionsLocation}
               setValue={setValue}
               className="w-[350px]"
             />

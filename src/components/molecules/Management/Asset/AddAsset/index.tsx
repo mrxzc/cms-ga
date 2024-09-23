@@ -17,6 +17,10 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { toast } from 'react-toastify'
 import { apiSubmitCreateAsset } from '@services/cms/assets/api'
 import ImageGallery from '@components/atoms/ImageGallery'
+import { useGetLocation } from '@services/gcm/location/query'
+import { OptionItem } from '@interfaces/utils'
+import { IDefaultParams } from '@interfaces/api'
+import { convertToBase64 } from '@utils/common'
 
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
@@ -29,24 +33,32 @@ const schema = Yup.object().shape({
       isActive: Yup.boolean(),
     })
   ),
+  fileImages: Yup.mixed().test('fileSize', 'File too large', (file: any) => {
+    return file ? file.size <= 5 * 1024 * 1024 : true
+  }),
 })
 
 export function AddAsset() {
   const router = useRouter()
-
+  const defaultParams = { search: '', page: 1, size: 50 }
+  const [params] = useState<IDefaultParams>(defaultParams)
   const [isChecked, setIsChecked] = useState(false)
   const [brands, setBrands] = useState<BrandData[]>([])
   const [images, setImages] = useState<File[]>([])
-
+  const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
+  const { data: locations } = useGetLocation(params)
+  useEffect(() => {
+    if (locations?.data) {
+      const transformedOptions = locations.data
+        .filter(item => item.flagActive)
+        .map(item => ({ label: item.descGcm, value: item.noSr }))
+      setOptionsLocation(transformedOptions)
+    }
+  }, [locations])
   const { handleSubmit, control, setValue, getValues } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
-
-  const options = [
-    { label: 'Head Office', value: 'ACC' },
-    { label: 'Berijalan', value: 'BERIJALAN' },
-  ]
 
   const breadcrumbs = [
     <Link href="/management/asset" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
@@ -89,25 +101,34 @@ export function AddAsset() {
     setSelectOptions(newOptions)
   }
 
+  // Function to convert files to base64
+
   const handleCreateAsset = async (payload: any) => {
     try {
-      // 1. Siapkan FormData
-      const requestPayload: any = {
+      // Convert the first image to base64 if available
+      const base64Image = images.length > 0 ? await convertToBase64(images[0]) : null
+
+      // Prepare the request payload
+      const requestPayload = {
         flagActive: payload.isActive ? 'Y' : 'N',
         assetName: payload.asset,
-        lokasi: payload.location.value,
-        brands: brands.map(brand => ({ name: brand.name, stock: brand.stock, flagActive: brand.isActive ? 'Y' : 'N' })),
+        lokasi: payload.location.label,
+        brands: brands.map(brand => ({
+          name: brand.name,
+          stock: brand.stock,
+          flagActive: brand.isActive ? 'Y' : 'N',
+        })),
+        fileImage: base64Image, // Use the converted image
       }
 
-      // 2. Panggil fungsi API
+      // Call the API
       const response = await apiSubmitCreateAsset(requestPayload)
 
-      // 3. Tangani respons
+      // Handle response
       if (response.status === 'T') {
         toast.success('Asset berhasil dibuat!')
         router.push('/management/asset')
       } else {
-        // Tampilkan pesan error yang lebih spesifik jika ada
         let errorMessage = 'Gagal membuat asset.'
         if (response.message) {
           errorMessage += ` ${response.message}`
@@ -117,17 +138,14 @@ export function AddAsset() {
         toast.error(errorMessage)
       }
     } catch (error: any) {
-      // Tangani error yang lebih spesifik
+      // Handle errors
       if (error.response) {
-        // Error dari server (misalnya 400, 500)
         const { status, data } = error.response
         toast.error(`Error ${status}: ${data.message || 'Terjadi kesalahan server.'}`)
       } else if (error.request) {
-        // Permintaan dikirim tapi tidak ada respons
         toast.error('Tidak ada respons dari server. Periksa koneksi internet Anda.')
       } else {
-        // Error lain saat menyiapkan permintaan
-        toast.error('Terjadi kesalahan saat membuat ruangan.')
+        toast.error('Terjadi kesalahan saat membuat asset.')
       }
     }
   }
@@ -188,7 +206,7 @@ export function AddAsset() {
               control={control}
               name="location"
               placeholder="Pilih lokasi asset"
-              options={options}
+              options={optionsLocation}
               setValue={setValue}
               className="w-[350px]"
             />

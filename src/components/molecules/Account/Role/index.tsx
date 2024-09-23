@@ -20,16 +20,11 @@ import { useGetRoleList } from '@services/account/query'
 
 export function Role() {
   const router = useRouter()
-
   const [searchQuery, setSearchQuery] = useState('')
-
-  const defaultParams: IDefaultParams = {
-    search: searchQuery,
-    page: 1,
-    size: 10,
-  }
-
+  const defaultParams: IDefaultParams = { search: searchQuery, page: 1, size: 10 }
   const [params, setParams] = useState<IDefaultParams>(defaultParams)
+
+  // Fetching role data
   const { data: roleList, isLoading, isFetching } = useGetRoleList(params)
   const transformedData = roleList?.data?.map((role, index) => ({
     ...role,
@@ -37,26 +32,22 @@ export function Role() {
     ACTION: '',
   }))
 
-  const handleStatus = (status: boolean) => {
-    if (status) {
-      return (
-        <label className="switch">
-          <input name={`status-${status}`} defaultChecked={status} type="checkbox" />
-          <span className="slider green round" />
-        </label>
-      )
-    } else {
-      return (
-        <label className="switch">
-          <input name={`status-${status}`} type="checkbox" />
-          <span className="slider green round" />
-        </label>
-      )
-    }
-  }
+  // Breadcrumbs
+  const breadcrumbs = [
+    <Link
+      underline="none"
+      color="black"
+      href="/account-management/role"
+      onClick={e => e.preventDefault()}
+      key="1"
+      className="text-extra-small regular-12"
+    >
+      Account Management - Role Management
+    </Link>,
+  ]
 
+  // Columns definition
   const columnHelper = createColumnHelper<any>()
-
   const columns = [
     columnHelper.accessor('originalIndex', {
       cell: info => {
@@ -65,18 +56,12 @@ export function Role() {
       },
       header: 'No',
     }),
-    columnHelper.accessor('roleName', {
-      cell: info => info.getValue(),
-      header: 'Nama Role',
-    }),
+    columnHelper.accessor('roleName', { cell: info => info.getValue(), header: 'Nama Role' }),
     columnHelper.accessor('description', {
       cell: info => info.getValue() ?? '-',
       header: 'Description',
     }),
-    columnHelper.accessor('createdAt', {
-      cell: info => info.getValue(),
-      header: 'Tanggal Terbuat',
-    }),
+    columnHelper.accessor('createdAt', { cell: info => info.getValue(), header: 'Tanggal Terbuat' }),
     columnHelper.accessor('flagActive', {
       cell: info => handleStatus(info.getValue()),
       header: 'Status',
@@ -91,10 +76,8 @@ export function Role() {
       header: 'Action',
     }),
   ]
-  const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    event.preventDefault()
-  }
 
+  // Handlers
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value)
   }
@@ -103,19 +86,14 @@ export function Role() {
     setParams(prevParam => ({ ...prevParam, page: newPage }))
   }
 
-  const breadcrumbs = [
-    <Link
-      underline="none"
-      color="black"
-      href="/account-management/role"
-      onClick={handleClick}
-      key="1"
-      className="text-extra-small regular-12"
-    >
-      Account Management - Role Management
-    </Link>,
-  ]
+  const handleStatus = (status: boolean) => (
+    <label className="switch">
+      <input name={`status-${status}`} defaultChecked={status} type="checkbox" />
+      <span className="slider green round" />
+    </label>
+  )
 
+  // Effects
   useEffect(() => {
     setParams(prevParam => ({
       ...prevParam,
@@ -124,6 +102,7 @@ export function Role() {
     }))
   }, [searchQuery])
 
+  // Render
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-full w-full overflow-auto">
       <div className="bg-white px-4 py-4 rounded-xl mb-4 text-[#235696] flex justify-between">
@@ -154,16 +133,13 @@ export function Role() {
         <div className="flex justify-between mb-4">
           <div className="search-input h-[38px] px-3 flex items-center justify-center space-x-3 border rounded-lg min-w-[400px]">
             <IconSearch color="#909090" />
-
             <input
               type="text"
               placeholder="Search..."
               className="flex-1 text-paragraph regular-14 mt-1"
               value={searchQuery}
               onChange={handleSearchChange}
-              style={{
-                outline: 'none',
-              }}
+              style={{ outline: 'none' }}
             />
           </div>
         </div>

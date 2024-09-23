@@ -1,33 +1,38 @@
 'use client'
 
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import React, { useState } from 'react'
 import { createColumnHelper } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
-import { toast } from 'react-toastify'
 
+// Icons
 import IconPlus from '@assets/icons/IconPlus'
-import Table from '@components/atoms/Table'
 import IconEditing from '@assets/icons/IconEditing'
 import IconDownload from '@assets/icons/IconDownload'
 import IconSearch from '@assets/icons/IconSearch'
 import IconAlertDelete from '@assets/icons/IconAlertDelete'
 import IconDeleting from '@assets/icons/IconDeleting'
+
+// Components
+import Table from '@components/atoms/Table'
+import { Modal } from '@components/atoms/ModalCustom'
+
+// Interfaces and API
 import { IAssetListParams } from '@interfaces/assets'
 import { useGetAssetList } from '@services/cms/assets/query'
-import { Modal } from '@components/atoms/ModalCustom'
 import { apiDeleteAsset } from '@services/cms/assets/api'
 
 export function Management() {
   const router = useRouter()
 
+  // State variables
   const [searchQuery, setSearchQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [assetIdToDelete, setAssetIdToDelete] = useState<string | null>(null)
-
   const [param, setParam] = useState<IAssetListParams>({
     search: searchQuery,
     page: 1,
@@ -36,22 +41,30 @@ export function Management() {
     sortDirection: 'ASC',
   })
 
+  // Fetch asset data
   const { data: assets, isLoading, isFetching, refetch } = useGetAssetList(param)
 
-  const handleStatus = (status: string) => {
-    if (status === 'Active') {
-      return <div className="bg-[#eaf5e9] text-[#457b3b] border border-[#afd5ab] rounded">Active</div>
-    } else {
-      return <div className="bg-[#fcebee] text-[#b63831] border border-[#e39e9c] rounded">Non-Active</div>
-    }
-  }
+  // Handle asset status display
+  const handleStatus = (status: string) => (
+    <div
+      className={`border rounded ${
+        status === 'Active'
+          ? 'bg-[#eaf5e9] text-[#457b3b] border-[#afd5ab]'
+          : 'bg-[#fcebee] text-[#b63831] border-[#e39e9c]'
+      }`}
+    >
+      {status}
+    </div>
+  )
 
+  // Transform asset data for the table
   const transformedData = assets?.data?.map((asset, index) => ({
     ...asset,
     originalIndex: index,
     ACTION: '',
   }))
 
+  // Event handlers
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault()
   }
@@ -74,6 +87,7 @@ export function Management() {
 
   const columnHelper = createColumnHelper<any>()
 
+  // Define table columns
   const columns = [
     columnHelper.accessor('originalIndex', {
       cell: info => {
@@ -122,6 +136,7 @@ export function Management() {
     }),
   ]
 
+  // Breadcrumbs for navigation
   const breadcrumbs = [
     <Link
       underline="none"
@@ -135,6 +150,7 @@ export function Management() {
     </Link>,
   ]
 
+  // Handle asset deletion
   const handleDeleteData = async (id: string | null) => {
     if (id) {
       try {
@@ -146,12 +162,16 @@ export function Management() {
           toast.error('Gagal menghapus asset.')
         }
       } catch (error) {
-        // ...
+        toast.error('Terjadi kesalahan saat menghapus asset.')
       }
     }
-
     handleCloseModal()
   }
+
+  // Refetch data when parameters change
+  useEffect(() => {
+    refetch()
+  }, [param, refetch])
 
   return (
     <>
@@ -184,16 +204,13 @@ export function Management() {
           <div className="flex justify-between mb-4">
             <div className="search-input h-[38px] px-3 flex items-center justify-center space-x-3 border rounded-lg min-w-[400px]">
               <IconSearch color="#909090" />
-
               <input
                 type="text"
                 placeholder="Search..."
                 className="flex-1 text-paragraph regular-14 mt-1"
                 value={searchQuery}
                 onChange={handleSearchChange}
-                style={{
-                  outline: 'none',
-                }}
+                style={{ outline: 'none' }}
               />
             </div>
           </div>

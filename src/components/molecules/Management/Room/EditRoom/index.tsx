@@ -1,35 +1,40 @@
 'use client'
 
+// Import necessary libraries and components
+import React, { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+import { useForm, Control } from 'react-hook-form'
+import { usePathname, useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
+import * as Yup from 'yup'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import React, { useEffect, useState } from 'react'
-import { Control, useForm } from 'react-hook-form'
-import { usePathname, useRouter } from 'next/navigation'
-import { toast } from 'react-toastify'
-import * as Yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 
+// Import custom components
 import SelectForm from '@components/atoms/Form/SelectForm'
 import ImageGallery from '@components/atoms/ImageGallery'
 import RHFMultiSelect from '@components/atoms/MultiSelect'
 import TextForm from '@components/atoms/Form/TextForm'
-import { yupResolver } from '@hookform/resolvers/yup'
+
+// Import API services
 import { apiSubmitUpdateRoom } from '@services/cms/room/api'
-import { optionsFacility } from './data'
 import { useGetRoomDetail } from '@services/cms/room/query'
-import { EditRoomProps, IRoomDetailParams } from '@interfaces/room'
-import { API_FILE_CMS } from '@utils/environment'
-import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
 import { useGetRoomFloor } from '@services/gcm/roomFloor/query'
 import { useGetRoomCapacity } from '@services/gcm/roomCapacity/query'
-import { OptionItem } from '@interfaces/utils'
 import { useGetLocation } from '@services/gcm/location/query'
 
-const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
+// Import interfaces and constants
+import { EditRoomProps, IRoomDetailParams } from '@interfaces/room'
+import { IGcmRoomFloorListParams } from '@interfaces/gcmRoomFloor'
+import { API_FILE_CMS } from '@utils/environment'
+import { optionsFacility } from './data'
+import { OptionItem } from '@interfaces/utils'
 
+// Validation schema for form
 const schema = Yup.object().shape({
   isActive: Yup.boolean().required('Aktif wajib dipilih'),
   location: Yup.object().required('Lokasi wajib dipilih'),
@@ -39,11 +44,15 @@ const schema = Yup.object().shape({
   selectedFacilities: Yup.array(),
 })
 
+const ReusableCKEditor = dynamic(() => import('@/components/atoms/ReuseableCKEditor'), { ssr: false })
+
+// Main component for editing room
 export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
   const router = useRouter()
   const pathname = usePathname()
   const slug = pathname.split('/').pop()
 
+  // State management
   const [param, setParam] = useState<IRoomDetailParams>({ roomId: '' })
   const [descriptionData, setDescriptionData] = useState('')
   const [termsData, setTermsData] = useState('')
@@ -55,23 +64,27 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
   const defaultParams = { search: '', page: 1, size: 50 }
   const [params] = useState<IGcmRoomFloorListParams>(defaultParams)
 
+  // Fetch data using custom hooks
   const { data: rooms } = useGetRoomDetail(param)
   const { data: floorData } = useGetRoomFloor(params)
   const { data: capacityData } = useGetRoomCapacity(params)
   const { data: locations } = useGetLocation(params)
 
+  // Options state
   const [optionsFloor, setOptionsFloor] = useState<OptionItem[]>([])
   const [optionsCapacity, setOptionsCapacity] = useState<OptionItem[]>([])
   const [optionsLocation, setOptionsLocation] = useState<OptionItem[]>([])
 
   const convertList = selectedFacility.join(',')
 
-  const { handleSubmit, control, setValue, getValues, watch } = useForm<any>({
+  // React Hook Form setup
+  const { handleSubmit, control, setValue, getValues } = useForm<any>({
     resolver: yupResolver(schema),
     defaultValues: { selectedFacilities: selectedFacility },
     mode: 'all',
   })
 
+  // Breadcrumbs for navigation
   const breadcrumbs = [
     <Link href="/management/room" key="1" className="text-extra-small regular-12 text-[#235696] hover:underline">
       Booking Asset Data - Room
@@ -81,10 +94,12 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     </Typography>,
   ]
 
+  // Load room ID from pathname
   useEffect(() => {
     if (slug) setParam({ roomId: slug })
-  }, [])
+  }, [slug])
 
+  // Transform floor options for select input
   useEffect(() => {
     if (floorData?.data) {
       const transformedOptions = floorData.data
@@ -97,6 +112,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     }
   }, [floorData])
 
+  // Transform capacity options for select input
   useEffect(() => {
     if (capacityData?.data) {
       const transformedOptions = capacityData.data
@@ -109,6 +125,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     }
   }, [capacityData])
 
+  // Transform location options for select input
   useEffect(() => {
     if (locations?.data) {
       const transformedOptions = locations.data
@@ -121,28 +138,30 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     }
   }, [locations])
 
+  // Initialize form with room details
   useEffect(() => {
     if (rooms?.data && !initialDataLoaded) {
       setValue('isActive', rooms.data.flagActive === 'Y')
       setInitialDataLoaded(true)
     }
-  }, [rooms, setValue])
+  }, [rooms, setValue, initialDataLoaded])
 
+  // Set form values based on fetched room data
   useEffect(() => {
     if (rooms?.data) {
       setIsChecked(rooms.data.flagActive === 'Y')
       setValue(
         'location',
-        optionsLocation.find(option => option.value === rooms?.data?.location)
+        optionsLocation.find(option => option.value === rooms.data?.location)
       )
       setValue('roomTitle', rooms.data.titleRoom)
       setValue(
         'floor',
-        optionsFloor.find(option => option.value === rooms?.data?.lantaiRuangan)
+        optionsFloor.find(option => option.value === rooms.data?.lantaiRuangan)
       )
       setValue(
         'capacity',
-        optionsCapacity.find(option => option.value === rooms?.data?.kapasitas.toString())
+        optionsCapacity.find(option => option.value === rooms.data?.kapasitas.toString())
       )
       setDescriptionData(rooms.data.deskripsi ?? '')
       setTermsData(rooms.data.termsCondition ?? '')
@@ -150,6 +169,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     }
   }, [rooms, optionsLocation, optionsFloor, optionsCapacity, setValue])
 
+  // Fetch room images
   useEffect(() => {
     const fetchImages = async () => {
       if (!rooms?.data?.fileImages?.length) return
@@ -171,6 +191,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     fetchImages()
   }, [rooms])
 
+  // Handle room update submission
   const handleUpdateRoom = async (payload: any) => {
     try {
       const formData: any = new FormData()
@@ -202,15 +223,18 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
     }
   }
 
+  // Update isActive value based on checkbox
   useEffect(() => {
     setValue('isActive', isChecked)
-  }, [isChecked, watch('isActive')])
+  }, [isChecked, setValue])
 
+  // Handlers for form data changes
   const handleImageChange = (newImages: File[]) => setImages(newImages)
   const handleDescriptionChange = (data: string) => setDescriptionData(data)
   const handleTermsChange = (data: string) => setTermsData(data)
   const handleFacilitySelectionChange = (newSelectedValues: any) => setSelectedFacility(newSelectedValues)
 
+  // Form submission handler
   const onSubmit = async () => {
     const data = getValues()
     handleUpdateRoom(data)
@@ -218,7 +242,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
 
   return (
     <div className="px-4 py-8 bg-[#f6f6f6] h-screen w-full overflow-y-auto">
-      <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center ">
+      <div className="bg-white px-4 py-4 rounded-xl mb-4 flex gap-2 items-center">
         <Stack spacing={2}>
           <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
             {breadcrumbs}
@@ -229,6 +253,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
       <div className="bg-white px-4 py-4 rounded-xl">
         <p className="text-heading s semibold-18 mb-4">Edit Room Data</p>
         <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Active status toggle */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Aktif</p>
             <label>
@@ -241,6 +266,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             </label>
           </div>
 
+          {/* Location selection */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
               Lokasi<span className="text-red-500">*</span>
@@ -254,6 +280,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             />
           </div>
 
+          {/* Room title input */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
               Title Room<span className="text-red-500">*</span>
@@ -267,6 +294,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             />
           </div>
 
+          {/* Floor selection */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
               Lantai Ruangan<span className="text-red-500">*</span>
@@ -280,6 +308,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             />
           </div>
 
+          {/* Capacity selection */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">
               Kapasitas Ruangan<span className="text-red-500">*</span>
@@ -293,6 +322,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             />
           </div>
 
+          {/* Description input */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Description</p>
             <div className="mt-1">
@@ -304,6 +334,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             </div>
           </div>
 
+          {/* Terms and conditions input */}
           <div className="flex items-center">
             <p className="text-heading xs regular-16 w-[160px]">Terms & Condition</p>
             <div className="max-w-[650px] mt-1">
@@ -315,6 +346,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             </div>
           </div>
 
+          {/* Facilities selection */}
           <div className="flex items-center mt-1">
             <p className="text-heading xs regular-16 w-[160px]">Fasilitas Ruangan</p>
             <div className="w-[650px]">
@@ -329,6 +361,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
             </div>
           </div>
 
+          {/* Image upload */}
           <div className="flex items-center mt-1">
             <div className="text-heading xs regular-16 w-[160px]">
               Image<span className="text-red-500">*</span>
@@ -344,6 +377,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
 
           <div className="divider" />
 
+          {/* Submit and cancel buttons */}
           <div className="flex justify-end gap-2 items-end">
             <button
               className="bg-[#e5f2fc] text-[#235696] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
@@ -353,7 +387,7 @@ export function EditRoom({ category = 'Meeting Room' }: EditRoomProps) {
               Cancel
             </button>
             <button
-              className="bg-[#235696] text-[#e5f2fc] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
+              className="bg-[#235696] text-[#e5f2f2] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
               type="submit"
             >
               Submit

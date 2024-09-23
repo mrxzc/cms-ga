@@ -10,7 +10,6 @@ import { useForm } from 'react-hook-form'
 import { usePathname, useRouter } from 'next/navigation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
-
 import TextForm from '@components/atoms/Form/TextForm'
 import SelectForm from '@components/atoms/Form/SelectForm'
 import { OptionItem } from '@interfaces/utils'
@@ -21,6 +20,7 @@ import { useApproveUserMutation } from '@services/user/mutation'
 import { toast } from 'react-toastify'
 import { IApprovalPayload } from '@interfaces/user-management'
 
+// Validation Schema
 const schema = Yup.object().shape({
   code: Yup.string().required('Kode User wajib diisi'),
   name: Yup.string().required('Nama wajib diisi'),
@@ -35,18 +35,22 @@ export function DetailVerification() {
   const pathname = usePathname()
   const slug = pathname.split('/').pop()
 
-  const [params] = useState<IDefaultParams>({ search: '', page: 1, size: 10 })
-  const [optionsRole, setOptionsRole] = useState<OptionItem[]>([])
-
-  const { data: roleList } = useGetRoleList(params)
-  const { data: userDetail } = useGetVerificationUserDetail(slug as string)
-  const approveUserMutation = useApproveUserMutation()
-
+  // Form Setup
   const { handleSubmit, control, setValue } = useForm<any>({
     resolver: yupResolver(schema),
     mode: 'all',
   })
 
+  // State Management
+  const [params] = useState<IDefaultParams>({ search: '', page: 1, size: 10 })
+  const [optionsRole, setOptionsRole] = useState<OptionItem[]>([])
+
+  // Data Fetching
+  const { data: roleList } = useGetRoleList(params)
+  const { data: userDetail } = useGetVerificationUserDetail(slug as string)
+  const approveUserMutation = useApproveUserMutation()
+
+  // Breadcrumbs
   const breadcrumbs = [
     <Link
       href="/user-management/verification"
@@ -60,6 +64,7 @@ export function DetailVerification() {
     </Typography>,
   ]
 
+  // Set Form Values
   useEffect(() => {
     if (userDetail?.data) {
       setValue('code', userDetail.data.idUser)
@@ -67,13 +72,15 @@ export function DetailVerification() {
       setValue('email', userDetail.data.email)
       setValue('noHandphone', userDetail.data.noHp)
       setValue('tanggalLahir', userDetail.data.birthOfDate)
-      const role = optionsRole.find(option => option.label === userDetail?.data?.role?.roleName)
+
+      const role = optionsRole.find(option => option.label === userDetail.data?.role?.roleName)
       setValue('role', role)
     }
-  }, [userDetail, setValue, optionsRole])
+  }, [userDetail, optionsRole, setValue])
 
+  // Set Role Options
   useEffect(() => {
-    if (roleList && roleList.data) {
+    if (roleList?.data) {
       const transformedOptions: OptionItem[] = roleList.data
         .filter(item => item.flagActive)
         .map(item => ({
@@ -84,6 +91,7 @@ export function DetailVerification() {
     }
   }, [roleList])
 
+  // Handle Approval
   const handleApproval = async (isApprove: boolean) => {
     const params: IApprovalPayload = {
       idUser: userDetail?.data?.idUser ?? '',
@@ -176,13 +184,15 @@ export function DetailVerification() {
           <div className="divider" />
 
           <div className="flex justify-end gap-2 items-end">
-            <button
-              className="bg-[#d92b41] text-[white] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
-              type="button"
-              onClick={() => handleApproval(false)}
-            >
-              Reject
-            </button>
+            {userDetail?.data?.verifyStatus !== 'R' && (
+              <button
+                className="bg-[#d92b41] text-[white] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md"
+                type="button"
+                onClick={() => handleApproval(false)}
+              >
+                Reject
+              </button>
+            )}
             <button
               className="bg-[#235696] text-[#e5f2fc] max-w-[145px] max-h-[45px] px-12 py-3 rounded-md text-center flex justify-center items-center"
               type="button"
