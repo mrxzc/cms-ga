@@ -36,7 +36,11 @@ const TableFilterDropdown: React.FC<TableFilterDropdownProps<any>> = ({
   const [keyword, setKeyword] = useState<string>()
 
   const handleCheckData = (selectedVal: any) => {
-    return value?.find((val: any) => val[valueField] == selectedVal)
+    if (Array.isArray(value) && value?.length) {
+      return value?.find((val: any) => val[valueField] == selectedVal)
+    }
+
+    return false
   }
 
   useEffect(() => {
@@ -79,7 +83,9 @@ const TableFilterDropdown: React.FC<TableFilterDropdownProps<any>> = ({
                 {valueField in val && labelField in val && (
                   <div className={`px-4 py-2 ${handleCheckData(val[valueField]) ? 'bg-[#BDE4F9]' : ''}`}>
                     <label
-                      className={`flex-1 flex items-center custom-checkbox text-paragraph  ${handleCheckData(val[valueField]) ? 'semibold-14 text-[#235696]' : 'regular-14 text-[#252525]'}`}
+                      className={`flex-1 flex items-center custom-checkbox text-paragraph  ${
+                        handleCheckData(val[valueField]) ? 'semibold-14 text-[#235696]' : 'regular-14 text-[#252525]'
+                      }`}
                     >
                       <span>{val[labelField]}</span>
                       <input
