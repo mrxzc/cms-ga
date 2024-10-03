@@ -1,11 +1,9 @@
+import { BuildingMaintenanceWasteManagementListPage } from '@components/organisms/BuildingMaintenance'
+
 export const metadata = {
-  title: 'Building Management - EHS - Waste Management',
+  title: 'Building Management - Building Maintenance - Waste Management',
 }
 
-export default function BuildingManagementWasteManagement() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-24">
-      <p>Waste management</p>
-    </div>
-  )
+export default function BuildingMaintenanceWasteManagementList() {
+  return <BuildingMaintenanceWasteManagementListPage />
 }

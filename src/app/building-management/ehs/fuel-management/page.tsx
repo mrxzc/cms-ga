@@ -1,11 +1,9 @@
+import { BuildingMaintenanceFuelManagementListPage } from '@components/organisms/BuildingMaintenance'
+
 export const metadata = {
-  title: 'Building Management - EHS - Penggunaan BBM',
+  title: 'Building Management - Building Maintenance - Penggunaan BBM',
 }
 
-export default function BuildingManagementFuelManagement() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-24">
-      <p>Fuel management</p>
-    </div>
-  )
+export default function BuildingMaintenanceFuelManagementList() {
+  return <BuildingMaintenanceFuelManagementListPage />
 }

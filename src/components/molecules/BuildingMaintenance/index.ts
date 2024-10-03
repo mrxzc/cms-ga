@@ -1,17 +1,17 @@
 import { List as BuildingMaintenanceBranchConditionReportList } from './BranchConditionReport/List'
 import { Detail as BuildingMaintenanceBranchConditionReportDetail } from './BranchConditionReport/Detail'
 
-import { List as BuildingMaintenanceWasteManagementList } from './WasteManagement/List'
-import { Detail as BuildingMaintenanceWasteManagementDetail } from './WasteManagement/Detail'
+import { List as BuildingMaintenanceWasteManagementList } from './waste-management/list'
+import { Detail as BuildingMaintenanceWasteManagementDetail } from './waste-management/detail'
 
-import { List as BuildingMaintenanceWaterManagementList } from './WaterManagement/List'
-import { Detail as BuildingMaintenanceWaterManagementDetail } from './WaterManagement/Detail'
+import { List as BuildingMaintenanceWaterManagementList } from './water-management/list'
+import { Detail as BuildingMaintenanceWaterManagementDetail } from './water-management/detail'
 
-import { List as BuildingMaintenanceFuelManagementList } from './FuelManagement/List'
-import { Detail as BuildingMaintenanceFuelManagementDetail } from './FuelManagement/Detail'
+import { List as BuildingMaintenanceFuelManagementList } from './fuel-management/list'
+import { Detail as BuildingMaintenanceFuelManagementDetail } from './fuel-management/detail'
 
-import { List as BuildingMaintenanceElectricityManagementList } from './ElectricityManagement/List'
-import { Detail as BuildingMaintenanceElectricityManagementDetail } from './ElectricityManagement/Detail'
+import { List as BuildingMaintenanceElectricityManagementList } from './electricity-management/list'
+import { Detail as BuildingMaintenanceElectricityManagementDetail } from './electricity-management/detail'
 
 import { List as BuildingMaintenanceRepairmentList } from './Repairment/List'
 import { Detail as BuildingMaintenanceRepairmentDetail } from './Repairment/Detail'

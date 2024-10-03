@@ -1,11 +1,9 @@
+import { BuildingMaintenanceWaterManagementListPage } from '@components/organisms/BuildingMaintenance'
+
 export const metadata = {
-  title: 'Building Management - EHS - Penggunaan Air',
+  title: 'Building Manegement - Building Maintenance - Water Management',
 }
 
-export default function BuildingManagementWaterManagement() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-24">
-      <p>Penggunaan Air</p>
-    </div>
-  )
+export default function BuildingMaintenanceWaterManagementList() {
+  return <BuildingMaintenanceWaterManagementListPage />
 }

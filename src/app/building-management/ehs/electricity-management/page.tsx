@@ -1,11 +1,9 @@
+import { BuildingMaintenanceElectricityManagementListPage } from '@components/organisms/BuildingMaintenance'
+
 export const metadata = {
-  title: 'Building Management - EHS - Penggunaan Listrik',
+  title: 'Building Management - Building Maintenance - Penggunaan Listik',
 }
 
-export default function BuildingManagementElectricityManagement() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-24">
-      <p>Penggunaan Listrik</p>
-    </div>
-  )
+export default function BuildingMaintenanceElectricityManagementList() {
+  return <BuildingMaintenanceElectricityManagementListPage />
 }
