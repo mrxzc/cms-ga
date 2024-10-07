@@ -11,8 +11,7 @@ import { apiCreateCarYear, apiDeleteCarYear, apiToggleStatusCarYear, apiUpdateCa
 // Create CarYear
 export const useMutateCreateCarYear = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarYearCreatePayload; idUser: string }) =>
-      apiCreateCarYear(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarYearCreatePayload }) => apiCreateCarYear(payload),
     onSuccess: () => {
       toast.success('Tambah tahun berhasil')
     },
@@ -25,8 +24,7 @@ export const useMutateCreateCarYear = () => {
 // Update CarYear
 export const useMutateUpdateCarYear = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarYearUpdatePayload; idUser: string }) =>
-      apiUpdateCarYear(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarYearUpdatePayload }) => apiUpdateCarYear(payload),
     onSuccess: () => {
       toast.success('Update tahun berhasil')
     },
@@ -39,8 +37,7 @@ export const useMutateUpdateCarYear = () => {
 // Toggle Status CarYear
 export const useMutateToggleStatusCarYear = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarYearToggleStatusPayload; idUser: string }) =>
-      apiToggleStatusCarYear(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarYearToggleStatusPayload }) => apiToggleStatusCarYear(payload),
     onSuccess: () => {
       toast.success('Update status tahun berhasil')
     },
@@ -53,8 +50,7 @@ export const useMutateToggleStatusCarYear = () => {
 // Delete CarYear
 export const useMutateDeleteCarYear = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarYearDeletePayload; idUser: string }) =>
-      apiDeleteCarYear(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarYearDeletePayload }) => apiDeleteCarYear(payload),
     onSuccess: () => {
       toast.success('Delete tahun berhasil')
     },

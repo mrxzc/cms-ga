@@ -11,6 +11,7 @@
 @import './partials/custom-table';
 @import './partials/custom-toggle';
 @import './partials/custom-input';
+@import './partials/custom-textarea';
 @import './partials/custom-date-picker';
 @import './partials/custom-dropdown';
 @import './partials/custom-ul';
@@ -192,4 +193,3 @@ input[type='number'] {
 *::-webkit-scrollbar-thumb:focus {
   background-color: var(--tertiary); /* Focus color for better accessibility */
 }
-

@@ -8,7 +8,7 @@ import { useParams, useRouter } from 'next/navigation'
 export function Detail() {
   const router = useRouter()
 
-  const paramsPage = useParams<{ wasteManagement: string }>()
+  const paramsPage = useParams<{ noId: string }>()
 
   const {
     data: meta,
@@ -18,7 +18,7 @@ export function Detail() {
     isError: isFetchError,
     isRefetchError,
     refetch,
-  } = useGetBuildingManagementWasteManagementDetail({ noId: paramsPage?.wasteManagement })
+  } = useGetBuildingManagementWasteManagementDetail({ noId: paramsPage?.noId })
 
   return (
     <div className="mb-[600px]">

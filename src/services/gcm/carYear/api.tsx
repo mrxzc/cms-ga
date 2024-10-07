@@ -21,70 +21,38 @@ import httpRequest from '@utils/helper'
 
 const api = httpRequest(API_MASTER)
 
-export function apiGetCarYear(params: IGcmCarYearListParams, idUser: string): Promise<APIBaseResponse<IGcmCarYear[]>> {
+export function apiGetCarYear(params: IGcmCarYearListParams): Promise<APIBaseResponse<IGcmCarYear[]>> {
   //  // return dummyGetCarYear()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmCarYear[], APIBaseResponse<IGcmCarYear[]>>('/cms/master/carYear/list', { params, headers })
+  return api.get<IGcmCarYear[], APIBaseResponse<IGcmCarYear[]>>('/cms/master/carYear/list', { params })
 }
 
-export function apiGetCarYearDetail(
-  params: IGcmCarYearDetailParams,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarYear>> {
+export function apiGetCarYearDetail(params: IGcmCarYearDetailParams): Promise<APIBaseResponse<IGcmCarYear>> {
   //  // return dummyGetCarYearDetail()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmCarYear, APIBaseResponse<IGcmCarYear>>('/cms/master/carYear/detail', { params, headers })
+  return api.get<IGcmCarYear, APIBaseResponse<IGcmCarYear>>('/cms/master/carYear/detail', { params })
 }
 
-export function apiCreateCarYear(
-  payload: IGcmCarYearCreatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarYear>> {
+export function apiCreateCarYear(payload: IGcmCarYearCreatePayload): Promise<APIBaseResponse<IGcmCarYear>> {
   //  // return dummyCreateCarYear()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarYear, APIBaseResponse<IGcmCarYear>>('/cms/master/carYear/create', payload, { headers })
+  return api.post<IGcmCarYear, APIBaseResponse<IGcmCarYear>>('/cms/master/carYear/create', payload)
 }
 
-export function apiUpdateCarYear(
-  payload: IGcmCarYearUpdatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarYear>> {
+export function apiUpdateCarYear(payload: IGcmCarYearUpdatePayload): Promise<APIBaseResponse<IGcmCarYear>> {
   //  // return dummyUpdateCarYear()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarYear, APIBaseResponse<IGcmCarYear>>('/cms/master/carYear/update', payload, { headers })
+  return api.post<IGcmCarYear, APIBaseResponse<IGcmCarYear>>('/cms/master/carYear/update', payload)
 }
 
-export function apiToggleStatusCarYear(
-  payload: IGcmCarYearToggleStatusPayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarYear>> {
+export function apiToggleStatusCarYear(payload: IGcmCarYearToggleStatusPayload): Promise<APIBaseResponse<IGcmCarYear>> {
   //  // return dummyToggleStatusCarYear()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarYear, APIBaseResponse<IGcmCarYear>>('/cms/master/carYear/toggleFlagActive', payload, {
-    headers,
-  })
+  return api.post<IGcmCarYear, APIBaseResponse<IGcmCarYear>>('/cms/master/carYear/toggleFlagActive', payload)
 }
 
-export function apiDeleteCarYear(payload: IGcmCarYearDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
+export function apiDeleteCarYear(payload: IGcmCarYearDeletePayload): Promise<APIBaseResponse<any>> {
   //  // return dummyDeleteCarYear()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<any, APIBaseResponse<any>>('/cms/master/carYear/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/carYear/delete', payload)
 }

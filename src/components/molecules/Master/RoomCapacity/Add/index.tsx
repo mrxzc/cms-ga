@@ -3,10 +3,8 @@
 import IconChevronRight from '@assets/icons/IconChevronRight'
 import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmRoomCapacityCreateForm, IGcmRoomCapacityCreatePayload } from '@interfaces/gcmRoomCapacity'
 import { useMutateCreateRoomCapacity } from '@services/gcm/roomCapacity/mutation'
-import { GetCookie } from '@store/storage'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -14,8 +12,6 @@ import { schema } from './schema'
 
 export function Add() {
   const router = useRouter()
-
-  const dataUser: IOTPLoginResponse = GetCookie('data_user')
 
   const {
     mutate: mutateCreate,
@@ -33,7 +29,7 @@ export function Add() {
 
   const onSubmit = (form: IGcmRoomCapacityCreateForm) => {
     const payload: IGcmRoomCapacityCreatePayload = { ...form }
-    mutateCreate({ payload, idUser: dataUser?.idUser })
+    mutateCreate({ payload })
   }
 
   useEffect(() => {

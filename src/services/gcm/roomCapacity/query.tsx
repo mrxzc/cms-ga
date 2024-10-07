@@ -15,11 +15,11 @@ export const useGetRoomCapacity = (params: IGcmRoomCapacityListParams) => {
 }
 
 // Get RoomCapacity Detail
-export const useGetRoomCapacityDetail = (params: IGcmRoomCapacityDetailParams, idUser: string) => {
+export const useGetRoomCapacityDetail = (params: IGcmRoomCapacityDetailParams) => {
   return useQuery({
     queryKey: ['/cms/master/roomCapacity/detail', params],
     queryFn: async () =>
-      apiGetRoomCapacityDetail(params, idUser).catch((error: Error) => {
+      apiGetRoomCapacityDetail(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })

@@ -20,73 +20,44 @@ import httpRequest from '@utils/helper'
 
 const api = httpRequest(API_MASTER)
 
-export function apiGetAssessmentList(idUser: string): Promise<APIBaseResponse<IAssessmentList[]>> {
+export function apiGetAssessmentList(): Promise<APIBaseResponse<IAssessmentList[]>> {
   //  // return dummyGetAssessmentList()
 
-  const headers = {
-    idUser,
-  }
-
-  return api.get<IAssessmentList[], APIBaseResponse<IAssessmentList[]>>('/cms/master/assessment/list', {
-    headers,
-  })
+  return api.get<IAssessmentList[], APIBaseResponse<IAssessmentList[]>>('/cms/master/assessment/list')
 }
 
-export function apiGetAssessmentData(
-  params: IAssessmentDataParams,
-  idUser: string
-): Promise<APIBaseResponse<IAssessmentData>> {
+export function apiGetAssessmentData(params: IAssessmentDataParams): Promise<APIBaseResponse<IAssessmentData>> {
   //  // return dummyGetAssessmentData()
 
-  const headers = {
-    idUser,
-  }
   return api.get<IAssessmentData, APIBaseResponse<IAssessmentData>>('/cms/master/assessment/data', {
     params,
-    headers,
   })
 }
 
 export function apiInsertAssessmentCriteria(
-  payload: IInsertAssessmentCriteriaPayload,
-  idUser: string
+  payload: IInsertAssessmentCriteriaPayload
 ): Promise<APIBaseResponse<IAssessmentCriteriaResponse>> {
   //  // return dummyInsertAssessmentCriteria()
 
-  const headers = {
-    idUser,
-  }
   return api.post<IAssessmentCriteriaResponse, APIBaseResponse<IAssessmentCriteriaResponse>>(
     '/cms/master/assessment/criteria/insert',
-    payload,
-    { headers }
+    payload
   )
 }
 
 export function apiUpdateAssessmentCriteria(
-  payload: IUpdateAssessmentCriteriaPayload,
-  idUser: string
+  payload: IUpdateAssessmentCriteriaPayload
 ): Promise<APIBaseResponse<IAssessmentCriteriaResponse>> {
   //  // return dummyUpdateAssessmentCriteria()
 
-  const headers = {
-    idUser,
-  }
   return api.post<IAssessmentCriteriaResponse, APIBaseResponse<IAssessmentCriteriaResponse>>(
     '/cms/master/assessment/criteria/update',
-    payload,
-    { headers }
+    payload
   )
 }
 
-export function apiDeleteAssessmentCriteria(
-  payload: IDeleteAssessmentCriteriaPayload,
-  idUser: string
-): Promise<APIBaseResponse<any>> {
+export function apiDeleteAssessmentCriteria(payload: IDeleteAssessmentCriteriaPayload): Promise<APIBaseResponse<any>> {
   //  // return dummyDeleteAssessmentCriteria()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<any, APIBaseResponse<any>>('/cms/master/assessment/criteria/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/assessment/criteria/delete', payload)
 }

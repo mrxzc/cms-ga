@@ -11,8 +11,7 @@ import { apiCreateRoomFloor, apiDeleteRoomFloor, apiToggleStatusRoomFloor, apiUp
 // Create RoomFloor
 export const useMutateCreateRoomFloor = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFloorCreatePayload; idUser: string }) =>
-      apiCreateRoomFloor(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomFloorCreatePayload }) => apiCreateRoomFloor(payload),
     onSuccess: () => {
       toast.success('Tambah lantai ruangan berhasil')
     },
@@ -25,8 +24,7 @@ export const useMutateCreateRoomFloor = () => {
 // Update RoomFloor
 export const useMutateUpdateRoomFloor = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFloorUpdatePayload; idUser: string }) =>
-      apiUpdateRoomFloor(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomFloorUpdatePayload }) => apiUpdateRoomFloor(payload),
     onSuccess: () => {
       toast.success('Update lantai ruangan berhasil')
     },
@@ -39,8 +37,7 @@ export const useMutateUpdateRoomFloor = () => {
 // Toggle Status RoomFloor
 export const useMutateToggleStatusRoomFloor = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFloorToggleStatusPayload; idUser: string }) =>
-      apiToggleStatusRoomFloor(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomFloorToggleStatusPayload }) => apiToggleStatusRoomFloor(payload),
     onSuccess: () => {
       toast.success('Update status lantai ruangan berhasil')
     },
@@ -53,8 +50,7 @@ export const useMutateToggleStatusRoomFloor = () => {
 // Delete RoomFloor
 export const useMutateDeleteRoomFloor = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFloorDeletePayload; idUser: string }) =>
-      apiDeleteRoomFloor(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomFloorDeletePayload }) => apiDeleteRoomFloor(payload),
     onSuccess: () => {
       toast.success('Delete lantai ruangan berhasil')
     },

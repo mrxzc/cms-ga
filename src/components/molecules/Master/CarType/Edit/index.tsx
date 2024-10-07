@@ -4,13 +4,11 @@ import IconChevronBottom from '@assets/icons/IconChevronBottom'
 import IconChevronRight from '@assets/icons/IconChevronRight'
 import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmCarBrand } from '@interfaces/gcmCarBrand'
 import { IGcmCarTypeListParams, IGcmCarTypeUpdateForm, IGcmCarTypeUpdatePayload } from '@interfaces/gcmCarType'
 import { useGetCarBrand } from '@services/gcm/carBrand/query'
 import { useMutateUpdateCarType } from '@services/gcm/carType/mutation'
 import { useGetCarTypeDetail } from '@services/gcm/carType/query'
-import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
 import { debounce } from 'lodash'
 import { useParams, useRouter } from 'next/navigation'
@@ -23,8 +21,6 @@ export function Edit() {
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const dataUser: IOTPLoginResponse = GetCookie('data_user')
-
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>()
   const [keywords, setKeywords] = useState<string>()
 
@@ -36,7 +32,7 @@ export function Edit() {
 
   const [params, setParams] = useState<IGcmCarTypeListParams>(defaultParams)
 
-  const { data: dataBrand, isFetching: isFetchingCarBrand } = useGetCarBrand(params, dataUser?.idUser)
+  const { data: dataBrand, isFetching: isFetchingCarBrand } = useGetCarBrand(params)
 
   const paramsPage = useParams<{ carType: string }>()
 
@@ -48,7 +44,7 @@ export function Edit() {
     isError: isFetchError,
     isRefetchError,
     refetch,
-  } = useGetCarTypeDetail({ noSr: paramsPage?.carType }, dataUser?.idUser)
+  } = useGetCarTypeDetail({ noSr: paramsPage?.carType })
 
   const {
     mutate: mutateUpdate,
@@ -66,7 +62,7 @@ export function Edit() {
 
   const onSubmit = (form: IGcmCarTypeUpdateForm) => {
     const payload: IGcmCarTypeUpdatePayload = { ...form }
-    mutateUpdate({ payload, idUser: dataUser?.idUser })
+    mutateUpdate({ payload })
   }
 
   const handleSearch = useCallback(

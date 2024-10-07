@@ -11,8 +11,7 @@ import { apiCreateLocation, apiDeleteLocation, apiToggleStatusLocation, apiUpdat
 // Create Location
 export const useMutateCreateLocation = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmLocationCreatePayload; idUser: string }) =>
-      apiCreateLocation(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmLocationCreatePayload }) => apiCreateLocation(payload),
     onSuccess: () => {
       toast.success('Tambah lokasi berhasil')
     },
@@ -25,8 +24,7 @@ export const useMutateCreateLocation = () => {
 // Update Location
 export const useMutateUpdateLocation = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmLocationUpdatePayload; idUser: string }) =>
-      apiUpdateLocation(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmLocationUpdatePayload }) => apiUpdateLocation(payload),
     onSuccess: () => {
       toast.success('Update lokasi berhasil')
     },
@@ -39,8 +37,7 @@ export const useMutateUpdateLocation = () => {
 // Toggle Status Location
 export const useMutateToggleStatusLocation = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmLocationToggleStatusPayload; idUser: string }) =>
-      apiToggleStatusLocation(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmLocationToggleStatusPayload }) => apiToggleStatusLocation(payload),
     onSuccess: () => {
       toast.success('Update status lokasi berhasil')
     },
@@ -53,8 +50,7 @@ export const useMutateToggleStatusLocation = () => {
 // Delete Location
 export const useMutateDeleteLocation = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmLocationDeletePayload; idUser: string }) =>
-      apiDeleteLocation(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmLocationDeletePayload }) => apiDeleteLocation(payload),
     onSuccess: () => {
       toast.success('Delete lokasi berhasil')
     },

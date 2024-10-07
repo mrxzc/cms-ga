@@ -3,11 +3,9 @@
 import IconChevronRight from '@assets/icons/IconChevronRight'
 import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmRoomFloorUpdateForm, IGcmRoomFloorUpdatePayload } from '@interfaces/gcmRoomFloor'
 import { useMutateUpdateRoomFloor } from '@services/gcm/roomFloor/mutation'
 import { useGetRoomFloorDetail } from '@services/gcm/roomFloor/query'
-import { GetCookie } from '@store/storage'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -15,8 +13,6 @@ import { schema } from './schema'
 
 export function Edit() {
   const router = useRouter()
-
-  const dataUser: IOTPLoginResponse = GetCookie('data_user')
 
   const paramsPage = useParams<{ roomFloor: string }>()
 
@@ -28,7 +24,7 @@ export function Edit() {
     isError: isFetchError,
     isRefetchError,
     refetch,
-  } = useGetRoomFloorDetail({ noSr: paramsPage?.roomFloor }, dataUser?.idUser)
+  } = useGetRoomFloorDetail({ noSr: paramsPage?.roomFloor })
 
   const {
     mutate: mutateUpdate,
@@ -46,7 +42,7 @@ export function Edit() {
 
   const onSubmit = (form: IGcmRoomFloorUpdateForm) => {
     const payload: IGcmRoomFloorUpdatePayload = { ...form }
-    mutateUpdate({ payload, idUser: dataUser?.idUser })
+    mutateUpdate({ payload })
   }
 
   useEffect(() => {

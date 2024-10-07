@@ -473,7 +473,7 @@ export function List() {
           {/* Pagination */}
           <Pagination
             isLoading={false}
-            pagination={{ currentPage: 1, totalPage: 10, totalRecords: 100, nextPage: null, prevPage: null }}
+            pagination={meta?.pagination}
             clicked={(page: number) => {
               setParams({ ...params, page })
             }}

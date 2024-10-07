@@ -4,11 +4,11 @@ import { toast } from 'react-toastify'
 import { apiGetListContent } from './api'
 
 // Get List Content
-export const useGetListContent = (params: IListContentParams, idUser: string) => {
+export const useGetListContent = (params: IListContentParams) => {
   return useQuery({
     queryKey: ['/cms/master/konten/list', params],
     queryFn: async () =>
-      apiGetListContent(params, idUser).catch((error: Error) => {
+      apiGetListContent(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })

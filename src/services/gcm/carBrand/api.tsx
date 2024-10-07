@@ -21,73 +21,40 @@ import httpRequest from '@utils/helper'
 
 const api = httpRequest(API_MASTER)
 
-export function apiGetCarBrand(
-  params: IGcmCarBrandListParams,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarBrand[]>> {
+export function apiGetCarBrand(params: IGcmCarBrandListParams): Promise<APIBaseResponse<IGcmCarBrand[]>> {
   //  // return dummyGetCarBrand()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmCarBrand[], APIBaseResponse<IGcmCarBrand[]>>('/cms/master/carBrand/list', { params, headers })
+  return api.get<IGcmCarBrand[], APIBaseResponse<IGcmCarBrand[]>>('/cms/master/carBrand/list', { params })
 }
 
-export function apiGetCarBrandDetail(
-  params: IGcmCarBrandDetailParams,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarBrand>> {
+export function apiGetCarBrandDetail(params: IGcmCarBrandDetailParams): Promise<APIBaseResponse<IGcmCarBrand>> {
   //  // return dummyGetCarBrandDetail()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/detail', { params, headers })
+  return api.get<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/detail', { params })
 }
 
-export function apiCreateCarBrand(
-  payload: IGcmCarBrandCreatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarBrand>> {
+export function apiCreateCarBrand(payload: IGcmCarBrandCreatePayload): Promise<APIBaseResponse<IGcmCarBrand>> {
   //  // return dummyCreateCarBrand()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/create', payload, { headers })
+  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/create', payload)
 }
 
-export function apiUpdateCarBrand(
-  payload: IGcmCarBrandUpdatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarBrand>> {
+export function apiUpdateCarBrand(payload: IGcmCarBrandUpdatePayload): Promise<APIBaseResponse<IGcmCarBrand>> {
   //  // return dummyUpdateCarBrand()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/update', payload, { headers })
+  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/update', payload)
 }
 
 export function apiToggleStatusCarBrand(
-  payload: IGcmCarBrandToggleStatusPayload,
-  idUser: string
+  payload: IGcmCarBrandToggleStatusPayload
 ): Promise<APIBaseResponse<IGcmCarBrand>> {
   //  // return dummyToggleStatusCarBrand()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/toggleFlagActive', payload, {
-    headers,
-  })
+  return api.post<IGcmCarBrand, APIBaseResponse<IGcmCarBrand>>('/cms/master/carBrand/toggleFlagActive', payload)
 }
 
-export function apiDeleteCarBrand(payload: IGcmCarBrandDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
+export function apiDeleteCarBrand(payload: IGcmCarBrandDeletePayload): Promise<APIBaseResponse<any>> {
   //  // return dummyDeleteCarBrand()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<any, APIBaseResponse<any>>('/cms/master/carBrand/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/carBrand/delete', payload)
 }

@@ -9,7 +9,6 @@ import IconTrashOutline from '@assets/icons/IconTrashOutline'
 import confirmationDanger from '@assets/images/ConfirmationDanger.png'
 import { Modal } from '@components/atoms/ModalCustom'
 import Pagination from '@components/atoms/Pagination'
-import { IOTPLoginResponse } from '@interfaces/auth'
 import {
   IGcmCarType,
   IGcmCarTypeDeletePayload,
@@ -18,7 +17,6 @@ import {
 } from '@interfaces/gcmCarType'
 import { useMutateDeleteCarType, useMutateToggleStatusCarType } from '@services/gcm/carType/mutation'
 import { useGetCarType } from '@services/gcm/carType/query'
-import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
 import { debounce } from 'lodash'
 import Image from 'next/image'
@@ -27,8 +25,6 @@ import { useCallback, useEffect, useState } from 'react'
 
 export function List() {
   const router = useRouter()
-
-  const dataUser: IOTPLoginResponse = GetCookie('data_user')
 
   const [isConfimationModalOpen, setIsConfimationModalOpen] = useState<boolean>(false)
 
@@ -43,7 +39,7 @@ export function List() {
   }
   const [params, setParams] = useState<IGcmCarTypeListParams>(defaultParams)
 
-  const { data, isFetching, refetch } = useGetCarType(params, dataUser?.idUser)
+  const { data, isFetching, refetch } = useGetCarType(params)
 
   const { mutate: mutateToggle, isSuccess: isToggleSuccess, reset: toggleReset } = useMutateToggleStatusCarType()
   const {
@@ -196,7 +192,7 @@ export function List() {
                                   noSr: carType?.noSr,
                                   flagActive: val?.target?.checked,
                                 }
-                                mutateToggle({ payload, idUser: dataUser?.idUser })
+                                mutateToggle({ payload })
                               }}
                             />
                             <span className="slider round"></span>
@@ -315,7 +311,7 @@ export function List() {
                         noSr: selectedCarType?.noSr,
                         flagActive: false,
                       }
-                      mutateDelete({ payload, idUser: dataUser?.idUser })
+                      mutateDelete({ payload })
                     }
                   }}
                 >

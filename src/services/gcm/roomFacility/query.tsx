@@ -15,11 +15,11 @@ export const useGetRoomFacility = (params: IGcmRoomFacilityListParams) => {
 }
 
 // Get RoomFacility Detail
-export const useGetRoomFacilityDetail = (params: IGcmRoomFacilityDetailParams, idUser: string) => {
+export const useGetRoomFacilityDetail = (params: IGcmRoomFacilityDetailParams) => {
   return useQuery({
     queryKey: ['/cms/master/roomFacility/detail', params],
     queryFn: async () =>
-      apiGetRoomFacilityDetail(params, idUser).catch((error: Error) => {
+      apiGetRoomFacilityDetail(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })

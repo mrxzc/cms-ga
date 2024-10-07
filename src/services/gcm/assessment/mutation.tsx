@@ -10,8 +10,8 @@ import { apiInsertAssessmentCriteria, apiUpdateAssessmentCriteria, apiDeleteAsse
 // Insert Assessment Criteria
 export const useMutateInsertAssessmentCriteria = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IInsertAssessmentCriteriaPayload; idUser: string }) =>
-      apiInsertAssessmentCriteria(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IInsertAssessmentCriteriaPayload }) =>
+      apiInsertAssessmentCriteria(payload),
     onSuccess: () => {
       toast.success('Tambah kriteria berhasil')
     },
@@ -24,8 +24,8 @@ export const useMutateInsertAssessmentCriteria = () => {
 // Update Assessment Criteria
 export const useMutateUpdateAssessmentCriteria = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IUpdateAssessmentCriteriaPayload; idUser: string }) =>
-      apiUpdateAssessmentCriteria(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IUpdateAssessmentCriteriaPayload }) =>
+      apiUpdateAssessmentCriteria(payload),
     onSuccess: () => {
       toast.success('Edit kriteria berhasil')
     },
@@ -38,8 +38,8 @@ export const useMutateUpdateAssessmentCriteria = () => {
 // Delete Assessment Criteria
 export const useMutateDeleteAssessmentCriteria = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IDeleteAssessmentCriteriaPayload; idUser: string }) =>
-      apiDeleteAssessmentCriteria(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IDeleteAssessmentCriteriaPayload }) =>
+      apiDeleteAssessmentCriteria(payload),
     onSuccess: () => {
       toast.success('Hapus kriteria berhasil')
     },

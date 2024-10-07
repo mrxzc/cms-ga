@@ -27,61 +27,34 @@ export function apiGetRoomFloor(params: IGcmRoomFloorListParams): Promise<APIBas
   return api.get<IGcmRoomFloor[], APIBaseResponse<IGcmRoomFloor[]>>('/cms/master/roomFloor/list', { params })
 }
 
-export function apiGetRoomFloorDetail(
-  params: IGcmRoomFloorDetailParams,
-  idUser: string
-): Promise<APIBaseResponse<IGcmRoomFloor>> {
+export function apiGetRoomFloorDetail(params: IGcmRoomFloorDetailParams): Promise<APIBaseResponse<IGcmRoomFloor>> {
   //  // return dummyGetRoomFloorDetail()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/detail', { params, headers })
+  return api.get<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/detail', { params })
 }
 
-export function apiCreateRoomFloor(
-  payload: IGcmRoomFloorCreatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmRoomFloor>> {
+export function apiCreateRoomFloor(payload: IGcmRoomFloorCreatePayload): Promise<APIBaseResponse<IGcmRoomFloor>> {
   //  // return dummyCreateRoomFloor()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/create', payload, { headers })
+  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/create', payload)
 }
 
-export function apiUpdateRoomFloor(
-  payload: IGcmRoomFloorUpdatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmRoomFloor>> {
+export function apiUpdateRoomFloor(payload: IGcmRoomFloorUpdatePayload): Promise<APIBaseResponse<IGcmRoomFloor>> {
   //  // return dummyUpdateRoomFloor()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/update', payload, { headers })
+  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/update', payload)
 }
 
 export function apiToggleStatusRoomFloor(
-  payload: IGcmRoomFloorToggleStatusPayload,
-  idUser: string
+  payload: IGcmRoomFloorToggleStatusPayload
 ): Promise<APIBaseResponse<IGcmRoomFloor>> {
   //  // return dummyToggleStatusRoomFloor()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/toggleFlagActive', payload, {
-    headers,
-  })
+  return api.post<IGcmRoomFloor, APIBaseResponse<IGcmRoomFloor>>('/cms/master/roomFloor/toggleFlagActive', payload)
 }
 
-export function apiDeleteRoomFloor(payload: IGcmRoomFloorDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
+export function apiDeleteRoomFloor(payload: IGcmRoomFloorDeletePayload): Promise<APIBaseResponse<any>> {
   //  // return dummyDeleteRoomFloor()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<any, APIBaseResponse<any>>('/cms/master/roomFloor/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/roomFloor/delete', payload)
 }

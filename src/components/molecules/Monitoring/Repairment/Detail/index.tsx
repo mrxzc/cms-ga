@@ -8,8 +8,6 @@ import { data } from './data'
 export function Detail() {
   const router = useRouter()
 
-  // const dataUser: IOTPLoginResponse = GetCookie('data_user')
-
   // const paramsPage = useParams<{ noIdSecurity: string }>()
 
   // const [isPhotoModalOpen, setIsPhotoModalOpen] = useState<boolean>(false)

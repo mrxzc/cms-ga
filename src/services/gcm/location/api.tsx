@@ -22,66 +22,37 @@ import httpRequest from '@utils/helper'
 const api = httpRequest(API_MASTER)
 
 export function apiGetLocation(params: IGcmLocationListParams): Promise<APIBaseResponse<IGcmLocation[]>> {
-  // return dummyGetLocation()
-
   return api.get<IGcmLocation[], APIBaseResponse<IGcmLocation[]>>('/cms/master/location/list', { params })
 }
 
-export function apiGetLocationDetail(
-  params: IGcmLocationDetailParams,
-  idUser: string
-): Promise<APIBaseResponse<IGcmLocation>> {
+export function apiGetLocationDetail(params: IGcmLocationDetailParams): Promise<APIBaseResponse<IGcmLocation>> {
   //  // return dummyGetLocationDetail()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmLocation, APIBaseResponse<IGcmLocation>>('/cms/master/location/detail', { params, headers })
+  return api.get<IGcmLocation, APIBaseResponse<IGcmLocation>>('/cms/master/location/detail', { params })
 }
 
-export function apiCreateLocation(
-  payload: IGcmLocationCreatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmLocation>> {
+export function apiCreateLocation(payload: IGcmLocationCreatePayload): Promise<APIBaseResponse<IGcmLocation>> {
   //  // return dummyCreateLocation()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmLocation, APIBaseResponse<IGcmLocation>>('/cms/master/location/create', payload, { headers })
+  return api.post<IGcmLocation, APIBaseResponse<IGcmLocation>>('/cms/master/location/create', payload)
 }
 
-export function apiUpdateLocation(
-  payload: IGcmLocationUpdatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmLocation>> {
+export function apiUpdateLocation(payload: IGcmLocationUpdatePayload): Promise<APIBaseResponse<IGcmLocation>> {
   //  // return dummyUpdateLocation()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmLocation, APIBaseResponse<IGcmLocation>>('/cms/master/location/update', payload, { headers })
+  return api.post<IGcmLocation, APIBaseResponse<IGcmLocation>>('/cms/master/location/update', payload)
 }
 
 export function apiToggleStatusLocation(
-  payload: IGcmLocationToggleStatusPayload,
-  idUser: string
+  payload: IGcmLocationToggleStatusPayload
 ): Promise<APIBaseResponse<IGcmLocation>> {
   //  // return dummyToggleStatusLocation()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmLocation, APIBaseResponse<IGcmLocation>>('/cms/master/location/toggleFlagActive', payload, {
-    headers,
-  })
+  return api.post<IGcmLocation, APIBaseResponse<IGcmLocation>>('/cms/master/location/toggleFlagActive', payload)
 }
 
-export function apiDeleteLocation(payload: IGcmLocationDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
+export function apiDeleteLocation(payload: IGcmLocationDeletePayload): Promise<APIBaseResponse<any>> {
   //  // return dummyDeleteLocation()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<any, APIBaseResponse<any>>('/cms/master/location/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/location/delete', payload)
 }

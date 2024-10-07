@@ -7,14 +7,14 @@ import {
 } from '@interfaces/building-management-cleaning-service'
 import { API_MASTER } from '@utils/environment'
 import httpRequest from '@utils/helper'
-import { dummyGetCleaningServiceDetail, dummyGetCleaningServiceList } from './dummy'
+// import { dummyGetBuildingManagementCleaningServiceDetail, dummyGetBuildingManagementCleaningServiceList } from './dummy'
 
 const api = httpRequest(API_MASTER)
 
-export function apiGetCleaningServiceList(
+export function apiGetBuildingManagementCleaningServiceList(
   params: IBuildingManagementCleaningServiceListParams
 ): Promise<APIBaseResponse<IBuildingManagementCleaningServiceList[]>> {
-  return dummyGetCleaningServiceList()
+  // return dummyGetBuildingManagementCleaningServiceList()
 
   return api.get<IBuildingManagementCleaningServiceList[], APIBaseResponse<IBuildingManagementCleaningServiceList[]>>(
     '/cms/master/buildingManagement/cleaningService/list',
@@ -24,10 +24,10 @@ export function apiGetCleaningServiceList(
   )
 }
 
-export function apiGetCleaningServiceDetail(
+export function apiGetBuildingManagementCleaningServiceDetail(
   params: IBuildingManagementCleaningServiceDetailParams
 ): Promise<APIBaseResponse<IBuildingManagementCleaningServiceDetail>> {
-  return dummyGetCleaningServiceDetail()
+  // return dummyGetBuildingManagementCleaningServiceDetail()
 
   return api.get<IBuildingManagementCleaningServiceDetail, APIBaseResponse<IBuildingManagementCleaningServiceDetail>>(
     '/cms/master/buildingManagement/cleaningService/detail',

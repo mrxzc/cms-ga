@@ -4,22 +4,22 @@ import { toast } from 'react-toastify'
 import { apiGetCarYear, apiGetCarYearDetail } from './api'
 
 // Get CarYear
-export const useGetCarYear = (params: IGcmCarYearListParams, idUser: string) => {
+export const useGetCarYear = (params: IGcmCarYearListParams) => {
   return useQuery({
     queryKey: ['/cms/master/carYear/list', params],
     queryFn: async () =>
-      apiGetCarYear(params, idUser).catch((error: Error) => {
+      apiGetCarYear(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })
 }
 
 // Get CarYear Detail
-export const useGetCarYearDetail = (params: IGcmCarYearDetailParams, idUser: string) => {
+export const useGetCarYearDetail = (params: IGcmCarYearDetailParams) => {
   return useQuery({
     queryKey: ['/cms/master/carYear/detail', params],
     queryFn: async () =>
-      apiGetCarYearDetail(params, idUser).catch((error: Error) => {
+      apiGetCarYearDetail(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })

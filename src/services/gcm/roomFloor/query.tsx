@@ -15,11 +15,11 @@ export const useGetRoomFloor = (params: IGcmRoomFloorListParams) => {
 }
 
 // Get RoomFloor Detail
-export const useGetRoomFloorDetail = (params: IGcmRoomFloorDetailParams, idUser: string) => {
+export const useGetRoomFloorDetail = (params: IGcmRoomFloorDetailParams) => {
   return useQuery({
     queryKey: ['/cms/master/roomFloor/detail', params],
     queryFn: async () =>
-      apiGetRoomFloorDetail(params, idUser).catch((error: Error) => {
+      apiGetRoomFloorDetail(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })

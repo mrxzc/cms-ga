@@ -15,8 +15,6 @@ import { data } from './data'
 export function List() {
   const router = useRouter()
 
-  // const dataUser: IOTPLoginResponse = GetCookie('data_user')
-
   const inputStartDateRef = useRef<any>(null)
   const inputEndDateRef = useRef<any>(null)
   const inputStartDateContainerRef = useRef<HTMLDivElement>(null)

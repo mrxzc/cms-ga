@@ -18,6 +18,7 @@ export interface IBuildingManagementSecurityGuardDetail {
   area: string
   descSp: string
   kategoriRequest: string
+  nameManpowerExisting: string
   lamaKerja: number
   reason: string
 }

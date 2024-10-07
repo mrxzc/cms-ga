@@ -15,11 +15,11 @@ export const useGetLocation = (params: IGcmLocationListParams) => {
 }
 
 // Get Location Detail
-export const useGetLocationDetail = (params: IGcmLocationDetailParams, idUser: string) => {
+export const useGetLocationDetail = (params: IGcmLocationDetailParams) => {
   return useQuery({
     queryKey: ['/cms/master/location/detail', params],
     queryFn: async () =>
-      apiGetLocationDetail(params, idUser).catch((error: Error) => {
+      apiGetLocationDetail(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })

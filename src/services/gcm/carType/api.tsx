@@ -21,70 +21,38 @@ import httpRequest from '@utils/helper'
 
 const api = httpRequest(API_MASTER)
 
-export function apiGetCarType(params: IGcmCarTypeListParams, idUser: string): Promise<APIBaseResponse<IGcmCarType[]>> {
+export function apiGetCarType(params: IGcmCarTypeListParams): Promise<APIBaseResponse<IGcmCarType[]>> {
   //  // return dummyGetCarType()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmCarType[], APIBaseResponse<IGcmCarType[]>>('/cms/master/carType/list', { params, headers })
+  return api.get<IGcmCarType[], APIBaseResponse<IGcmCarType[]>>('/cms/master/carType/list', { params })
 }
 
-export function apiGetCarTypeDetail(
-  params: IGcmCarTypeDetailParams,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarType>> {
+export function apiGetCarTypeDetail(params: IGcmCarTypeDetailParams): Promise<APIBaseResponse<IGcmCarType>> {
   //  // return dummyGetCarTypeDetail()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmCarType, APIBaseResponse<IGcmCarType>>('/cms/master/carType/detail', { params, headers })
+  return api.get<IGcmCarType, APIBaseResponse<IGcmCarType>>('/cms/master/carType/detail', { params })
 }
 
-export function apiCreateCarType(
-  payload: IGcmCarTypeCreatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarType>> {
+export function apiCreateCarType(payload: IGcmCarTypeCreatePayload): Promise<APIBaseResponse<IGcmCarType>> {
   //  // return dummyCreateCarType()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarType, APIBaseResponse<IGcmCarType>>('/cms/master/carType/create', payload, { headers })
+  return api.post<IGcmCarType, APIBaseResponse<IGcmCarType>>('/cms/master/carType/create', payload)
 }
 
-export function apiUpdateCarType(
-  payload: IGcmCarTypeUpdatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarType>> {
+export function apiUpdateCarType(payload: IGcmCarTypeUpdatePayload): Promise<APIBaseResponse<IGcmCarType>> {
   //  // return dummyUpdateCarType()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarType, APIBaseResponse<IGcmCarType>>('/cms/master/carType/update', payload, { headers })
+  return api.post<IGcmCarType, APIBaseResponse<IGcmCarType>>('/cms/master/carType/update', payload)
 }
 
-export function apiToggleStatusCarType(
-  payload: IGcmCarTypeToggleStatusPayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarType>> {
+export function apiToggleStatusCarType(payload: IGcmCarTypeToggleStatusPayload): Promise<APIBaseResponse<IGcmCarType>> {
   //  // return dummyToggleStatusCarType()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarType, APIBaseResponse<IGcmCarType>>('/cms/master/carType/toggleFlagActive', payload, {
-    headers,
-  })
+  return api.post<IGcmCarType, APIBaseResponse<IGcmCarType>>('/cms/master/carType/toggleFlagActive', payload)
 }
 
-export function apiDeleteCarType(payload: IGcmCarTypeDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
+export function apiDeleteCarType(payload: IGcmCarTypeDeletePayload): Promise<APIBaseResponse<any>> {
   //  // return dummyDeleteCarType()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<any, APIBaseResponse<any>>('/cms/master/carType/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/carType/delete', payload)
 }

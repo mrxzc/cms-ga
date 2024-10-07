@@ -11,8 +11,7 @@ import { apiCreateCarType, apiDeleteCarType, apiToggleStatusCarType, apiUpdateCa
 // Create CarType
 export const useMutateCreateCarType = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarTypeCreatePayload; idUser: string }) =>
-      apiCreateCarType(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarTypeCreatePayload }) => apiCreateCarType(payload),
     onSuccess: () => {
       toast.success('Tambah tipe mobil berhasil')
     },
@@ -25,8 +24,7 @@ export const useMutateCreateCarType = () => {
 // Update CarType
 export const useMutateUpdateCarType = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarTypeUpdatePayload; idUser: string }) =>
-      apiUpdateCarType(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarTypeUpdatePayload }) => apiUpdateCarType(payload),
     onSuccess: () => {
       toast.success('Update tipe mobil berhasil')
     },
@@ -39,8 +37,7 @@ export const useMutateUpdateCarType = () => {
 // Toggle Status CarType
 export const useMutateToggleStatusCarType = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarTypeToggleStatusPayload; idUser: string }) =>
-      apiToggleStatusCarType(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarTypeToggleStatusPayload }) => apiToggleStatusCarType(payload),
     onSuccess: () => {
       toast.success('Update status tipe mobil berhasil')
     },
@@ -53,8 +50,7 @@ export const useMutateToggleStatusCarType = () => {
 // Delete CarType
 export const useMutateDeleteCarType = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarTypeDeletePayload; idUser: string }) =>
-      apiDeleteCarType(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarTypeDeletePayload }) => apiDeleteCarType(payload),
     onSuccess: () => {
       toast.success('Delete tipe mobil berhasil')
     },

@@ -1,0 +1,13 @@
+.custom-textarea {
+  textarea {
+    outline: none;
+  }
+}
+
+.custom-textarea:has(textarea:focus) {
+  border: 1px solid #4994ec;
+}
+
+.custom-textarea:has(textarea:user-invalid) {
+  border: 1px solid #ec4949;
+}

@@ -11,8 +11,7 @@ import { apiCreateCarBrand, apiDeleteCarBrand, apiToggleStatusCarBrand, apiUpdat
 // Create CarBrand
 export const useMutateCreateCarBrand = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarBrandCreatePayload; idUser: string }) =>
-      apiCreateCarBrand(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarBrandCreatePayload }) => apiCreateCarBrand(payload),
     onSuccess: () => {
       toast.success('Tambah brand mobil berhasil')
     },
@@ -25,8 +24,7 @@ export const useMutateCreateCarBrand = () => {
 // Update CarBrand
 export const useMutateUpdateCarBrand = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarBrandUpdatePayload; idUser: string }) =>
-      apiUpdateCarBrand(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarBrandUpdatePayload }) => apiUpdateCarBrand(payload),
     onSuccess: () => {
       toast.success('Update brand mobil berhasil')
     },
@@ -39,8 +37,7 @@ export const useMutateUpdateCarBrand = () => {
 // Toggle Status CarBrand
 export const useMutateToggleStatusCarBrand = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarBrandToggleStatusPayload; idUser: string }) =>
-      apiToggleStatusCarBrand(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarBrandToggleStatusPayload }) => apiToggleStatusCarBrand(payload),
     onSuccess: () => {
       toast.success('Update status brand mobil berhasil')
     },
@@ -53,8 +50,7 @@ export const useMutateToggleStatusCarBrand = () => {
 // Delete CarBrand
 export const useMutateDeleteCarBrand = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarBrandDeletePayload; idUser: string }) =>
-      apiDeleteCarBrand(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarBrandDeletePayload }) => apiDeleteCarBrand(payload),
     onSuccess: () => {
       toast.success('Delete brand mobil berhasil')
     },

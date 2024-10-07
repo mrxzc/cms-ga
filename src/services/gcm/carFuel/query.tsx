@@ -4,22 +4,22 @@ import { toast } from 'react-toastify'
 import { apiGetCarFuel, apiGetCarFuelDetail } from './api'
 
 // Get CarFuel
-export const useGetCarFuel = (params: IGcmCarFuelListParams, idUser: string) => {
+export const useGetCarFuel = (params: IGcmCarFuelListParams) => {
   return useQuery({
     queryKey: ['/cms/master/carFuel/list', params],
     queryFn: async () =>
-      apiGetCarFuel(params, idUser).catch((error: Error) => {
+      apiGetCarFuel(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })
 }
 
 // Get CarFuel Detail
-export const useGetCarFuelDetail = (params: IGcmCarFuelDetailParams, idUser: string) => {
+export const useGetCarFuelDetail = (params: IGcmCarFuelDetailParams) => {
   return useQuery({
     queryKey: ['/cms/master/carFuel/detail', params],
     queryFn: async () =>
-      apiGetCarFuelDetail(params, idUser).catch((error: Error) => {
+      apiGetCarFuelDetail(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })

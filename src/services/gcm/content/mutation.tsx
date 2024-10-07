@@ -6,8 +6,7 @@ import { apiCreateContent, apiDeleteContent } from './api'
 // Create Content
 export const useMutateCreateContent = () => {
   return useMutation({
-    mutationFn: async ({ formData, idUser }: { formData: FormData; idUser: string }) =>
-      apiCreateContent(formData, idUser),
+    mutationFn: async ({ formData }: { formData: FormData }) => apiCreateContent(formData),
     onSuccess: () => {
       toast.success('Tambah konten berhasil')
     },
@@ -20,8 +19,7 @@ export const useMutateCreateContent = () => {
 // Delete Content
 export const useMutateDeleteContent = () => {
   return useMutation({
-    mutationFn: async ({ params, idUser }: { params: IDeleteContentParams; idUser: string }) =>
-      apiDeleteContent(params, idUser),
+    mutationFn: async ({ params }: { params: IDeleteContentParams }) => apiDeleteContent(params),
     onSuccess: () => {
       toast.success('Hapus konten berhasil')
     },

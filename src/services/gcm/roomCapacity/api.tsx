@@ -30,74 +30,44 @@ export function apiGetRoomCapacity(params: IGcmRoomCapacityListParams): Promise<
 }
 
 export function apiGetRoomCapacityDetail(
-  params: IGcmRoomCapacityDetailParams,
-  idUser: string
+  params: IGcmRoomCapacityDetailParams
 ): Promise<APIBaseResponse<IGcmRoomCapacity>> {
   //  // return dummyGetRoomCapacityDetail()
 
-  const headers = {
-    idUser,
-  }
   return api.get<IGcmRoomCapacity, APIBaseResponse<IGcmRoomCapacity>>('/cms/master/roomCapacity/detail', {
     params,
-    headers,
   })
 }
 
 export function apiCreateRoomCapacity(
-  payload: IGcmRoomCapacityCreatePayload,
-  idUser: string
+  payload: IGcmRoomCapacityCreatePayload
 ): Promise<APIBaseResponse<IGcmRoomCapacity>> {
   //  // return dummyCreateRoomCapacity()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmRoomCapacity, APIBaseResponse<IGcmRoomCapacity>>('/cms/master/roomCapacity/create', payload, {
-    headers,
-  })
+  return api.post<IGcmRoomCapacity, APIBaseResponse<IGcmRoomCapacity>>('/cms/master/roomCapacity/create', payload)
 }
 
 export function apiUpdateRoomCapacity(
-  payload: IGcmRoomCapacityUpdatePayload,
-  idUser: string
+  payload: IGcmRoomCapacityUpdatePayload
 ): Promise<APIBaseResponse<IGcmRoomCapacity>> {
   //  // return dummyUpdateRoomCapacity()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmRoomCapacity, APIBaseResponse<IGcmRoomCapacity>>('/cms/master/roomCapacity/update', payload, {
-    headers,
-  })
+  return api.post<IGcmRoomCapacity, APIBaseResponse<IGcmRoomCapacity>>('/cms/master/roomCapacity/update', payload)
 }
 
 export function apiToggleStatusRoomCapacity(
-  payload: IGcmRoomCapacityToggleStatusPayload,
-  idUser: string
+  payload: IGcmRoomCapacityToggleStatusPayload
 ): Promise<APIBaseResponse<IGcmRoomCapacity>> {
   //  // return dummyToggleStatusRoomCapacity()
 
-  const headers = {
-    idUser,
-  }
   return api.post<IGcmRoomCapacity, APIBaseResponse<IGcmRoomCapacity>>(
     '/cms/master/roomCapacity/toggleFlagActive',
-    payload,
-    {
-      headers,
-    }
+    payload
   )
 }
 
-export function apiDeleteRoomCapacity(
-  payload: IGcmRoomCapacityDeletePayload,
-  idUser: string
-): Promise<APIBaseResponse<any>> {
+export function apiDeleteRoomCapacity(payload: IGcmRoomCapacityDeletePayload): Promise<APIBaseResponse<any>> {
   //  // return dummyDeleteRoomCapacity()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<any, APIBaseResponse<any>>('/cms/master/roomCapacity/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/roomCapacity/delete', payload)
 }

@@ -18,14 +18,12 @@ import {
   IInsertAssessmentCriteriaPayload,
   IUpdateAssessmentCriteriaPayload,
 } from '@interfaces/gcmAssesment'
-import { IOTPLoginResponse } from '@interfaces/auth'
 import {
   useMutateDeleteAssessmentCriteria,
   useMutateInsertAssessmentCriteria,
   useMutateUpdateAssessmentCriteria,
 } from '@services/gcm/assessment/mutation'
 import { useGetAssessmentData, useGetAssessmentList } from '@services/gcm/assessment/query'
-import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
@@ -33,8 +31,6 @@ import { Controller, useForm } from 'react-hook-form'
 import { insertSchema, updateSchema } from './schema'
 
 export function List() {
-  const dataUser: IOTPLoginResponse = GetCookie('data_user')
-
   const dropdownContainerRef = useRef<HTMLDivElement>(null)
   const dropdownFormContainerRef = useRef<HTMLDivElement>(null)
 
@@ -82,19 +78,19 @@ export function List() {
     data: assessmentList,
     isFetching: isAssessmentListFetching,
     refetch: assessmentListRefect,
-  } = useGetAssessmentList('main', dataUser?.idUser)
+  } = useGetAssessmentList('main')
 
   const {
     data: assessmentListDropdown,
     isFetching: isAssessmentListDropdownFetching,
     refetch: assessmentListDropdownRefect,
-  } = useGetAssessmentList('form', dataUser?.idUser)
+  } = useGetAssessmentList('form')
 
   const {
     data: assessmentData,
     isFetching: isAssessmentDataFetching,
     refetch: assessmentDataRefect,
-  } = useGetAssessmentData(selectedAssessment, dataUser?.idUser)
+  } = useGetAssessmentData(selectedAssessment)
 
   const {
     mutate: mutateInsert,
@@ -161,11 +157,11 @@ export function List() {
   }, [isDeleteSuccess])
 
   const onInsertSubmit = (payload: IInsertAssessmentCriteriaPayload) => {
-    mutateInsert({ payload, idUser: dataUser?.idUser })
+    mutateInsert({ payload })
   }
 
   const onUpdateSubmit = (payload: IUpdateAssessmentCriteriaPayload) => {
-    mutateUpdate({ payload, idUser: dataUser?.idUser })
+    mutateUpdate({ payload })
   }
 
   return (
@@ -620,7 +616,7 @@ export function List() {
                       const payload: IDeleteAssessmentCriteriaPayload = {
                         criteriaId: selectedAssessmentCriteria?.criteria?.id,
                       }
-                      mutateDelete({ payload, idUser: dataUser?.idUser })
+                      mutateDelete({ payload })
                     }
                   }}
                 >

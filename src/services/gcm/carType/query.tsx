@@ -4,22 +4,22 @@ import { toast } from 'react-toastify'
 import { apiGetCarType, apiGetCarTypeDetail } from './api'
 
 // Get CarType
-export const useGetCarType = (params: IGcmCarTypeListParams, idUser: string) => {
+export const useGetCarType = (params: IGcmCarTypeListParams) => {
   return useQuery({
     queryKey: ['/cms/master/carType/list', params],
     queryFn: async () =>
-      apiGetCarType(params, idUser).catch((error: Error) => {
+      apiGetCarType(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })
 }
 
 // Get CarType Detail
-export const useGetCarTypeDetail = (params: IGcmCarTypeDetailParams, idUser: string) => {
+export const useGetCarTypeDetail = (params: IGcmCarTypeDetailParams) => {
   return useQuery({
     queryKey: ['/cms/master/carType/detail', params],
     queryFn: async () =>
-      apiGetCarTypeDetail(params, idUser).catch((error: Error) => {
+      apiGetCarTypeDetail(params).catch((error: Error) => {
         toast.error(error?.message)
       }),
   })

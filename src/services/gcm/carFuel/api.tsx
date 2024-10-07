@@ -21,70 +21,38 @@ import httpRequest from '@utils/helper'
 
 const api = httpRequest(API_MASTER)
 
-export function apiGetCarFuel(params: IGcmCarFuelListParams, idUser: string): Promise<APIBaseResponse<IGcmCarFuel[]>> {
+export function apiGetCarFuel(params: IGcmCarFuelListParams): Promise<APIBaseResponse<IGcmCarFuel[]>> {
   //  // return dummyGetCarFuel()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmCarFuel[], APIBaseResponse<IGcmCarFuel[]>>('/cms/master/carFuel/list', { params, headers })
+  return api.get<IGcmCarFuel[], APIBaseResponse<IGcmCarFuel[]>>('/cms/master/carFuel/list', { params })
 }
 
-export function apiGetCarFuelDetail(
-  params: IGcmCarFuelDetailParams,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarFuel>> {
+export function apiGetCarFuelDetail(params: IGcmCarFuelDetailParams): Promise<APIBaseResponse<IGcmCarFuel>> {
   //  // return dummyGetCarFuelDetail()
 
-  const headers = {
-    idUser,
-  }
-  return api.get<IGcmCarFuel, APIBaseResponse<IGcmCarFuel>>('/cms/master/carFuel/detail', { params, headers })
+  return api.get<IGcmCarFuel, APIBaseResponse<IGcmCarFuel>>('/cms/master/carFuel/detail', { params })
 }
 
-export function apiCreateCarFuel(
-  payload: IGcmCarFuelCreatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarFuel>> {
+export function apiCreateCarFuel(payload: IGcmCarFuelCreatePayload): Promise<APIBaseResponse<IGcmCarFuel>> {
   //  // return dummyCreateCarFuel()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarFuel, APIBaseResponse<IGcmCarFuel>>('/cms/master/carFuel/create', payload, { headers })
+  return api.post<IGcmCarFuel, APIBaseResponse<IGcmCarFuel>>('/cms/master/carFuel/create', payload)
 }
 
-export function apiUpdateCarFuel(
-  payload: IGcmCarFuelUpdatePayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarFuel>> {
+export function apiUpdateCarFuel(payload: IGcmCarFuelUpdatePayload): Promise<APIBaseResponse<IGcmCarFuel>> {
   //  // return dummyUpdateCarFuel()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarFuel, APIBaseResponse<IGcmCarFuel>>('/cms/master/carFuel/update', payload, { headers })
+  return api.post<IGcmCarFuel, APIBaseResponse<IGcmCarFuel>>('/cms/master/carFuel/update', payload)
 }
 
-export function apiToggleStatusCarFuel(
-  payload: IGcmCarFuelToggleStatusPayload,
-  idUser: string
-): Promise<APIBaseResponse<IGcmCarFuel>> {
+export function apiToggleStatusCarFuel(payload: IGcmCarFuelToggleStatusPayload): Promise<APIBaseResponse<IGcmCarFuel>> {
   //  // return dummyToggleStatusCarFuel()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmCarFuel, APIBaseResponse<IGcmCarFuel>>('/cms/master/carFuel/toggleFlagActive', payload, {
-    headers,
-  })
+  return api.post<IGcmCarFuel, APIBaseResponse<IGcmCarFuel>>('/cms/master/carFuel/toggleFlagActive', payload)
 }
 
-export function apiDeleteCarFuel(payload: IGcmCarFuelDeletePayload, idUser: string): Promise<APIBaseResponse<any>> {
+export function apiDeleteCarFuel(payload: IGcmCarFuelDeletePayload): Promise<APIBaseResponse<any>> {
   //  // return dummyDeleteCarFuel()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<any, APIBaseResponse<any>>('/cms/master/carFuel/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/carFuel/delete', payload)
 }

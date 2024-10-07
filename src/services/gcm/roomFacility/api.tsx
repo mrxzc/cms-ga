@@ -30,74 +30,44 @@ export function apiGetRoomFacility(params: IGcmRoomFacilityListParams): Promise<
 }
 
 export function apiGetRoomFacilityDetail(
-  params: IGcmRoomFacilityDetailParams,
-  idUser: string
+  params: IGcmRoomFacilityDetailParams
 ): Promise<APIBaseResponse<IGcmRoomFacility>> {
   //  // return dummyGetRoomFacilityDetail()
 
-  const headers = {
-    idUser,
-  }
   return api.get<IGcmRoomFacility, APIBaseResponse<IGcmRoomFacility>>('/cms/master/roomFacility/detail', {
     params,
-    headers,
   })
 }
 
 export function apiCreateRoomFacility(
-  payload: IGcmRoomFacilityCreatePayload,
-  idUser: string
+  payload: IGcmRoomFacilityCreatePayload
 ): Promise<APIBaseResponse<IGcmRoomFacility>> {
   //  // return dummyCreateRoomFacility()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmRoomFacility, APIBaseResponse<IGcmRoomFacility>>('/cms/master/roomFacility/create', payload, {
-    headers,
-  })
+  return api.post<IGcmRoomFacility, APIBaseResponse<IGcmRoomFacility>>('/cms/master/roomFacility/create', payload)
 }
 
 export function apiUpdateRoomFacility(
-  payload: IGcmRoomFacilityUpdatePayload,
-  idUser: string
+  payload: IGcmRoomFacilityUpdatePayload
 ): Promise<APIBaseResponse<IGcmRoomFacility>> {
   //  // return dummyUpdateRoomFacility()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<IGcmRoomFacility, APIBaseResponse<IGcmRoomFacility>>('/cms/master/roomFacility/update', payload, {
-    headers,
-  })
+  return api.post<IGcmRoomFacility, APIBaseResponse<IGcmRoomFacility>>('/cms/master/roomFacility/update', payload)
 }
 
 export function apiToggleStatusRoomFacility(
-  payload: IGcmRoomFacilityToggleStatusPayload,
-  idUser: string
+  payload: IGcmRoomFacilityToggleStatusPayload
 ): Promise<APIBaseResponse<IGcmRoomFacility>> {
   //  // return dummyToggleStatusRoomFacility()
 
-  const headers = {
-    idUser,
-  }
   return api.post<IGcmRoomFacility, APIBaseResponse<IGcmRoomFacility>>(
     '/cms/master/roomFacility/toggleFlagActive',
-    payload,
-    {
-      headers,
-    }
+    payload
   )
 }
 
-export function apiDeleteRoomFacility(
-  payload: IGcmRoomFacilityDeletePayload,
-  idUser: string
-): Promise<APIBaseResponse<any>> {
+export function apiDeleteRoomFacility(payload: IGcmRoomFacilityDeletePayload): Promise<APIBaseResponse<any>> {
   //  // return dummyDeleteRoomFacility()
 
-  const headers = {
-    idUser,
-  }
-  return api.post<any, APIBaseResponse<any>>('/cms/master/roomFacility/delete', payload, { headers })
+  return api.post<any, APIBaseResponse<any>>('/cms/master/roomFacility/delete', payload)
 }

@@ -3,11 +3,9 @@
 import IconChevronRight from '@assets/icons/IconChevronRight'
 import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmCarYearUpdateForm, IGcmCarYearUpdatePayload } from '@interfaces/gcmCarYear'
 import { useMutateUpdateCarYear } from '@services/gcm/carYear/mutation'
 import { useGetCarYearDetail } from '@services/gcm/carYear/query'
-import { GetCookie } from '@store/storage'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -15,8 +13,6 @@ import { schema } from './schema'
 
 export function Edit() {
   const router = useRouter()
-
-  const dataUser: IOTPLoginResponse = GetCookie('data_user')
 
   const paramsPage = useParams<{ carYear: string }>()
 
@@ -28,7 +24,7 @@ export function Edit() {
     isError: isFetchError,
     isRefetchError,
     refetch,
-  } = useGetCarYearDetail({ noSr: paramsPage?.carYear }, dataUser?.idUser)
+  } = useGetCarYearDetail({ noSr: paramsPage?.carYear })
 
   const {
     mutate: mutateUpdate,
@@ -46,7 +42,7 @@ export function Edit() {
 
   const onSubmit = (form: IGcmCarYearUpdateForm) => {
     const payload: IGcmCarYearUpdatePayload = { ...form }
-    mutateUpdate({ payload, idUser: dataUser?.idUser })
+    mutateUpdate({ payload })
   }
 
   useEffect(() => {

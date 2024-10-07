@@ -3,11 +3,9 @@
 import IconChevronRight from '@assets/icons/IconChevronRight'
 import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmCarBrandUpdateForm, IGcmCarBrandUpdatePayload } from '@interfaces/gcmCarBrand'
 import { useMutateUpdateCarBrand } from '@services/gcm/carBrand/mutation'
 import { useGetCarBrandDetail } from '@services/gcm/carBrand/query'
-import { GetCookie } from '@store/storage'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -15,8 +13,6 @@ import { schema } from './schema'
 
 export function Edit() {
   const router = useRouter()
-
-  const dataUser: IOTPLoginResponse = GetCookie('data_user')
 
   const paramsPage = useParams<{ carBrand: string }>()
 
@@ -28,7 +24,7 @@ export function Edit() {
     isError: isFetchError,
     isRefetchError,
     refetch,
-  } = useGetCarBrandDetail({ noSr: paramsPage?.carBrand }, dataUser?.idUser)
+  } = useGetCarBrandDetail({ noSr: paramsPage?.carBrand })
 
   const {
     mutate: mutateUpdate,
@@ -46,7 +42,7 @@ export function Edit() {
 
   const onSubmit = (form: IGcmCarBrandUpdateForm) => {
     const payload: IGcmCarBrandUpdatePayload = { ...form }
-    mutateUpdate({ payload, idUser: dataUser?.idUser })
+    mutateUpdate({ payload })
   }
 
   useEffect(() => {

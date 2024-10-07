@@ -4,12 +4,10 @@ import IconChevronBottom from '@assets/icons/IconChevronBottom'
 import IconChevronRight from '@assets/icons/IconChevronRight'
 import IconSpinner from '@assets/icons/IconSpinner'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { IOTPLoginResponse } from '@interfaces/auth'
 import { IGcmCarBrand } from '@interfaces/gcmCarBrand'
 import { IGcmCarTypeCreateForm, IGcmCarTypeCreatePayload, IGcmCarTypeListParams } from '@interfaces/gcmCarType'
 import { useGetCarBrand } from '@services/gcm/carBrand/query'
 import { useMutateCreateCarType } from '@services/gcm/carType/mutation'
-import { GetCookie } from '@store/storage'
 import { dummiesArray } from '@utils/common'
 import { debounce } from 'lodash'
 import { useRouter } from 'next/navigation'
@@ -22,8 +20,6 @@ export function Add() {
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const dataUser: IOTPLoginResponse = GetCookie('data_user')
-
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>()
   const [keywords, setKeywords] = useState<string>()
 
@@ -35,7 +31,7 @@ export function Add() {
 
   const [params, setParams] = useState<IGcmCarTypeListParams>(defaultParams)
 
-  const { data, isFetching } = useGetCarBrand(params, dataUser?.idUser)
+  const { data, isFetching } = useGetCarBrand(params)
 
   const {
     mutate: mutateCreate,
@@ -53,7 +49,7 @@ export function Add() {
 
   const onSubmit = (form: IGcmCarTypeCreateForm) => {
     const payload: IGcmCarTypeCreatePayload = { ...form }
-    mutateCreate({ payload, idUser: dataUser?.idUser })
+    mutateCreate({ payload })
   }
 
   const handleSearch = useCallback(

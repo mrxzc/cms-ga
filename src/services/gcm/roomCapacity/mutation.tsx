@@ -11,8 +11,7 @@ import { apiCreateRoomCapacity, apiDeleteRoomCapacity, apiToggleStatusRoomCapaci
 // Create RoomCapacity
 export const useMutateCreateRoomCapacity = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomCapacityCreatePayload; idUser: string }) =>
-      apiCreateRoomCapacity(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomCapacityCreatePayload }) => apiCreateRoomCapacity(payload),
     onSuccess: () => {
       toast.success('Tambah kapasitas ruangan berhasil')
     },
@@ -25,8 +24,7 @@ export const useMutateCreateRoomCapacity = () => {
 // Update RoomCapacity
 export const useMutateUpdateRoomCapacity = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomCapacityUpdatePayload; idUser: string }) =>
-      apiUpdateRoomCapacity(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomCapacityUpdatePayload }) => apiUpdateRoomCapacity(payload),
     onSuccess: () => {
       toast.success('Update kapasitas ruangan berhasil')
     },
@@ -39,8 +37,8 @@ export const useMutateUpdateRoomCapacity = () => {
 // Toggle Status RoomCapacity
 export const useMutateToggleStatusRoomCapacity = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomCapacityToggleStatusPayload; idUser: string }) =>
-      apiToggleStatusRoomCapacity(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomCapacityToggleStatusPayload }) =>
+      apiToggleStatusRoomCapacity(payload),
     onSuccess: () => {
       toast.success('Update status kapasitas ruangan berhasil')
     },
@@ -53,8 +51,7 @@ export const useMutateToggleStatusRoomCapacity = () => {
 // Delete RoomCapacity
 export const useMutateDeleteRoomCapacity = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomCapacityDeletePayload; idUser: string }) =>
-      apiDeleteRoomCapacity(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomCapacityDeletePayload }) => apiDeleteRoomCapacity(payload),
     onSuccess: () => {
       toast.success('Delete kapasitas ruangan berhasil')
     },

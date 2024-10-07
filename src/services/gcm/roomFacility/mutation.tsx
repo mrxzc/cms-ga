@@ -11,8 +11,7 @@ import { apiCreateRoomFacility, apiDeleteRoomFacility, apiToggleStatusRoomFacili
 // Create RoomFacility
 export const useMutateCreateRoomFacility = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFacilityCreatePayload; idUser: string }) =>
-      apiCreateRoomFacility(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomFacilityCreatePayload }) => apiCreateRoomFacility(payload),
     onSuccess: () => {
       toast.success('Tambah lantai ruangan berhasil')
     },
@@ -25,8 +24,7 @@ export const useMutateCreateRoomFacility = () => {
 // Update RoomFacility
 export const useMutateUpdateRoomFacility = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFacilityUpdatePayload; idUser: string }) =>
-      apiUpdateRoomFacility(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomFacilityUpdatePayload }) => apiUpdateRoomFacility(payload),
     onSuccess: () => {
       toast.success('Update lantai ruangan berhasil')
     },
@@ -39,8 +37,8 @@ export const useMutateUpdateRoomFacility = () => {
 // Toggle Status RoomFacility
 export const useMutateToggleStatusRoomFacility = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFacilityToggleStatusPayload; idUser: string }) =>
-      apiToggleStatusRoomFacility(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomFacilityToggleStatusPayload }) =>
+      apiToggleStatusRoomFacility(payload),
     onSuccess: () => {
       toast.success('Update status lantai ruangan berhasil')
     },
@@ -53,8 +51,7 @@ export const useMutateToggleStatusRoomFacility = () => {
 // Delete RoomFacility
 export const useMutateDeleteRoomFacility = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmRoomFacilityDeletePayload; idUser: string }) =>
-      apiDeleteRoomFacility(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmRoomFacilityDeletePayload }) => apiDeleteRoomFacility(payload),
     onSuccess: () => {
       toast.success('Delete lantai ruangan berhasil')
     },

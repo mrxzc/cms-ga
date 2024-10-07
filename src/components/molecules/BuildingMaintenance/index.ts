@@ -19,11 +19,11 @@ import { Detail as BuildingMaintenanceRepairmentDetail } from './Repairment/Deta
 import { List as BuildingMaintenanceAssessmentCSList } from './AssessmentCS/List'
 import { Detail as BuildingMaintenanceAssessmentCSDetail } from './AssessmentCS/Detail'
 
-import { List as BuildingMaintenanceManpowerSGList } from './ManpowerSG/List'
-import { Detail as BuildingMaintenanceManpowerSGDetail } from './ManpowerSG/Detail'
+import { List as BuildingMaintenanceManpowerSGList } from './manpower-sg/list'
+import { Detail as BuildingMaintenanceManpowerSGDetail } from './manpower-sg/detail'
 
-import { List as BuildingMaintenanceManpowerCSList } from './ManpowerCS/List'
-import { Detail as BuildingMaintenanceManpowerCSDetail } from './ManpowerCS/Detail'
+import { List as BuildingMaintenanceManpowerCSList } from './manpower-cs/list'
+import { Detail as BuildingMaintenanceManpowerCSDetail } from './manpower-cs/detail'
 
 import { List as BuildingMaintenanceSOIList } from './SOI/List'
 import { Detail as BuildingMaintenanceSOIDetail } from './SOI/Detail'

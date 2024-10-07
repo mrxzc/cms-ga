@@ -11,8 +11,7 @@ import { apiCreateCarFuel, apiDeleteCarFuel, apiToggleStatusCarFuel, apiUpdateCa
 // Create CarFuel
 export const useMutateCreateCarFuel = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarFuelCreatePayload; idUser: string }) =>
-      apiCreateCarFuel(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarFuelCreatePayload }) => apiCreateCarFuel(payload),
     onSuccess: () => {
       toast.success('Tambah bahan bakar berhasil')
     },
@@ -25,8 +24,7 @@ export const useMutateCreateCarFuel = () => {
 // Update CarFuel
 export const useMutateUpdateCarFuel = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarFuelUpdatePayload; idUser: string }) =>
-      apiUpdateCarFuel(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarFuelUpdatePayload }) => apiUpdateCarFuel(payload),
     onSuccess: () => {
       toast.success('Update bahan bakar berhasil')
     },
@@ -39,8 +37,7 @@ export const useMutateUpdateCarFuel = () => {
 // Toggle Status CarFuel
 export const useMutateToggleStatusCarFuel = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarFuelToggleStatusPayload; idUser: string }) =>
-      apiToggleStatusCarFuel(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarFuelToggleStatusPayload }) => apiToggleStatusCarFuel(payload),
     onSuccess: () => {
       toast.success('Update status bahan bakar berhasil')
     },
@@ -53,8 +50,7 @@ export const useMutateToggleStatusCarFuel = () => {
 // Delete CarFuel
 export const useMutateDeleteCarFuel = () => {
   return useMutation({
-    mutationFn: async ({ payload, idUser }: { payload: IGcmCarFuelDeletePayload; idUser: string }) =>
-      apiDeleteCarFuel(payload, idUser),
+    mutationFn: async ({ payload }: { payload: IGcmCarFuelDeletePayload }) => apiDeleteCarFuel(payload),
     onSuccess: () => {
       toast.success('Delete bahan bakar berhasil')
     },

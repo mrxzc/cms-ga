@@ -4,13 +4,15 @@ import {
   IBuildingManagementCleaningServiceList,
 } from '@interfaces/building-management-cleaning-service'
 
-export function dummyGetCleaningServiceList(): Promise<APIBaseResponse<IBuildingManagementCleaningServiceList[]>> {
+export function dummyGetBuildingManagementCleaningServiceList(): Promise<
+  APIBaseResponse<IBuildingManagementCleaningServiceList[]>
+> {
   const dataFunc = (noId: number) => {
     const data: IBuildingManagementCleaningServiceList = {
       noId,
-      requestor: '',
+      requestor: 'TEST',
       location: 'ACC',
-      area: '',
+      area: 'TEST',
       descSp: 'Fatmawati',
       kategoriRequest: 'Refreshment',
       dateRequest: '2024-08-01 21:21:51',
@@ -53,14 +55,16 @@ export function dummyGetCleaningServiceList(): Promise<APIBaseResponse<IBuilding
   })
 }
 
-export function dummyGetCleaningServiceDetail(): Promise<APIBaseResponse<IBuildingManagementCleaningServiceDetail>> {
+export function dummyGetBuildingManagementCleaningServiceDetail(): Promise<
+  APIBaseResponse<IBuildingManagementCleaningServiceDetail>
+> {
   const dataFunc = (noId: number) => {
     const data: IBuildingManagementCleaningServiceDetail = {
       noId,
       dateRequest: '2024-08-01 21:21:51',
-      requestor: '',
+      requestor: 'Test',
       location: 'ACC',
-      area: '',
+      area: 'Jakarta',
       descSp: 'Fatmawati',
       kategoriRequest: 'Refreshment',
       nameManpowerExisting: 'Jane Doe',

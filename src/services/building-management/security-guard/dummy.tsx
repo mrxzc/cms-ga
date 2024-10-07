@@ -4,13 +4,15 @@ import {
   IBuildingManagementSecurityGuardList,
 } from '@interfaces/building-management-security-guard'
 
-export function dummyGetSecurityGuardList(): Promise<APIBaseResponse<IBuildingManagementSecurityGuardList[]>> {
+export function dummyGetBuildingManagementSecurityGuardList(): Promise<
+  APIBaseResponse<IBuildingManagementSecurityGuardList[]>
+> {
   const dataFunc = (noId: number) => {
     const data: IBuildingManagementSecurityGuardList = {
       noId,
       requestor: 'ZCUR120',
       location: 'ACC',
-      area: '',
+      area: 'Jakarta',
       descSp: 'Fatmawati',
       kategoriRequest: 'Refreshment',
       dateRequest: '2024-08-01 21:21:51',
@@ -53,16 +55,19 @@ export function dummyGetSecurityGuardList(): Promise<APIBaseResponse<IBuildingMa
   })
 }
 
-export function dummyGetSecurityGuardDetail(): Promise<APIBaseResponse<IBuildingManagementSecurityGuardDetail>> {
+export function dummyGetBuildingManagementSecurityGuardDetail(): Promise<
+  APIBaseResponse<IBuildingManagementSecurityGuardDetail>
+> {
   const dataFunc = (noId: number) => {
     const data: IBuildingManagementSecurityGuardDetail = {
       noId,
       dateRequest: '2024-08-01 21:21:51',
-      requestor: '',
+      requestor: 'Test',
       location: 'ACC',
-      area: '',
+      area: 'Jakarta',
       descSp: 'Fatmawati',
       kategoriRequest: 'Refreshment',
+      nameManpowerExisting: 'jbhadsjbhdas',
       lamaKerja: 2,
       reason: 'reason',
     }
